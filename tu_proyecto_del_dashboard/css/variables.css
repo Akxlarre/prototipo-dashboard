@@ -1,0 +1,93 @@
+:root {
+    /* ------------------------------------ */
+    /* 1. Paleta de Colores                   */
+    /* ------------------------------------ */
+    /* Superficie */
+    --color-surface-page: #F9FAFB; /* Gris-50 */
+    --color-surface-widget: #FFFFFF; /* Blanco */
+    --color-border-light: #E5E7EB; /* Gris-200 */
+    --color-border-medium: #D1D5DB; /* Gris-300 */
+
+    /* Texto */
+    --color-text-primary: #1F2937; /* Gris-800 */
+    --color-text-secondary: #4B5563; /* Gris-600 */
+    --color-text-disabled: #9CA3AF; /* Gris-400 */
+
+    /* Acción (Primaria) */
+    --color-action-primary: #2563EB; /* Azul-600 */
+    --color-action-primary-hover: #1D4ED8; /* Azul-700 */
+    --color-action-primary-active: #1E40AF; /* Azul-800 */
+    --color-action-focus-outline: #93C5FD; /* Azul-300 */
+    --color-action-text-light: #FFFFFF; /* Blanco */
+
+    /* Estados Semánticos */
+    --color-state-error: #DC2626; /* Rojo-600 */
+    --color-state-warning: #F59E0B; /* Ámbar-500 */
+    --color-state-success: #16A34A; /* Verde-600 */
+
+    /* ------------------------------------ */
+    /* 2. Escala de Espaciado (8pt Grid)    */
+    /* ------------------------------------ */
+    --space-xxs: 4px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 20px;
+    --space-xl: 24px;
+    --space-xxl: 32px;
+    --space-xxxl: 36px;
+    --space-xxxxl: 48px; /* Para alturas de inputs/botones en móvil */
+    --space-xxxxxl: 56px; /* Altura principal de inputs/botones en móvil */
+
+
+    /* ------------------------------------ */
+    /* 3. Tipografía (Mobile First, luego Desktop) */
+    /* ------------------------------------ */
+    --font-family-base: 'Inter', sans-serif;
+
+    /* Mobile (Trabajador) */
+    --font-size-mobile-base: 18px;
+    --line-height-mobile-base: 1.5; /* 27px para 18px */
+    --font-size-mobile-label: 16px;
+    --line-height-mobile-label: 1.5; /* 24px para 16px */
+    --font-size-mobile-step: 14px;
+    --line-height-mobile-step: 1.5; /* 21px para 14px */
+    --font-size-mobile-h1: 24px;
+    --line-height-mobile-h1: 1.3; /* Aprox 32px */
+    --font-size-mobile-kpi-lg: 36px;
+    --line-height-mobile-kpi-lg: 1.2; /* Aprox 43px */
+
+    /* Desktop (Administrador) - Usaremos estas como default para web, y ajustaremos si es necesario */
+    --font-size-desktop-base: 16px;
+    --line-height-desktop-base: 1.5; /* 24px para 16px */
+    --font-size-desktop-label: 14px;
+    --line-height-desktop-label: 1.5; /* 21px para 14px */
+    --font-size-desktop-h1: 24px;
+    --line-height-desktop-h1: 1.3;
+    --font-size-desktop-h2: 20px;
+    --line-height-desktop-h2: 1.3;
+    --font-size-desktop-small: 12px;
+    --line-height-desktop-small: 1.5;
+
+
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semi-bold: 600;
+    --font-weight-bold: 700;
+
+    /* ------------------------------------ */
+    /* 4. Radios de Borde                   */
+    /* ------------------------------------ */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+
+    /* ------------------------------------ */
+    /* 5. Sombras                           */
+    /* ------------------------------------ */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Para widgets/cards */
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* Para modals */
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.1); /* Para modals grandes */
+}

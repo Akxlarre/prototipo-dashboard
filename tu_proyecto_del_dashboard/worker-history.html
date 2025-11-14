@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajador - Mi Historial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_mobile-layout.css">
+    <link rel="stylesheet" href="css/components/_history-item.css">
+</head>
+<body>
+    <div class="mobile-app-container">
+        <main class="mobile-content">
+            <header class="mobile-header mobile-header--align-left">
+                <h1 class="mobile-header__title">Mi Historial</h1>
+                <p class="mobile-header__subtitle">Máquina Asignada: 05</p>
+            </header>
+
+            <div class="history-list">
+                <a href="#" class="history-item">
+                    <div class="history-item__header">
+                        <span class="history-item__date">14 de Noviembre, 2023</span>
+                        <span class="history-item__status history-item__status--approved">Aprobado</span>
+                    </div>
+                    <div class="history-item__detail">
+                        <span class="history-item__label">Kilometraje Recorrido</span>
+                        <span class="history-item__value">150 Km</span>
+                    </div>
+                    <div class="history-item__detail">
+                        <span class="history-item__label">Diésel Ingresado</span>
+                        <span class="history-item__value">45 Lts</span>
+                    </div>
+                </a>
+
+                <a href="#" class="history-item">
+                    <div class="history-item__header">
+                        <span class="history-item__date">13 de Noviembre, 2023</span>
+                        <span class="history-item__status history-item__status--pending">Pendiente</span>
+                    </div>
+                    <div class="history-item__detail">
+                        <span class="history-item__label">Kilometraje Recorrido</span>
+                        <span class="history-item__value">120 Km</span>
+                    </div>
+                    <div class="history-item__detail">
+                        <span class="history-item__label">Diésel Ingresado</span>
+                        <span class="history-item__value">30 Lts</span>
+                    </div>
+                </a>
+
+                <a href="#" class="history-item">
+                    <div class="history-item__header">
+                        <span class="history-item__date">12 de Noviembre, 2023</span>
+                        <span class="history-item__status history-item__status--approved">Aprobado</span>
+                    </div>
+                    <div class="history-item__detail">
+                        <span class="history-item__label">Kilometraje Recorrido</span>
+                        <span class="history-item__value">180 Km</span>
+                    </div>
+                    <div class="history-item__detail">
+                        <span class="history-item__label">Diésel Ingresado</span>
+                        <span class="history-item__value">50 Lts</span>
+                    </div>
+                </a>
+            </div>
+        </main>
+
+        <nav class="mobile-nav-bar">
+            <a href="worker-home.html" class="mobile-nav-item">
+                <svg class="mobile-nav-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                Reportar
+            </a>
+            <a href="worker-history.html" class="mobile-nav-item is-active">
+                <svg class="mobile-nav-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3H6v18h12V9h-5V3zm2 14h-2v-4h2v4zm0-6h-2V7h2v4z"/></svg>
+                Mi Historial
+            </a>
+        </nav>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+

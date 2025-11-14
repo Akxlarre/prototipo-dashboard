@@ -1,0 +1,67 @@
+/* ==================================== */
+/* _export-button.css - Componente: Exportación */
+/* ==================================== */
+
+.export-group {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0; /* Evita que el grupo se encoja en el layout */
+}
+
+.export-button {
+    /* Basado en .btn-secondary, pero sin el border-right para fusionar */
+    /* Le daremos un tamaño ligeramente más pequeño para reportes (btn-sm) */
+    padding: var(--space-xs) var(--space-md); /* 8px 16px */
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md); /* Redondeado solo a la izquierda */
+    border-right-color: transparent; /* Quita el borde derecho para que se fusione con el dropdown */
+}
+
+.export-dropdown-toggle {
+    /* Flecha/botón que abre el menú */
+    padding: var(--space-xs); /* 8px */
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    border-left: 1px solid var(--color-border-medium); /* Borde separador */
+    background-color: var(--color-surface-widget);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.export-dropdown-toggle:hover {
+    background-color: var(--color-border-light);
+}
+
+/* ------------------------------------ */
+/* Menú de Formatos (Dropdown)          */
+/* ------------------------------------ */
+.export-menu {
+    position: absolute;
+    top: 100%; /* Justo debajo del botón */
+    right: 0;
+    margin-top: var(--space-xs); /* 8px de separación */
+    background-color: var(--color-surface-widget);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    min-width: 150px;
+    padding: var(--space-xs) 0;
+    list-style: none;
+    display: none; /* Oculto por defecto con JS */
+}
+
+.export-menu.is-visible {
+    display: block;
+}
+
+.export-menu__item {
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--font-size-desktop-label);
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.export-menu__item:hover {
+    background-color: var(--color-border-light);
+}

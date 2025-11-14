@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Contabilidad</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_tabs.css">
+    <link rel="stylesheet" href="css/components/_chart.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo"></div>
+                <span class="sidebar__app-name">Nombre de la App</span>
+            </div>
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                    Dashboard
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                    Máquinas
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-choferes"></span>
+                    Choferes
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                    Contabilidad
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-reportes"></span>
+                    Reportes
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                    Configuración
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-content__header">
+                <h1 class="main-content__title">Contabilidad y Liquidación</h1>
+                <p class="main-content__subtitle">Revisa resúmenes financieros y procesa la nómina de choferes.</p>
+            </header>
+
+            <div class="card">
+                <div class="card__header">
+                    <div class="tabs-container">
+                        <div class="tabs-list" role="tablist">
+                            <button class="tab-item is-active" id="tab-summary" role="tab" aria-controls="content-summary" aria-selected="true">
+                                Resumen General (RF-019)
+                            </button>
+                            <button class="tab-item" id="tab-payroll" role="tab" aria-controls="content-payroll" aria-selected="false">
+                                Liquidación de Choferes (RF-022)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content is-active" id="content-summary" role="tabpanel" aria-labelledby="tab-summary">
+                    <div class="card__body">
+                        <h2 class="card__header-title" style="margin-bottom: var(--space-md);">Resumen del Mes: Noviembre 2025</h2>
+                        
+                        <div style="display: flex; gap: var(--space-xl); margin-bottom: var(--space-xl); flex-wrap: wrap;">
+                            <div class="chart-kpi" style="text-align: left;">
+                                <span class="chart-kpi__label">Ganancia Líquida (Total Neto)</span>
+                                <span class="chart-kpi__value">$ 8.765.432</span>
+                            </div>
+                            <div class="chart-kpi" style="text-align: left;">
+                                <span class="chart-kpi__label">Total Recaudado (Bruto)</span>
+                                <span class="chart-kpi__value">$ 15.123.456</span>
+                            </div>
+                            <div class="chart-kpi" style="text-align: left;">
+                                <span class="chart-kpi__label">Total Pagos (Diésel, Choferes)</span>
+                                <span class="chart-kpi__value">$ 6.358.024</span>
+                            </div>
+                        </div>
+
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Semana</th>
+                                        <th>Recaudado</th>
+                                        <th>Gastos (Diésel, Pagos)</th>
+                                        <th>Total Neto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Semana 1 (Nov 1-7)</td>
+                                        <td>$ 3.800.000</td>
+                                        <td>$ 1.600.000</td>
+                                        <td>$ 2.200.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Semana 2 (Nov 8-14)</td>
+                                        <td>$ 3.750.000</td>
+                                        <td>$ 1.550.000</td>
+                                        <td>$ 2.200.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="content-payroll" role="tabpanel" aria-labelledby="tab-payroll">
+                    <div class="card__body card__body--no-padding">
+                        <div class="data-table-container">
+                            <table class="data-table" id="payroll-table">
+                                <thead>
+                                    <tr>
+                                        <th>Chofer</th>
+                                        <th>Total Ganado (RF-022)</th>
+                                        <th>Mínimo Garantizado (RF-023)</th>
+                                        <th>Monto Faltante (RF-024)</th>
+                                        <th>Pago Final (RF-025)</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-min-guaranteed="400000">
+                                        <td>Juan Pérez</td>
+                                        <td data-total-earned="450000">$ 450.000</td>
+                                        <td>$ 400.000</td>
+                                        <td>
+                                            <input type="number" class="input-text payroll-missing-amount" value="0" disabled>
+                                        </td>
+                                        <td class="payroll-final-payment">$ 450.000</td>
+                                        <td class="action-cell">
+                                            <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
+                                        </td>
+                                    </tr>
+                                    <tr data-min-guaranteed="400000">
+                                        <td>Pedro López</td>
+                                        <td data-total-earned="380000">$ 380.000</td>
+                                        <td>$ 400.000</td>
+                                        <td>
+                                            <input type="number" class="input-text payroll-missing-amount" value="20000">
+                                        </td>
+                                        <td class="payroll-final-payment">$ 400.000</td>
+                                        <td class="action-cell">
+                                            <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
+                                        </td>
+                                    </tr>
+                                    <tr data-min-guaranteed="400000">
+                                        <td>María Gómez</td>
+                                        <td data-total-earned="350000">$ 350.000</td>
+                                        <td>$ 400.000</td>
+                                        <td>
+                                            <input type="number" class="input-text payroll-missing-amount" value="50000">
+                                        </td>
+                                        <td class="payroll-final-payment">$ 400.000</td>
+                                        <td class="action-cell">
+                                            <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card__footer">
+                        <button class="btn btn-primary" id="save-payroll-button">Guardar Liquidaciones</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Lógica de Pestañas (Tabs) ---
+            const tabButtons = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('is-active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    tabContents.forEach(content => {
+                        content.classList.remove('is-active');
+                    });
+
+                    button.classList.add('is-active');
+                    button.setAttribute('aria-selected', 'true');
+                    const contentId = button.getAttribute('aria-controls');
+                    document.getElementById(contentId).classList.add('is-active');
+                });
+            });
+
+            // --- Lógica de Liquidación (Payroll) ---
+            const payrollTable = document.getElementById('payroll-table');
+            if (payrollTable) {
+                function calculateFinalPayment(row) {
+                    const totalEarnedCell = row.querySelector('[data-total-earned]');
+                    const missingAmountInput = row.querySelector('.payroll-missing-amount');
+                    const finalPaymentCell = row.querySelector('.payroll-final-payment');
+                    
+                    const totalEarned = parseFloat(totalEarnedCell.dataset.totalEarned) || 0;
+                    const missingAmount = parseFloat(missingAmountInput.value) || 0;
+                    
+                    const finalPayment = totalEarned + missingAmount;
+                    finalPaymentCell.textContent = `$ ${finalPayment.toLocaleString('es-CL')}`;
+                }
+
+                function initializePayrollRow(row) {
+                    const totalEarned = parseFloat(row.querySelector('[data-total-earned]').dataset.totalEarned) || 0;
+                    const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
+                    const missingAmountInput = row.querySelector('.payroll-missing-amount');
+                    
+                    if (totalEarned >= minGuaranteed) {
+                        missingAmountInput.value = 0;
+                        missingAmountInput.setAttribute('disabled', 'true');
+                    } else {
+                        const missingAmount = minGuaranteed - totalEarned;
+                        missingAmountInput.value = missingAmount;
+                        missingAmountInput.removeAttribute('disabled');
+                    }
+                    
+                    calculateFinalPayment(row);
+                    missingAmountInput.addEventListener('input', () => {
+                        calculateFinalPayment(row);
+                    });
+                }
+                
+                payrollTable.querySelectorAll('tbody tr').forEach(row => {
+                    initializePayrollRow(row);
+                });
+
+                document.getElementById('save-payroll-button').addEventListener('click', () => {
+                    alert('Liquidaciones guardadas exitosamente (simulado)!');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

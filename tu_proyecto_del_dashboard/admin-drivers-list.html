@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Lista de Choferes</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_modal.css">
+    <link rel="stylesheet" href="css/components/_alert-row.css">
+    <link rel="stylesheet" href="css/components/_chart-controls.css">
+    <link rel="stylesheet" href="css/components/_chart.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo"></div>
+                <span class="sidebar__app-name">Nombre de la App</span>
+            </div>
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                    Dashboard
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                    Máquinas
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-choferes"></span>
+                    Choferes
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                    Contabilidad
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-reportes"></span>
+                    Reportes
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                    Configuración
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-content__header">
+                <h1 class="main-content__title">Lista de Choferes</h1>
+                <p class="main-content__subtitle">Gestiona todos los choferes registrados en el sistema.</p>
+            </header>
+
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__header-title">Todos los Choferes</h2>
+                    <a href="admin-driver-create.html" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+                        Registrar Nuevo Chofer
+                    </a>
+                </div>
+                <div class="card__body card__body--no-padding"> 
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>RUT</th>
+                                    <th>Teléfono</th>
+                                    <th>Correo Electrónico</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Juan Pérez</td>
+                                    <td>12.345.678-9</td>
+                                    <td>+56 9 1234 5678</td>
+                                    <td>juan.perez@dominio.com</td>
+                                    <td><span class="status-cell status-cell--approved">Activo</span></td>
+                                    <td class="action-cell">
+                                        <a href="admin-driver-detail.html" class="btn btn-secondary btn-sm">Ver/Editar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>María Gómez</td>
+                                    <td>9.876.543-2</td>
+                                    <td>+56 9 9876 5432</td>
+                                    <td>maria.gomez@dominio.com</td>
+                                    <td><span class="status-cell status-cell--approved">Activo</span></td>
+                                    <td class="action-cell">
+                                        <a href="#" class="btn btn-secondary btn-sm">Ver/Editar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pedro López</td>
+                                    <td>10.111.222-K</td>
+                                    <td>+56 9 1011 1222</td>
+                                    <td>pedro.lopez@dominio.com</td>
+                                    <td><span class="status-cell status-cell--rejected">Inactivo</span></td>
+                                    <td class="action-cell">
+                                        <a href="#" class="btn btn-secondary btn-sm">Ver/Editar</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <span class="pagination__info">Mostrando 1-3 de 3 registros</span>
+                    <button class="pagination__button" disabled>&laquo; Anterior</button>
+                    <button class="pagination__button">1</button>
+                    <button class="pagination__button" disabled>Siguiente &raquo;</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

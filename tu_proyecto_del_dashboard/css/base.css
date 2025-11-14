@@ -1,0 +1,50 @@
+/* Reset Básico para una experiencia más consistente */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 100%; /* Base para rem */
+    -webkit-text-size-adjust: 100%; /* Evita el ajuste de tamaño de texto en iOS */
+}
+
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-desktop-base); /* Por defecto, usamos la base de escritorio */
+    line-height: var(--line-height-desktop-base);
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-page);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos para Títulos */
+h1 {
+    font-size: var(--font-size-desktop-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-desktop-h1);
+    color: var(--color-text-primary);
+}
+
+h2 {
+    font-size: var(--font-size-desktop-h2);
+    font-weight: var(--font-weight-semi-bold);
+    line-height: var(--line-height-desktop-h2);
+    color: var(--color-text-primary);
+}
+
+/* Enlaces base */
+a {
+    color: var(--color-action-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Para la experiencia móvil del trabajador, ajustaremos las variables en el CSS del layout móvil */
+/* Por ahora, esta es la base */
+

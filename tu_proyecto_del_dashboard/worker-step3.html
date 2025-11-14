@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajador - Comprobante</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_mobile-layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+
+    <style>
+        /* Estilos específicos para el área de subida de archivo */
+        .file-upload-area {
+            border: 2px dashed var(--color-border-medium);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-xxl); /* 32px */
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+            margin-top: var(--space-xl);
+            background-color: var(--color-surface-widget);
+        }
+        .file-upload-area:hover {
+            border-color: var(--color-action-primary);
+            background-color: var(--color-surface-page);
+        }
+        .file-upload-area p {
+            font-size: var(--font-size-mobile-base);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+        .file-upload-area img {
+            max-width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+            border-radius: var(--border-radius-sm);
+            margin-top: var(--space-md);
+            display: none; /* Oculto por defecto */
+        }
+        .file-upload-area.has-file img {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-app-container">
+        <main class="mobile-content">
+            <header class="mobile-header mobile-header--align-left">
+                <p style="font-size: var(--font-size-mobile-label); color: var(--color-text-secondary); margin-bottom: var(--space-xs);">
+                    Paso 3 de 3: Comprobante
+                </p>
+                <h1 class="mobile-header__title">Adjuntar Comprobante</h1>
+                <p class="mobile-header__subtitle">Máquina Asignada: 05</p>
+                <p class="mobile-header__subtitle">Fecha: Viernes, 14 de Noviembre</p>
+            </header>
+
+            <div class="form-field form-field--mobile">
+                <label for="comprobante-file" class="form-field__label">FOTO DEL COMPROBANTE</label>
+                <div class="file-upload-area" id="file-upload-area">
+                    <input type="file" id="comprobante-file" accept="image/*" style="display: none;">
+                    <p>Haz clic para subir o arrastra una imagen</p>
+                    <p style="font-size: var(--font-size-mobile-step); color: var(--color-text-disabled);">
+                        Formatos permitidos: JPG, PNG. Máx. 5MB.
+                    </p>
+                    <img id="preview-image" src="#" alt="Previsualización del comprobante">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: var(--space-md); margin-top: var(--space-xl);">
+                <a href="worker-step2.html" class="btn btn-secondary btn-mobile-height" style="flex-grow: 1;">Anterior</a>
+                <a href="worker-success.html" class="btn btn-primary btn-mobile-height" style="flex-grow: 1;" id="send-report-button">Enviar Reporte</a>
+            </div>
+        </main>
+
+        <nav class="mobile-nav-bar">
+            <a href="worker-home.html" class="mobile-nav-item is-active">
+                <svg class="mobile-nav-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                Reportar
+            </a>
+            <a href="worker-history.html" class="mobile-nav-item">
+                <svg class="mobile-nav-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3H6v18h12V9h-5V3zm2 14h-2v-4h2v4zm0-6h-2V7h2v4z"/></svg>
+                Mi Historial
+            </a>
+        </nav>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileUploadArea = document.getElementById('file-upload-area');
+            const fileInput = document.getElementById('comprobante-file');
+            const previewImage = document.getElementById('preview-image');
+            const sendReportButton = document.getElementById('send-report-button');
+
+            // Simular clic en input al hacer clic en el área
+            fileUploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        previewImage.src = e.target.result;
+                        fileUploadArea.classList.add('has-file');
+                        sendReportButton.removeAttribute('disabled');
+                        sendReportButton.classList.remove('btn-primary--disabled');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewImage.src = '#';
+                    fileUploadArea.classList.remove('has-file');
+                    sendReportButton.setAttribute('disabled', 'true');
+                    sendReportButton.classList.add('btn-primary--disabled');
+                }
+            });
+
+            // Deshabilitar botón al inicio si no hay archivo
+            if (!fileInput.files.length) {
+                sendReportButton.setAttribute('disabled', 'true');
+                sendReportButton.classList.add('btn-primary--disabled');
+            }
+        });
+    </script>
+</body>
+</html>

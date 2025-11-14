@@ -1,0 +1,103 @@
+/* ==================================== */
+/* _buttons.css - Átomo: Botones        */
+/* ==================================== */
+
+.btn {
+    display: inline-flex; /* Permite que el contenido se centre y el padding funcione */
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs); /* Espacio entre icono y texto, si aplica */
+    padding: var(--space-sm) var(--space-xl); /* 12px vertical, 24px horizontal (Web Base) */
+    border: 1px solid transparent; /* Borde transparente por defecto para evitar cambios de tamaño */
+    border-radius: var(--border-radius-md); /* 8px */
+    cursor: pointer;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-desktop-base); /* Base de escritorio */
+    font-weight: var(--font-weight-semi-bold); /* Semi-Bold por defecto */
+    line-height: var(--line-height-desktop-base);
+    text-decoration: none; /* Asegura que no se subraye si es un <a> */
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ------------------------------------ */
+/* Botón Primario (Sólido Azul)         */
+/* ------------------------------------ */
+.btn-primary {
+    background-color: var(--color-action-primary);
+    color: var(--color-action-text-light);
+    border-color: var(--color-action-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-action-primary-hover);
+    border-color: var(--color-action-primary-hover);
+}
+
+.btn-primary:focus {
+    outline: none; /* Quitamos el outline por defecto del navegador */
+    box-shadow: 0 0 0 3px var(--color-action-focus-outline);
+}
+
+.btn-primary:active {
+    background-color: var(--color-action-primary-active);
+    border-color: var(--color-action-primary-active);
+}
+
+.btn-primary:disabled {
+    background-color: var(--color-border-medium); /* Gris-300 */
+    border-color: var(--color-border-medium);
+    color: var(--color-text-disabled); /* Gris-400 */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ------------------------------------ */
+/* Botón Secundario (Outline)           */
+/* ------------------------------------ */
+.btn-secondary {
+    background-color: var(--color-surface-widget); /* Blanco */
+    color: var(--color-text-primary);
+    border-color: var(--color-border-medium); /* Gris-300 */
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-surface-page); /* Gris-50 */
+    border-color: var(--color-text-disabled); /* Gris-400 */
+    color: var(--color-text-primary);
+}
+
+.btn-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-action-focus-outline);
+}
+
+.btn-secondary:active {
+    background-color: var(--color-border-light); /* Gris-200 */
+    border-color: var(--color-border-light);
+}
+
+.btn-secondary:disabled {
+    background-color: var(--color-surface-widget); /* Blanco */
+    border-color: var(--color-border-light); /* Gris-200 */
+    color: var(--color-text-disabled); /* Gris-400 */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ------------------------------------ */
+/* Utilidad: Botón de ancho completo    */
+/* ------------------------------------ */
+.btn-full-width {
+    width: 100%;
+}
+
+/* ------------------------------------ */
+/* Utilidad: Altura de botón para móvil */
+/* (Se usará con @media para sobrescribir el padding base) */
+/* ------------------------------------ */
+.btn-mobile-height {
+    padding: var(--space-md) var(--space-xl); /* Ajustar padding para altura de 56px con font-size mobile */
+    min-height: var(--space-xxxxxl); /* 56px */
+    font-size: var(--font-size-mobile-base);
+    line-height: var(--line-height-mobile-base);
+}

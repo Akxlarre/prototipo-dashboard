@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Centro de Reportes</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_tabs.css">
+    <link rel="stylesheet" href="css/components/_chart.css">
+    <link rel="stylesheet" href="css/components/_export-button.css"> 
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo"></div>
+                <span class="sidebar__app-name">Nombre de la App</span>
+            </div>
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                    Dashboard
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                    Máquinas
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-choferes"></span>
+                    Choferes
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                    Contabilidad
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-reportes"></span>
+                    Reportes
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                    Configuración
+                </a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="main-content__header">
+                <h1 class="main-content__title">Centro de Reportes y Análisis</h1>
+                <p class="main-content__subtitle">Filtra y exporta métricas detalladas de rendimiento y finanzas.</p>
+            </header>
+            
+            <div class="card">
+                <div class="card__header">
+                    <div style="flex-grow: 1;">
+                         <h2 class="card__header-title" style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-medium); color: var(--color-text-secondary);">Filtros Globales</h2>
+                         <div style="display: flex; gap: var(--space-md); align-items: center; margin-top: var(--space-xs);">
+                            <div class="date-range-input">
+                                <svg class="date-range-input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.5 0a.5.5 0 0 0-.5.5V1H4a2 2 0 0 0-2 2v1h12V3a2 2 0 0 0-2-2h-2.5V.5a.5.5 0 0 0-1 0V1H6V.5a.5.5 0 0 0-.5-.5zM14 4H2v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zM2 3a1 1 0 0 1 1-1h2.5V.5a.5.5 0 0 1 1 0V1H10V.5a.5.5 0 0 1 1 0V1h2.5a1 1 0 0 1 1 1V3H2z"/></svg>
+                                <input type="text" class="input-text date-range-input__field" value="2025-01-01 - 2025-12-31">
+                            </div>
+                            <div class="export-group">
+                                <button class="btn btn-secondary export-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793l-1.854-1.854a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                                    Exportar Datos
+                                </button>
+                                <button class="export-dropdown-toggle" id="export-toggle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                                </button>
+                                <div class="export-menu" id="export-menu">
+                                    <div class="export-menu__item">Exportar a PDF</div>
+                                    <div class="export-menu__item">Exportar a Excel</div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="card__body">
+                    <div class="tabs-container" style="border-bottom: none;">
+                        <div class="tabs-list" role="tablist">
+                            <button class="tab-item is-active" id="tab-ranking" role="tab" aria-controls="content-ranking" aria-selected="true">
+                                Ranking Financiero (RF-032)
+                            </button>
+                            <button class="tab-item" id="tab-fuel" role="tab" aria-controls="content-fuel" aria-selected="false">
+                                Rendimiento de Combustible (RF-033)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content is-active" id="content-ranking" role="tabpanel" aria-labelledby="tab-ranking">
+                         <div class="chart-controls" style="padding-bottom: 0;">
+                            <div class="segmented-button-group">
+                                <button class="segmented-button is-active">Ganancia Neta</button>
+                                <button class="segmented-button">Ingreso Total</button>
+                            </div>
+                         </div>
+
+                         <div style="padding: var(--space-xl) 0;">
+                            <div class="chart-kpi">
+                                <span class="chart-kpi__label">Ganancia Neta Total Anual</span>
+                                <span class="chart-kpi__value">$ 12.345.678</span>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-bar" style="height: 40%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 20%;"></div>
+                                <div class="chart-bar" style="height: 80%;"></div>
+                            </div>
+                         </div>
+
+                         <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">Detalle de Ranking por Máquina</h3>
+                         <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ranking</th>
+                                        <th>Nº Máquina</th>
+                                        <th>Ganancia Neta ($)</th>
+                                        <th>KM Recorridos</th>
+                                        <th>Choferes Asignados</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>#1</td><td>05</td><td>$ 3.500.000</td><td>45,000 Km</td><td>2</td></tr>
+                                    <tr><td>#2</td><td>02</td><td>$ 2.900.000</td><td>40,000 Km</td><td>1</td></tr>
+                                    </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    
+                    <div class="tab-content" id="content-fuel" role="tabpanel" aria-labelledby="tab-fuel">
+                        <div style="padding: var(--space-xl) 0;">
+                            <div class="chart-kpi">
+                                <span class="chart-kpi__label">Rendimiento Promedio de Flota</span>
+                                <span class="chart-kpi__value">5.8 Km/L</span>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-bar" style="height: 75%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 80%;"></div>
+                                <div class="chart-bar" style="height: 55%;"></div>
+                            </div>
+                            <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">Tabla de Rendimiento Detallado (Km/L)</h3>
+                            <div class="data-table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ranking</th>
+                                            <th>Nº Máquina</th>
+                                            <th>Rendimiento (Km/L)</th>
+                                            <th>Litros Totales</th>
+                                            <th>KM Recorridos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>#1</td><td>05</td><td>6.2 Km/L</td><td>7,500 Lts</td><td>46,500 Km</td></tr>
+                                        <tr><td>#2</td><td>07</td><td>5.9 Km/L</td><td>8,000 Lts</td><td>47,200 Km</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lógica de Pestañas
+            const tabButtons = document.querySelectorAll('.tabs-list .tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('is-active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    tabContents.forEach(content => {
+                        content.classList.remove('is-active');
+                    });
+
+                    button.classList.add('is-active');
+                    button.setAttribute('aria-selected', 'true');
+                    const contentId = button.getAttribute('aria-controls');
+                    document.getElementById(contentId).classList.add('is-active');
+                });
+            });
+
+
+            // Lógica del Export Button
+            const exportToggle = document.getElementById('export-toggle');
+            const exportMenu = document.getElementById('export-menu');
+
+            exportToggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evita que el clic se propague al documento inmediatamente
+                exportMenu.classList.toggle('is-visible');
+            });
+
+            // Ocultar menú si se hace clic en cualquier otro lugar
+            document.addEventListener('click', (e) => {
+                if (exportMenu.classList.contains('is-visible') && !exportToggle.contains(e.target)) {
+                    exportMenu.classList.remove('is-visible');
+                }
+            });
+            
+            // Lógica para cerrar la modal de reportes
+            const exportMenuItems = document.querySelectorAll('.export-menu__item');
+            exportMenuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const format = item.textContent.replace('Exportar a ', '');
+                    const activeTab = document.querySelector('.tab-item.is-active').textContent.trim();
+                    alert(`Simulando la exportación del reporte "${activeTab}" a formato ${format}.`);
+                    exportMenu.classList.remove('is-visible');
+                });
+            });
+
+            // Inicialización: Asegurar que el contenido activo se muestre
+            const activeTab = document.querySelector('.tab-item.is-active');
+            if (activeTab) {
+                const contentId = activeTab.getAttribute('aria-controls');
+                document.getElementById(contentId).classList.add('is-active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+/* ==================================== */
+/* _layout.css - Layout General         */
+/* ==================================== */
+
+/* ------------------------------------ */
+/* Layout del Dashboard (Web)           */
+/* ------------------------------------ */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr; /* Sidebar de 260px, el resto para el contenido */
+    min-height: 100vh; /* Ocupa toda la altura de la ventana */
+    background-color: var(--color-surface-page); /* Gris-50 */
+}
+
+/* ------------------------------------ */
+/* Sidebar (Barra de Navegación Lateral) */
+/* ------------------------------------ */
+.sidebar {
+    background-color: var(--color-text-primary); /* Gris-800 */
+    color: var(--color-action-text-light); /* Texto blanco */
+    padding: var(--space-xxl) var(--space-md); /* 24px arriba/abajo, 16px lateral */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxl); /* 24px entre secciones (logo, navegación) */
+}
+
+.sidebar__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md); /* 16px entre logo y texto */
+    padding: 0 var(--space-sm); /* 12px de padding lateral interno */
+}
+
+.sidebar__logo {
+    /* Estilo para un placeholder de logo SVG o IMG */
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-action-primary); /* Azul para placeholder */
+    border-radius: var(--border-radius-sm);
+    flex-shrink: 0; /* Evita que se encoja */
+}
+
+.sidebar__app-name {
+    font-size: var(--font-size-desktop-h2); /* 20px */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-action-text-light); /* Blanco */
+}
+
+.sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs); /* 8px entre ítems de navegación */
+}
+
+.sidebar__nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md); /* 16px entre icono y texto */
+    padding: var(--space-md) var(--space-sm); /* 16px vertical, 12px horizontal */
+    border-radius: var(--border-radius-md); /* 8px */
+    color: var(--color-text-disabled); /* Gris-400 */
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar__nav-item:hover {
+    background-color: var(--color-text-primary); /* Gris-800 más oscuro (o un matiz) */
+    color: var(--color-action-text-light); /* Blanco */
+}
+
+.sidebar__nav-item.is-active {
+    background-color: var(--color-action-primary); /* Azul-600 */
+    color: var(--color-action-text-light); /* Blanco */
+    font-weight: var(--font-weight-medium);
+}
+
+.sidebar__nav-item-icon {
+    /* Placeholder para iconos SVG */
+    width: 20px;
+    height: 20px;
+    background-color: currentColor; /* El color del icono será el del texto */
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2L3 9h4v12h10V9h4L12 2z"/></svg>') no-repeat center / contain; /* Placeholder para icono de "home" */
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2L3 9h4v12h10V9h4L12 2z"/></svg>') no-repeat center / contain;
+}
+
+
+/* Separador para el footer de la sidebar */
+.sidebar__nav-separator {
+    flex-grow: 1; /* Empuja los ítems de abajo al final */
+}
+
+/* ------------------------------------ */
+/* Contenido Principal                  */
+/* ------------------------------------ */
+.main-content {
+    padding: var(--space-xxl) var(--space-xxxl); /* 24px arriba/abajo, 32px lateral */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxl); /* 24px de espacio entre secciones/widgets */
+}
+
+.main-content__header {
+    margin-bottom: var(--space-md); /* 16px debajo del título */
+}
+
+.main-content__title {
+    font-size: var(--font-size-desktop-h1); /* 24px */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+
+.main-content__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas responsivas */
+    gap: var(--space-xl); /* 24px de espacio entre widgets */
+}

@@ -1,0 +1,68 @@
+/* ==================================== */
+/* _cards.css - Organismo: Tarjeta      */
+/* ==================================== */
+
+.card {
+    /* Esta es la tarjeta base para nuestros widgets */
+    background-color: var(--color-surface-widget); /* #FFFFFF */
+    border-radius: var(--border-radius-md); /* 8px */
+    border: 1px solid var(--color-border-light); /* Gris-200, para definición sutil */
+    box-shadow: var(--shadow-sm); /* Sombra muy sutil para 'flotar' */
+    width: 100%;
+    overflow: hidden; /* Para contener los bordes de los elementos hijos */
+}
+
+.card__header {
+    /* El contenedor del título del widget */
+    padding: var(--space-xl) var(--space-xl) var(--space-md) var(--space-xl); /* 24px, 24px, 16px, 24px */
+    border-bottom: 1px solid var(--color-border-light); /* Separador */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card__header-title {
+    /* El título H2 en sí */
+    font-size: var(--font-size-desktop-h2); /* 20px */
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-text-primary);
+}
+
+.card__header-action {
+    /* El 'slot' para el icono de chevron o enlace */
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-action-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xxs); /* 4px */
+}
+
+.card__header-action:hover {
+    text-decoration: underline;
+}
+
+.card__body {
+    /* El contenedor principal para el contenido del widget */
+    padding: var(--space-xl); /* 24px */
+}
+
+/* Modificador para listas (como el widget de alertas) */
+.card__body--no-padding {
+    padding: 0;
+}
+
+/* ------------------------------------ */
+/* Card Footer                          */
+/* ------------------------------------ */
+.card__footer {
+    padding: var(--space-xl); /* 24px */
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    justify-content: flex-end; /* Alinear botones a la derecha */
+    gap: var(--space-md); /* Espacio entre botones */
+    background-color: var(--color-surface-page); /* Fondo ligeramente diferente para destacar */
+    border-bottom-left-radius: var(--border-radius-md);
+    border-bottom-right-radius: var(--border-radius-md);
+}

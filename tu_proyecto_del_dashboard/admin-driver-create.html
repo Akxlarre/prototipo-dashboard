@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Registrar Chofer</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_modal.css">
+    <link rel="stylesheet" href="css/components/_alert-row.css">
+    <link rel="stylesheet" href="css/components/_chart-controls.css">
+    <link rel="stylesheet" href="css/components/_chart.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo"></div>
+                <span class="sidebar__app-name">Nombre de la App</span>
+            </div>
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                    Dashboard
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                    Máquinas
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-choferes"></span>
+                    Choferes
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                    Contabilidad
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-reportes"></span>
+                    Reportes
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                    Configuración
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-content__header">
+                <h1 class="main-content__title">Registrar Nuevo Chofer</h1>
+                <p class="main-content__subtitle">Completa la información para añadir un nuevo chofer al sistema.</p>
+            </header>
+
+            <div class="card" style="max-width: 800px;"> 
+                <div class="card__header">
+                    <h2 class="card__header-title">Datos del Chofer</h2>
+                </div>
+                <div class="card__body">
+                    <form>
+                        <div class="form-field">
+                            <label for="driver-name" class="form-field__label">Nombre Completo</label>
+                            <input type="text" id="driver-name" class="input-text" placeholder="Ej: Juan Pérez Sánchez">
+                        </div>
+                        <div class="form-field">
+                            <label for="driver-rut" class="form-field__label">RUT</label>
+                            <input type="text" id="driver-rut" class="input-text" placeholder="Ej: 12.345.678-9">
+                        </div>
+                        <div class="form-field">
+                            <label for="driver-phone" class="form-field__label">Teléfono</label>
+                            <input type="tel" id="driver-phone" class="input-text" placeholder="Ej: +56 9 1234 5678">
+                        </div>
+                        <div class="form-field">
+                            <label for="driver-email" class="form-field__label">Correo Electrónico</label>
+                            <input type="email" id="driver-email" class="input-text" placeholder="Ej: juan.perez@dominio.com">
+                        </div>
+                        <div class="form-field">
+                            <label for="driver-status" class="form-field__label">Estado</label>
+                            <select id="driver-status" class="input-text">
+                                <option value="active">Activo</option>
+                                <option value="inactive">Inactivo</option>
+                                <option value="on-leave">De Licencia</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="license-number" class="form-field__label">Número de Licencia</label>
+                            <input type="text" id="license-number" class="input-text" placeholder="Ej: 98765432-1">
+                        </div>
+                        <div class="form-field">
+                            <label for="license-expiry" class="form-field__label">Fecha de Vencimiento de Licencia</label>
+                            <input type="date" id="license-expiry" class="input-text">
+                        </div>
+                    </form>
+                </div>
+                <div class="card__footer">
+                    <a href="admin-drivers-list.html" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary" id="save-driver-button">Guardar Chofer</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const saveButton = document.getElementById('save-driver-button');
+            const formFields = document.querySelectorAll('.card__body .input-text');
+
+            function checkFormValidity() {
+                let allFilled = true;
+                formFields.forEach(field => {
+                    if (field.value.trim() === '') {
+                        allFilled = false;
+                    }
+                });
+
+                if (allFilled) {
+                    saveButton.removeAttribute('disabled');
+                    saveButton.classList.remove('btn-primary--disabled');
+                } else {
+                    saveButton.setAttribute('disabled', 'true');
+                    saveButton.classList.add('btn-primary--disabled');
+                }
+            }
+
+            formFields.forEach(field => {
+                field.addEventListener('input', checkFormValidity);
+                field.addEventListener('change', checkFormValidity);
+            });
+
+            checkFormValidity();
+            
+            saveButton.addEventListener('click', (e) => {
+                if (!saveButton.hasAttribute('disabled')) {
+                    e.preventDefault();
+                    alert('Chofer registrado exitosamente (simulado)!');
+                    window.location.href = 'admin-drivers-list.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

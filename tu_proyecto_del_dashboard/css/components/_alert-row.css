@@ -1,0 +1,77 @@
+/* ==================================== */
+/* _alert-row.css - Organismo: Fila de Alerta */
+/* ==================================== */
+
+.alert-row {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los ítems */
+    padding: var(--space-md) var(--space-xl); /* 16px vertical, 24px horizontal */
+    border-bottom: 1px solid var(--color-border-light); /* Separador entre filas */
+    gap: var(--space-md); /* 16px de espacio entre la barra y el texto */
+    text-decoration: none; /* Asegura que no se subraye si el contenedor es un <a> */
+    color: var(--color-text-primary); /* Para que el texto principal herede el color */
+}
+
+/* Estado de Hover para la fila completa */
+.alert-row:hover {
+    background-color: var(--color-surface-page); /* Gris-50 */
+    cursor: pointer;
+}
+
+/* ------------------------------------ */
+/* Átomo: Barra de Estado               */
+/* ------------------------------------ */
+.alert-row__status-bar {
+    flex-shrink: 0; /* Evita que la barra se encoja */
+    width: var(--space-xxs); /* 4px de ancho */
+    height: var(--space-xxxl); /* 36px de altura, para que sea visible */
+    border-radius: var(--border-radius-sm); /* 4px */
+}
+
+.alert-row__status-bar--error {
+    background-color: var(--color-state-error); /* Rojo-600 */
+}
+
+.alert-row__status-bar--warning {
+    background-color: var(--color-state-warning); /* Ámbar-500 */
+}
+
+.alert-row__status-bar--approved {
+    background-color: var(--color-state-success); /* Verde-600 */
+}
+
+.alert-row__status-bar--pending {
+    background-color: var(--color-state-warning); /* Ámbar-500 */
+}
+
+/* ------------------------------------ */
+/* Átomo: Texto de la Alerta            */
+/* ------------------------------------ */
+.alert-row__text {
+    flex-grow: 1; /* Permite que el texto ocupe el espacio restante */
+    font-size: var(--font-size-desktop-base); /* 16px */
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-desktop-base);
+    color: inherit; /* Hereda del .alert-row */
+}
+
+/* ------------------------------------ */
+/* Átomo: Enlace de Acción              */
+/* ------------------------------------ */
+.alert-row__action-link {
+    flex-shrink: 0; /* Evita que el enlace se encoja */
+    font-size: var(--font-size-desktop-base); /* 16px */
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-action-primary); /* Azul-600 */
+    text-decoration: none;
+    padding-left: var(--space-md); /* Espacio extra para separar del texto si el gap no es suficiente */
+}
+
+.alert-row__action-link:hover {
+    text-decoration: underline;
+}
+
+/* Eliminar el borde inferior de la última fila en una lista */
+.alert-row:last-child {
+    border-bottom: none;
+}

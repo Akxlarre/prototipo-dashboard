@@ -1,0 +1,60 @@
+/* ==================================== */
+/* _inputs.css - Átomo: Inputs de Texto */
+/* ==================================== */
+
+.input-text {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md); /* 12px vertical, 16px horizontal (Web Base) */
+    border: 1px solid var(--color-border-medium); /* Gris-300 */
+    border-radius: var(--border-radius-md); /* 8px */
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-desktop-base); /* Base de escritorio */
+    line-height: var(--line-height-desktop-base);
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-widget); /* Blanco */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-text:hover {
+    border-color: var(--color-text-disabled); /* Gris-400 */
+}
+
+.input-text:focus {
+    outline: none;
+    border-color: var(--color-action-primary); /* Azul-600 */
+    box-shadow: 0 0 0 3px var(--color-action-focus-outline); /* Brillo Azul-300 */
+}
+
+.input-text:disabled {
+    background-color: var(--color-surface-page); /* Gris-50 */
+    border-color: var(--color-border-light); /* Gris-200 */
+    color: var(--color-text-disabled); /* Gris-400 */
+    cursor: not-allowed;
+}
+
+/* Estado de Error para Input */
+.input-text.is-error {
+    border-color: var(--color-state-error); /* Rojo-600 */
+}
+
+.input-text.is-error:focus {
+    border-color: var(--color-state-error);
+    box-shadow: 0 0 0 3px rgba(var(--color-state-error), 0.3); /* Un brillo rojo sutil */
+}
+
+/* Placeholder Styling */
+.input-text::placeholder {
+    color: var(--color-text-disabled); /* Gris-400 */
+    font-weight: var(--font-weight-regular);
+}
+
+/* ------------------------------------ */
+/* Utilidad: Altura de Input para móvil */
+/* (Se usará con @media para sobrescribir el padding base) */
+/* ------------------------------------ */
+.input-mobile-height {
+    padding: var(--space-md); /* Ajustar padding para altura de 56px con font-size mobile */
+    min-height: var(--space-xxxxxl); /* 56px */
+    font-size: var(--font-size-mobile-base);
+    line-height: var(--line-height-mobile-base);
+}

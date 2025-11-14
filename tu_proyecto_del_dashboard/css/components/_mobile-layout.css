@@ -1,0 +1,102 @@
+/* ==================================== */
+/* _mobile-layout.css - Layout Móvil    */
+/* ==================================== */
+
+/* Contenedor principal de la app móvil */
+.mobile-app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ocupa toda la altura disponible */
+    background-color: var(--color-surface-page); /* Gris-50 */
+    font-family: var(--font-family-base);
+    color: var(--color-text-primary);
+}
+
+/* Área de Contenido Principal Móvil */
+.mobile-content {
+    flex-grow: 1; /* Ocupa el espacio restante */
+    padding: var(--space-xl); /* 24px de padding general */
+    overflow-y: auto; /* Permite scroll si el contenido es largo */
+    padding-bottom: calc(var(--space-xxxxxl) + var(--space-xl)); /* Deja espacio para la nav bar */
+}
+
+.mobile-header {
+    margin-bottom: var(--space-xxl); /* 32px */
+    text-align: center;
+}
+
+.mobile-header--align-left {
+    text-align: left;
+}
+
+.mobile-header__title {
+    font-size: var(--font-size-mobile-h1); /* 24px */
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xs); /* 8px */
+}
+
+.mobile-header__subtitle {
+    font-size: var(--font-size-mobile-base); /* 18px */
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-secondary);
+}
+
+/* ------------------------------------ */
+/* Navegación Inferior Móvil            */
+/* ------------------------------------ */
+.mobile-nav-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed; /* Fijo en la parte inferior */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--space-xxxxxl); /* 56px de altura */
+    background-color: var(--color-surface-widget); /* Blanco */
+    border-top: 1px solid var(--color-border-light); /* Borde superior sutil */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+    padding: var(--space-xs) 0;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text-secondary); /* Gris-600 */
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    transition: color 0.2s ease;
+}
+
+.mobile-nav-item:hover {
+    color: var(--color-action-primary); /* Azul-600 */
+}
+
+.mobile-nav-item.is-active {
+    color: var(--color-action-primary); /* Azul-600 */
+}
+
+.mobile-nav-item__icon {
+    width: var(--space-lg); /* 20px */
+    height: var(--space-lg);
+    margin-bottom: var(--space-xxs); /* 4px */
+    fill: currentColor;
+}
+
+/* ------------------------------------ */
+/* Ajustes de tipografía para móvil (sobrescribiendo base.css) */
+/* ------------------------------------ */
+@media (max-width: 768px) { /* Define un breakpoint para dispositivos móviles */
+    body {
+        font-size: var(--font-size-mobile-base);
+        line-height: var(--line-height-mobile-base);
+    }
+    h1 {
+        font-size: var(--font-size-mobile-h1);
+        line-height: var(--line-height-mobile-h1);
+    }
+    /* Añadir más ajustes si es necesario para h2, etc. */
+}
+

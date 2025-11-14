@@ -1,0 +1,88 @@
+/* ==================================== */
+/* _chart-controls.css                  */
+/* Moléculas para controles de gráficos */
+/* ==================================== */
+
+.chart-controls {
+    display: flex;
+    justify-content: space-between; /* Alinea los ítems a los extremos */
+    align-items: center;
+    padding-top: var(--space-md); /* 16px de espacio superior */
+    padding-bottom: var(--space-xl); /* 24px de espacio inferior (antes del KPI) */
+}
+
+/* ------------------------------------ */
+/* Molécula: Grupo de Botones Segmentados (Toggle) */
+/* ------------------------------------ */
+.segmented-button-group {
+    display: inline-flex;
+    border-radius: var(--border-radius-md); /* 8px */
+    overflow: hidden; /* Corta los bordes internos */
+    border: 1px solid var(--color-border-medium); /* Borde Gris-300 para el grupo */
+}
+
+.segmented-button {
+    /* Base para cada botón dentro del grupo */
+    padding: var(--space-xs) var(--space-md); /* 8px vertical, 16px horizontal */
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-desktop-label);
+    color: var(--color-text-secondary); /* Gris-600 */
+    background-color: var(--color-surface-widget); /* Blanco */
+    border: none; /* No queremos bordes internos */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.segmented-button:first-child {
+    border-top-left-radius: var(--border-radius-md);
+    border-bottom-left-radius: var(--border-radius-md);
+}
+
+.segmented-button:last-child {
+    border-top-right-radius: var(--border-radius-md);
+    border-bottom-right-radius: var(--border-radius-md);
+}
+
+
+/* Estado Activo para Botón Segmentado */
+.segmented-button.is-active {
+    background-color: var(--color-action-primary); /* Azul-600 */
+    color: var(--color-action-text-light); /* Blanco */
+    font-weight: var(--font-weight-semi-bold);
+    border-color: var(--color-action-primary); /* Se asegura que el borde sea azul si sobrescribe */
+}
+
+/* ------------------------------------ */
+/* Molécula: Selector de Rango de Fechas (Input con Icono) */
+/* ------------------------------------ */
+.date-range-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 200px; /* Ancho fijo para el ejemplo */
+}
+
+.date-range-input__icon {
+    position: absolute;
+    left: var(--space-md); /* 16px */
+    color: var(--color-text-secondary); /* Gris-600 */
+    pointer-events: none; /* Permite hacer clic en el input subyacente */
+}
+
+.date-range-input__field {
+    /* Reutilizamos las clases de input-text */
+    padding-left: var(--space-xxl); /* 24px + 16px = 40px para el icono */
+    cursor: pointer; /* Indica que es interactivo */
+}
+
+/* Ajustes de tipografía para el input de fecha, más pequeño */
+.date-range-input__field {
+    font-size: var(--font-size-desktop-label); /* 14px */
+    line-height: var(--line-height-desktop-label);
+    min-height: var(--space-xxxxl); /* 48px de altura (para que el icono se vea bien) */
+    padding-top: var(--space-xs); /* Ajuste fino para la altura */
+    padding-bottom: var(--space-xs);
+}
+

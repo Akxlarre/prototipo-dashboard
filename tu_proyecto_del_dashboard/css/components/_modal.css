@@ -1,0 +1,92 @@
+/* ==================================== */
+/* _modal.css - Molécula: Modal         */
+/* ==================================== */
+
+/* ------------------------------------ */
+/* Overlay del Modal                    */
+/* ------------------------------------ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de todo */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ------------------------------------ */
+/* Contenido del Modal                  */
+/* ------------------------------------ */
+.modal-content {
+    background-color: var(--color-surface-widget); /* Blanco */
+    border-radius: var(--border-radius-lg); /* 12px */
+    box-shadow: var(--shadow-xl);
+    width: 90%; /* Ancho responsivo */
+    max-width: 500px; /* Ancho máximo para desktop */
+    transform: translateY(20px); /* Pequeño desplazamiento inicial */
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Para modals largos */
+}
+
+.modal-overlay.is-active .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-header {
+    padding: var(--space-xl); /* 24px */
+    border-bottom: 1px solid var(--color-border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header__title {
+    font-size: var(--font-size-desktop-h2); /* 20px */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    padding: var(--space-xs); /* 8px */
+    cursor: pointer;
+    font-size: var(--font-size-desktop-h2);
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    color: var(--color-text-primary);
+}
+
+.modal-body {
+    padding: var(--space-xl); /* 24px */
+    overflow-y: auto; /* Permite scroll si el contenido es largo */
+    flex-grow: 1; /* Para que ocupe el espacio disponible */
+}
+
+.modal-footer {
+    padding: var(--space-xl); /* 24px */
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    justify-content: flex-end; /* Botones a la derecha */
+    gap: var(--space-md); /* Espacio entre botones */
+}
+

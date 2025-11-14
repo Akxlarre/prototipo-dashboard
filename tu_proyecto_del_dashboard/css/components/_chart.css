@@ -1,0 +1,65 @@
+/* ==================================== */
+/* _chart.css - Organismo: Gráfico      */
+/* ==================================== */
+
+.chart-kpi {
+    text-align: center;
+    margin-bottom: var(--space-xl); /* 24px de espacio antes del gráfico */
+}
+
+.chart-kpi__label {
+    font-size: var(--font-size-desktop-base); /* 16px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    display: block; /* Asegura que ocupe su propia línea */
+    margin-bottom: var(--space-xxs); /* 4px */
+}
+
+.chart-kpi__value {
+    font-size: var(--font-size-xxxl); /* 36px */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    display: block;
+}
+
+/* ------------------------------------ */
+/* Contenedor del Gráfico de Barras (Visual solamente) */
+/* ------------------------------------ */
+.chart-container {
+    height: 200px; /* Altura fija para el área del gráfico */
+    display: flex;
+    align-items: flex-end; /* Las barras crecen desde abajo */
+    gap: var(--space-sm); /* Espacio entre barras */
+    padding: var(--space-sm); /* Un pequeño padding interno */
+    border-top: 1px dashed var(--color-border-light); /* Una línea de cuadrícula superior */
+    position: relative; /* Para las líneas de cuadrícula */
+}
+
+/* Líneas de cuadrícula horizontales sutiles */
+.chart-container::before,
+.chart-container::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    border-top: 1px dashed var(--color-border-light);
+    left: 0;
+    z-index: 0; /* Asegura que las barras estén encima */
+}
+.chart-container::before { top: 25%; } /* Línea en el 25% de altura */
+.chart-container::after { top: 75%; } /* Línea en el 75% de altura */
+
+
+/* Estilo de Barra (para ejemplo visual) */
+.chart-bar {
+    width: 20px; /* Ancho fijo para cada barra */
+    background-color: var(--color-action-primary); /* Azul-600 */
+    border-radius: var(--border-radius-sm); /* 4px */
+    transition: background-color 0.2s ease;
+    cursor: help; /* Para indicar que podría haber un tooltip */
+    z-index: 1; /* Para que esté por encima de las líneas de cuadrícula */
+}
+
+.chart-bar:hover {
+    background-color: var(--color-action-primary-hover); /* Azul-700 en hover */
+}
+

@@ -1,0 +1,61 @@
+/* ==================================== */
+/* _forms.css - Moléculas de Formulario */
+/* ==================================== */
+
+.form-field {
+    /* Esta es la 'molécula' contenedora */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-field__label {
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary); /* Usamos primario para alta legibilidad */
+    margin-bottom: var(--space-xs); /* 8px */
+}
+
+.form-field__input {
+    /* Esto es solo un 'slot' donde irá nuestro .input-text */
+    /* No necesita estilos, ya que .input-text los tiene */
+}
+
+.form-field__helper-text {
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-secondary); /* Gris-600 */
+    margin-top: var(--space-xs); /* 8px */
+}
+
+.form-field__error-text {
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-regular);
+    color: var(--color-state-error); /* Rojo-600 */
+    margin-top: var(--space-xs); /* 8px */
+    
+    /* Para accesibilidad (A11y), podríamos añadir un icono */
+    display: flex;
+    align-items: center;
+    gap: var(--space-xxs); /* 4px */
+}
+
+/* ------------------------------------ */
+/* Modificador para el Flujo Móvil      */
+/* ------------------------------------ */
+.form-field--mobile {
+    margin-bottom: var(--space-xl); /* 24px de separación */
+}
+
+.form-field--mobile .form-field__label {
+    font-size: var(--font-size-mobile-label); /* 16px */
+    line-height: var(--line-height-mobile-label);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.form-field--mobile .form-field__helper-text,
+.form-field--mobile .form-field__error-text {
+    font-size: var(--font-size-mobile-step); /* 14px */
+}
+

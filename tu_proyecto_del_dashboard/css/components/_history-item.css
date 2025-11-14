@@ -1,0 +1,74 @@
+/* ==================================== */
+/* _history-item.css - Molécula: Ítem de Historial */
+/* ==================================== */
+
+.history-item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg); /* 20px */
+    background-color: var(--color-surface-widget); /* Blanco */
+    border-radius: var(--border-radius-md); /* 8px */
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-md); /* 16px entre ítems */
+    text-decoration: none; /* Asegura que no se subraye si es un <a> */
+    color: var(--color-text-primary);
+    transition: box-shadow 0.2s ease;
+}
+
+.history-item:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.history-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md); /* 16px */
+}
+
+.history-item__date {
+    font-size: var(--font-size-mobile-label); /* 16px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+.history-item__status {
+    font-size: var(--font-size-mobile-step); /* 14px */
+    font-weight: var(--font-weight-semi-bold);
+    padding: var(--space-xxs) var(--space-xs); /* 4px vertical, 8px horizontal */
+    border-radius: var(--border-radius-sm); /* 4px */
+    text-transform: uppercase;
+}
+
+.history-item__status--approved {
+    background-color: rgba(var(--color-state-success), 0.1); /* Verde suave */
+    color: var(--color-state-success);
+}
+
+.history-item__status--pending {
+    background-color: rgba(var(--color-state-warning), 0.1); /* Ámbar suave */
+    color: var(--color-state-warning);
+}
+
+.history-item__detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-xs); /* 8px */
+}
+
+.history-item__label {
+    font-size: var(--font-size-mobile-step); /* 14px */
+    color: var(--color-text-secondary);
+}
+
+.history-item__value {
+    font-size: var(--font-size-mobile-label); /* 16px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+/* Último item sin margen inferior */
+.history-item:last-of-type {
+    margin-bottom: 0;
+}
+
