@@ -1,16 +1,16 @@
 /* ==================================== */
-/* _tabs.css - Componente: Pestañas     */
+/* _tabs.css - Componente: Pestanas     */
 /* ==================================== */
 
 .tabs-container {
     width: 100%;
-    border-bottom: 1px solid var(--color-border-medium); /* Línea base */
+    border-bottom: 1px solid var(--color-border-medium); /* Linea base */
     margin-bottom: var(--space-xl); /* Espacio antes del contenido */
 }
 
 .tabs-list {
     display: flex;
-    gap: var(--space-md); /* 16px de espacio entre pestañas */
+    gap: var(--space-md); /* 16px de espacio entre pestanas */
 }
 
 .tab-item {
@@ -22,7 +22,7 @@
     border: none;
     border-bottom: 2px solid transparent; /* Borde inferior inactivo */
     cursor: pointer;
-    margin-bottom: -1px; /* Alinea el borde activo con la línea base */
+    margin-bottom: -1px; /* Mantiene alineado el borde activo */
     transition: color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -41,6 +41,5 @@
 }
 
 .tab-content.is-active {
-    display: block; /* Visible cuando está activo */
+    display: block; /* Visible cuando esta activo */
 }
-

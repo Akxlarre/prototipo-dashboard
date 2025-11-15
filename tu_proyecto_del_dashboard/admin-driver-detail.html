@@ -79,6 +79,7 @@
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Correo:** <span id="driver-email-view">juan.perez@dominio.com</span></p>
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**RUT:** <span id="driver-rut-view">12.345.678-9</span></p>
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Estado:** <span id="driver-status-view">Activo</span></p>
+                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**% Pago Individual:** <span id="driver-split-view" data-raw="30">30%</span></p>
                                 </div>
                             </div>
                         </div>
@@ -107,6 +108,16 @@
                                         <option value="Inactivo">Inactivo</option>
                                         <option value="De Licencia">De Licencia</option>
                                     </select>
+                                </div>
+                                <div class="form-field">
+                                    <label for="driver-split-input" class="form-field__label">% Pago Individual</label>
+                                    <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                                        <input type="number" id="driver-split-input" class="input-text" value="30" min="0" max="100" step="0.5" style="max-width: 140px;">
+                                        <span>%</span>
+                                    </div>
+                                    <p class="form-field__helper-text">
+                                        Este porcentaje reemplaza el valor por defecto configurado en <strong>Configuración</strong> al calcular la liquidación del chofer.
+                                    </p>
                                 </div>
                             </form>
                         </div>
@@ -202,19 +213,79 @@
             const driverEmailView = document.getElementById('driver-email-view');
             const driverRutView = document.getElementById('driver-rut-view');
             const driverStatusView = document.getElementById('driver-status-view');
+            const driverSplitView = document.getElementById('driver-split-view');
 
             const driverNameInput = document.getElementById('driver-name-input');
             const driverRutInput = document.getElementById('driver-rut-input');
             const driverPhoneInput = document.getElementById('driver-phone-input');
             const driverEmailInput = document.getElementById('driver-email-input');
             const driverStatusInput = document.getElementById('driver-status-input');
+            const driverSplitInput = document.getElementById('driver-split-input');
+
+            const DRIVER_SPLIT_STORAGE_KEY = 'driverSplitPercentages';
+            const DEFAULT_PERCENTAGE_KEY = 'cfg_porcentajeDefectoChofer';
+            const driverIdValue = driverIdView ? driverIdView.textContent.trim() : (driverNameView ? driverNameView.textContent.trim() : 'driver');
+
+            const safeJSONParse = (value, fallback = {}) => {
+                try {
+                    return value ? JSON.parse(value) : fallback;
+                } catch {
+                    return fallback;
+                }
+            };
+
+            const getDefaultPercentage = () => {
+                const stored = Number(localStorage.getItem(DEFAULT_PERCENTAGE_KEY));
+                return Number.isFinite(stored) ? stored : 30;
+            };
+
+            const getSplitStore = () => safeJSONParse(localStorage.getItem(DRIVER_SPLIT_STORAGE_KEY), {});
+
+            const applyDriverSplit = (value) => {
+                if (!driverSplitView) return;
+                const numeric = Number(value);
+                if (Number.isFinite(numeric)) {
+                    driverSplitView.textContent = `${numeric}%`;
+                    driverSplitView.dataset.raw = numeric;
+                } else {
+                    driverSplitView.textContent = 'Sin definir';
+                    driverSplitView.dataset.raw = '';
+                }
+            };
+
+            const persistDriverSplit = (value) => {
+                if (!driverSplitInput || !driverSplitView) return;
+                const store = getSplitStore();
+                const numeric = Number(value);
+                if (Number.isFinite(numeric)) {
+                    store[driverIdValue] = numeric;
+                } else {
+                    delete store[driverIdValue];
+                }
+                localStorage.setItem(DRIVER_SPLIT_STORAGE_KEY, JSON.stringify(store));
+                applyDriverSplit(numeric);
+            };
+
+            const loadDriverSplit = () => {
+                if (!driverSplitInput || !driverSplitView) return;
+                const store = getSplitStore();
+                let value = store[driverIdValue];
+                if (!Number.isFinite(value)) {
+                    value = getDefaultPercentage();
+                }
+                driverSplitInput.value = value;
+                applyDriverSplit(value);
+            };
+
+            loadDriverSplit();
 
             let initialGeneralData = {
                 name: driverNameView.textContent,
                 rut: driverRutView.textContent,
                 phone: driverPhoneView.textContent,
                 email: driverEmailView.textContent,
-                status: driverStatusView.textContent
+                status: driverStatusView.textContent,
+                split: driverSplitInput ? driverSplitInput.value : (driverSplitView ? driverSplitView.dataset.raw : '')
             };
 
             function toggleGeneralInfoEditMode(enable) {
@@ -229,13 +300,17 @@
                     driverPhoneInput.value = driverPhoneView.textContent;
                     driverEmailInput.value = driverEmailView.textContent;
                     driverStatusInput.value = driverStatusView.textContent;
+                    if (driverSplitInput && driverSplitView) {
+                        driverSplitInput.value = driverSplitView.dataset.raw || driverSplitInput.value || getDefaultPercentage();
+                    }
 
                     initialGeneralData = {
                         name: driverNameView.textContent,
                         rut: driverRutView.textContent,
                         phone: driverPhoneView.textContent,
                         email: driverEmailView.textContent,
-                        status: driverStatusView.textContent
+                        status: driverStatusView.textContent,
+                        split: driverSplitInput ? driverSplitInput.value : (driverSplitView ? driverSplitView.dataset.raw : '')
                     };
                 } else {
                     generalInfoView.style.display = 'block';
@@ -253,6 +328,9 @@
                 driverPhoneInput.value = initialGeneralData.phone;
                 driverEmailInput.value = initialGeneralData.email;
                 driverStatusInput.value = initialGeneralData.status;
+                if (driverSplitInput) {
+                    driverSplitInput.value = initialGeneralData.split || getDefaultPercentage();
+                }
 
                 toggleGeneralInfoEditMode(false);
             });
@@ -263,13 +341,17 @@
                 driverPhoneView.textContent = driverPhoneInput.value;
                 driverEmailView.textContent = driverEmailInput.value;
                 driverStatusView.textContent = driverStatusInput.value;
+                if (driverSplitInput) {
+                    persistDriverSplit(driverSplitInput.value);
+                }
 
                 initialGeneralData = {
                     name: driverNameInput.value,
                     rut: driverRutInput.value,
                     phone: driverPhoneInput.value,
                     email: driverEmailInput.value,
-                    status: driverStatusInput.value
+                    status: driverStatusInput.value,
+                    split: driverSplitInput ? driverSplitInput.value : initialGeneralData.split
                 };
 
                 alert('Información General actualizada (simulado)!');

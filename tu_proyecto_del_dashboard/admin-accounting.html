@@ -140,7 +140,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-min-guaranteed="400000">
+                                    <tr data-driver-id="CH001" data-min-guaranteed="400000">
                                         <td>Juan Pérez</td>
                                         <td data-total-earned="450000">$ 450.000</td>
                                         <td>$ 400.000</td>
@@ -152,7 +152,7 @@
                                             <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
                                         </td>
                                     </tr>
-                                    <tr data-min-guaranteed="400000">
+                                    <tr data-driver-id="CH002" data-min-guaranteed="400000">
                                         <td>Pedro López</td>
                                         <td data-total-earned="380000">$ 380.000</td>
                                         <td>$ 400.000</td>
@@ -164,7 +164,7 @@
                                             <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
                                         </td>
                                     </tr>
-                                    <tr data-min-guaranteed="400000">
+                                    <tr data-driver-id="CH003" data-min-guaranteed="400000">
                                         <td>María Gómez</td>
                                         <td data-total-earned="350000">$ 350.000</td>
                                         <td>$ 400.000</td>
@@ -191,6 +191,22 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const safeJSONParse = (value, fallback = {}) => {
+                try {
+                    return value ? JSON.parse(value) : fallback;
+                } catch {
+                    return fallback;
+                }
+            };
+
+            const DEFAULT_PERCENTAGE_KEY = 'cfg_porcentajeDefectoChofer';
+            const DRIVER_SPLIT_STORAGE_KEY = 'driverSplitPercentages';
+
+            const getDefaultPercentage = () => {
+                const stored = Number(localStorage.getItem(DEFAULT_PERCENTAGE_KEY));
+                return Number.isFinite(stored) ? stored : 30;
+            };
+
             // --- Lógica de Pestañas (Tabs) ---
             const tabButtons = document.querySelectorAll('.tab-item');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -215,40 +231,70 @@
             // --- Lógica de Liquidación (Payroll) ---
             const payrollTable = document.getElementById('payroll-table');
             if (payrollTable) {
-                function calculateFinalPayment(row) {
-                    const totalEarnedCell = row.querySelector('[data-total-earned]');
-                    const missingAmountInput = row.querySelector('.payroll-missing-amount');
-                    const finalPaymentCell = row.querySelector('.payroll-final-payment');
-                    
-                    const totalEarned = parseFloat(totalEarnedCell.dataset.totalEarned) || 0;
-                    const missingAmount = parseFloat(missingAmountInput.value) || 0;
-                    
-                    const finalPayment = totalEarned + missingAmount;
-                    finalPaymentCell.textContent = `$ ${finalPayment.toLocaleString('es-CL')}`;
-                }
+                const driverSplitMap = safeJSONParse(localStorage.getItem(DRIVER_SPLIT_STORAGE_KEY), {});
+                const defaultDriverPercentage = getDefaultPercentage();
 
-                function initializePayrollRow(row) {
+                const formatCurrency = (value) => {
+                    const numeric = Number(value) || 0;
+                    return `$ ${numeric.toLocaleString('es-CL')}`;
+                };
+
+                const resolveDriverPercentage = (row) => {
+                    const driverId = row.dataset.driverId;
+                    let value = driverId ? driverSplitMap[driverId] : undefined;
+                    if (value === undefined) {
+                        const driverNameCell = row.querySelector('td');
+                        const driverName = driverNameCell ? driverNameCell.textContent.trim() : '';
+                        value = driverSplitMap[driverName];
+                    }
+                    const numeric = Number(value);
+                    return Number.isFinite(numeric) ? numeric : defaultDriverPercentage;
+                };
+
+                const computeBasePayment = (totalEarned, percentage) => Math.round((totalEarned * percentage) / 100);
+
+                const renderFinalPayment = (row) => {
+                    const finalPaymentCell = row.querySelector('.payroll-final-payment');
+                    const basePayment = Number(row.dataset.basePayment) || 0;
+                    const missingAmountInput = row.querySelector('.payroll-missing-amount');
+                    const missingAmount = parseFloat(missingAmountInput.value) || 0;
+                    const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
+                    const appliedPercentage = row.dataset.splitPercentage || defaultDriverPercentage;
+                    const totalPayment = basePayment + missingAmount;
+
+                    finalPaymentCell.innerHTML = `
+                        <div>${formatCurrency(totalPayment)}</div>
+                        <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
+                            ${appliedPercentage}% aplicado · Mínimo: ${formatCurrency(minGuaranteed)}
+                        </div>
+                    `;
+                };
+
+                payrollTable.querySelectorAll('tbody tr').forEach(row => {
                     const totalEarned = parseFloat(row.querySelector('[data-total-earned]').dataset.totalEarned) || 0;
                     const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
                     const missingAmountInput = row.querySelector('.payroll-missing-amount');
-                    
-                    if (totalEarned >= minGuaranteed) {
-                        missingAmountInput.value = 0;
+                    const percentage = resolveDriverPercentage(row);
+                    row.dataset.splitPercentage = percentage;
+
+                    const basePayment = computeBasePayment(totalEarned, percentage);
+                    row.dataset.basePayment = basePayment;
+
+                    const requiredTopUp = Math.max(minGuaranteed - basePayment, 0);
+                    missingAmountInput.value = requiredTopUp;
+                    if (requiredTopUp === 0) {
                         missingAmountInput.setAttribute('disabled', 'true');
                     } else {
-                        const missingAmount = minGuaranteed - totalEarned;
-                        missingAmountInput.value = missingAmount;
                         missingAmountInput.removeAttribute('disabled');
                     }
-                    
-                    calculateFinalPayment(row);
+
+                    renderFinalPayment(row);
+
                     missingAmountInput.addEventListener('input', () => {
-                        calculateFinalPayment(row);
+                        const value = Math.max(0, Number(missingAmountInput.value) || 0);
+                        missingAmountInput.value = value;
+                        renderFinalPayment(row);
                     });
-                }
-                
-                payrollTable.querySelectorAll('tbody tr').forEach(row => {
-                    initializePayrollRow(row);
                 });
 
                 document.getElementById('save-payroll-button').addEventListener('click', () => {

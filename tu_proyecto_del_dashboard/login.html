@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesi�n - Sistema de Flota</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+
+    <style>
+        body {
+            background: var(--color-background, #f5f6f7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: var(--space-lg);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: var(--space-xl);
+        }
+
+        .login-title {
+            font-size: 1.6rem;
+            font-weight: var(--font-weight-semi-bold);
+            margin-bottom: var(--space-xs);
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 0.95rem;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+
+        .divider {
+            text-align: center;
+            margin: var(--space-lg) 0;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .quick-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .login-footer-links {
+            margin-top: var(--space-lg);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .login-footer-links a {
+            color: var(--color-action-primary);
+            text-decoration: none;
+        }
+
+        .login-footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="card login-card">
+        <div style="text-align: center; margin-bottom: var(--space-md);">
+            <div class="sidebar__logo" style="margin: 0 auto var(--space-sm);"></div>
+            <span class="sidebar__app-name" style="font-size: 0.95rem;">Nombre de la App</span>
+        </div>
+        <h1 class="login-title">Iniciar Sesión</h1>
+        <p class="login-subtitle">Accede al sistema para gestionar tu flota</p>
+
+        <form id="login-form">
+            <div class="form-field">
+                <label class="form-field__label" for="email">Correo electrónico</label>
+                <input id="email" type="email" class="input-text" placeholder="ejemplo@correo.com" required>
+            </div>
+
+            <div class="form-field">
+                <label class="form-field__label" for="password">Contraseña</label>
+                <input id="password" type="password" class="input-text" placeholder="********" required>
+            </div>
+
+            <button type="submit" id="login-submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div class="divider">o acceder rápidamente</div>
+
+        <div class="quick-buttons">
+            <button class="btn btn-secondary" id="login-admin-btn">Entrar como Administrador</button>
+            <button class="btn btn-secondary" id="login-worker-btn">Entrar como Trabajador</button>
+        </div>
+
+        <div class="login-footer-links">
+            <a href="#" aria-disabled="true">Recuperar contraseña</a>
+            <a href="#" aria-disabled="true">¿Necesitas ayuda?</a>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

@@ -169,19 +169,12 @@
                                 </p>
                             </div>
                             <div class="summary-badges">
-                                <span class="summary-badge">2 registros incompletos</span>
-                                <span class="summary-badge">2 documentos por vencer</span>
+                                <span class="summary-badge">1 registros incompletos</span>
+                                <span class="summary-badge">3 documentos por vencer</span>
                             </div>
                         </div>
                         <div class="card__body card__body--no-padding"> 
-                            <!-- Registros incompletos -->
-                            <div class="alert-row">
-                                <div class="alert-row__status-bar alert-row__status-bar--error"></div>
-                                <span class="alert-row__text">
-                                    Máquina 05 (Ayer) · Estado: <strong>PENDIENTE_DIESEL</strong>.
-                                </span>
-                                <a href="admin-registro-diario.html" class="alert-row__action-link">Ingresar Diésel</a>
-                            </div>
+                            <!-- Registros incompletos -->        
                             <div class="alert-row">
                                 <div class="alert-row__status-bar alert-row__status-bar--error"></div>
                                 <span class="alert-row__text">
@@ -191,19 +184,14 @@
                             </div>
 
                             <!-- Vencimientos -->
-                            <div class="alert-row">
-                                <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
-                                <span class="alert-row__text">
-                                    Licencia chofer "Juan Pérez" · vence en 3 días.
-                                </span>
-                                <a href="admin-driver-detail.html" class="alert-row__action-link">Ver Perfil</a>
-                            </div>
-                            <div class="alert-row">
-                                <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
-                                <span class="alert-row__text">
-                                    Rev. Técnica Máquina 03 · vence el 20 Nov.
-                                </span>
-                                <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Registro</a>
+                            <div id="document-alerts">
+                                <div class="alert-row">
+                                    <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
+                                    <span class="alert-row__text">
+                                        Sin registros recientes de documentación. Se mostrarán aquí cuando existan datos.
+                                    </span>
+                                    <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Fichas</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -244,7 +232,7 @@
                                             <td>05</td>
                                             <td>2025-11-14</td>
                                             <td><strong>PENDIENTE_DIESEL</strong></td>
-                                            <td><a href="admin-registro-diario.html" class="link-inline alert-row__action-link">Ingresar Diésel</a></td>
+                                            <td><a href="admin-machine-detail.html#daily-records-section" class="link-inline alert-row__action-link">Ver Detalle</a></td>
                                         </tr>
                                         <tr>
                                             <td>02</td>
@@ -376,141 +364,108 @@
 
     <script src="js/main.js"></script>
 
-    <!-- Modal Diésel con más contexto -->
-    <div class="modal-overlay" id="diesel-modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>
-                    <h3 class="modal-header__title">Ingresar Diésel - Máquina 05</h3>
-                    <p class="dashboard-section-subtitle">
-                        Completa los datos faltantes para cerrar el registro diario como <strong>COMPLETO</strong> (RF-012, RF-016, RF-037).
-                    </p>
-                </div>
-                <button class="modal-close-btn" id="close-diesel-modal-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="card" style="margin-bottom: var(--space-md);">
-                    <div class="card__body">
-                        <p class="dashboard-section-title">Resumen del día</p>
-                        <p class="dashboard-section-subtitle">
-                            Fecha: <strong>2025-11-14</strong> · Monto recaudado (chofer): <strong>$ 450.000</strong> · Km recorridos: <strong>180 Km</strong>.
-                        </p>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label for="modal-diesel-quantity" class="form-field__label">Cantidad de Diésel (Litros)</label>
-                    <input type="number" id="modal-diesel-quantity" class="input-text" placeholder="0.00" step="0.01" min="0">
-                </div>
-                <div class="form-field">
-                    <label for="modal-diesel-cost" class="form-field__label">Costo Total Diésel ($)</label>
-                    <input type="number" id="modal-diesel-cost" class="input-text" placeholder="0" step="100" min="0">
-                </div>
-                <div class="form-field">
-                    <label for="modal-diesel-date" class="form-field__label">Fecha de Ingreso</label>
-                    <input type="date" id="modal-diesel-date" class="input-text">
-                </div>
-                <p class="dashboard-section-subtitle">
-                    El sistema calculará automáticamente <strong>Km/L</strong> y <strong>$ / Km</strong> (RF-016). Valores fuera de rango deben generar revisión.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancel-diesel-modal-button">Cancelar</button>
-                <button class="btn btn-primary btn-primary--disabled" id="save-diesel-modal-button" disabled>Guardar</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const closeDieselModalBtn = document.getElementById('close-diesel-modal-button');
-            const cancelDieselModalBtn = document.getElementById('cancel-diesel-modal-button');
-            const dieselModalOverlay = document.getElementById('diesel-modal-overlay');
-            const saveDieselModalBtn = document.getElementById('save-diesel-modal-button');
-            const modalDieselQuantity = document.getElementById('modal-diesel-quantity');
-            const modalDieselCost = document.getElementById('modal-diesel-cost');
-            const modalDieselDate = document.getElementById('modal-diesel-date');
+            const docAlertsContainer = document.getElementById('document-alerts');
+            const DOC_STORAGE_KEY = 'machineDocuments';
 
-            function openDieselModal() {
-                dieselModalOverlay.classList.add('is-active');
-                modalDieselQuantity.focus();
-                modalDieselDate.valueAsDate = new Date();
-                checkDieselInputs();
-            }
-
-            function closeDieselModal() {
-                dieselModalOverlay.classList.remove('is-active');
-                modalDieselQuantity.value = '';
-                modalDieselCost.value = '';
-                modalDieselDate.value = '';
-                checkDieselInputs();
-            }
-
-            function checkDieselInputs() {
-                const quantity = parseFloat(modalDieselQuantity.value);
-                const cost = parseFloat(modalDieselCost.value);
-                const date = modalDieselDate.value;
-
-                const validQuantity = !isNaN(quantity) && quantity > 0;
-                const validCost = !isNaN(cost) && cost >= 0;
-                const validDate = !!date;
-
-                if (validQuantity && validCost && validDate) {
-                    saveDieselModalBtn.removeAttribute('disabled');
-                    saveDieselModalBtn.classList.remove('btn-primary--disabled');
-                } else {
-                    saveDieselModalBtn.setAttribute('disabled', 'true');
-                    saveDieselModalBtn.classList.add('btn-primary--disabled');
+            const safeJSONParse = (value, fallback = {}) => {
+                try {
+                    return value ? JSON.parse(value) : fallback;
+                } catch {
+                    return fallback;
                 }
-            }
+            };
 
-            // Delegar click en "Ingresar Diésel"
-            const mainGrid = document.querySelector('.dashboard-columns');
-            if (mainGrid) {
-                mainGrid.addEventListener('click', (e) => {
-                    const target = e.target;
-                    if (
-                        target &&
-                        target.classList &&
-                        target.classList.contains('alert-row__action-link') &&
-                        target.textContent.trim().startsWith('Ingresar')
-                    ) {
-                        e.preventDefault();
-                        openDieselModal();
+            const getDocStatus = (dateValue) => {
+                if (!dateValue) {
+                    return { text: 'Sin fecha registrada', severity: 'warning' };
+                }
+                const today = new Date();
+                const date = new Date(dateValue);
+                const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+                if (Number.isNaN(diffDays)) {
+                    return { text: 'Fecha inválida', severity: 'error' };
+                }
+                if (diffDays < 0) {
+                    return { text: `Vencido hace ${Math.abs(diffDays)} días`, severity: 'error' };
+                }
+                if (diffDays <= 10) {
+                    return { text: `Vence en ${diffDays} días`, severity: 'warning' };
+                }
+                return { text: 'Al día', severity: 'ok' };
+            };
+
+            const severityToClass = {
+                error: 'alert-row__status-bar--error',
+                warning: 'alert-row__status-bar--warning',
+                ok: 'alert-row__status-bar--approved'
+            };
+
+            const docTypeLabel = {
+                revision: 'Revisión Técnica',
+                permit: 'Permiso de Circulación',
+                insurance: 'Seguro Obligatorio'
+            };
+
+            const renderDocumentAlerts = () => {
+                if (!docAlertsContainer) return;
+                const storedDocs = safeJSONParse(localStorage.getItem(DOC_STORAGE_KEY));
+                const dataset = Object.keys(storedDocs).length ? storedDocs : {
+                    '05': {
+                        revision: '2023-11-20',
+                        permit: '2024-03-31',
+                        insurance: '2024-01-15',
+                        meta: { number: '05', brand: 'Mercedes-Benz', driver: 'Juan Pérez' }
                     }
+                };
+
+                const alerts = [];
+                Object.entries(dataset).forEach(([machineId, doc]) => {
+                    const meta = doc.meta || { number: machineId, brand: '', driver: '' };
+                    ['revision', 'permit', 'insurance'].forEach((key) => {
+                        const status = getDocStatus(doc[key]);
+                        if (status.severity !== 'ok') {
+                            alerts.push({
+                                machine: meta.number || machineId,
+                                driver: meta.driver || 'Sin chofer',
+                                label: docTypeLabel[key] || key,
+                                status
+                            });
+                        }
+                    });
                 });
-            }
 
-            if (closeDieselModalBtn) closeDieselModalBtn.addEventListener('click', closeDieselModal);
-            if (cancelDieselModalBtn) cancelDieselModalBtn.addEventListener('click', closeDieselModal);
-
-            if (modalDieselQuantity) modalDieselQuantity.addEventListener('input', checkDieselInputs);
-            if (modalDieselCost) modalDieselCost.addEventListener('input', checkDieselInputs);
-            if (modalDieselDate) modalDieselDate.addEventListener('change', checkDieselInputs);
-
-            dieselModalOverlay.addEventListener('click', (e) => {
-                if (e.target === dieselModalOverlay) {
-                    closeDieselModal();
+                docAlertsContainer.innerHTML = '';
+                if (!alerts.length) {
+                    const row = document.createElement('div');
+                    row.className = 'alert-row';
+                    row.innerHTML = `
+                        <div class="alert-row__status-bar ${severityToClass.ok}"></div>
+                        <span class="alert-row__text">
+                            Documentación al día para todas las máquinas.
+                        </span>
+                        <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Fichas</a>
+                    `;
+                    docAlertsContainer.appendChild(row);
+                    return;
                 }
-            });
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && dieselModalOverlay.classList.contains('is-active')) {
-                    closeDieselModal();
-                }
-            });
+                alerts.slice(0, 4).forEach((alert) => {
+                    const row = document.createElement('div');
+                    row.className = 'alert-row';
+                    row.innerHTML = `
+                        <div class="alert-row__status-bar ${severityToClass[alert.status.severity] || severityToClass.warning}"></div>
+                        <span class="alert-row__text">
+                            Máquina ${alert.machine} · ${alert.label} · ${alert.status.text}
+                        </span>
+                        <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Detalle</a>
+                    `;
+                    docAlertsContainer.appendChild(row);
+                });
+            };
 
-            saveDieselModalBtn.addEventListener('click', () => {
-                if (!saveDieselModalBtn.hasAttribute('disabled')) {
-                    alert(
-                        `Diésel de ${modalDieselQuantity.value} Lts, costo $${modalDieselCost.value} para Máquina 05, fecha ${modalDieselDate.value}, guardado (simulado).`
-                    );
-                    closeDieselModal();
-                }
-            });
+            renderDocumentAlerts();
         });
     </script>
 </body>
