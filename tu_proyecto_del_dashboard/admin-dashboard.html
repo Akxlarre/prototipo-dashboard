@@ -20,12 +20,103 @@
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_modal.css">
+
+    <style>
+        /* Ajustes locales para estructura del dashboard sin romper tu sistema atómico */
+
+        .dashboard-columns {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: var(--space-xl);
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-columns {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .dashboard-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+        }
+
+        .dashboard-section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .dashboard-section-subtitle {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.125rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            border: 1px solid var(--color-border-subtle);
+            color: var(--color-text-secondary);
+        }
+
+        .status-pill__dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+        }
+
+        .status-pill--error .status-pill__dot { background-color: #EF4444; }
+        .status-pill--warning .status-pill__dot { background-color: #F97316; }
+        .status-pill--ok .status-pill__dot { background-color: #10B981; }
+
+        .summary-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: var(--space-sm);
+        }
+
+        .summary-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            background-color: var(--color-surface-subtle);
+            color: var(--color-text-secondary);
+        }
+
+        .chart-axis-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+
+        .chart-axis-caption {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .data-table--compact td,
+        .data-table--compact th {
+            padding-block: 0.5rem;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div> <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__logo"></div> 
+                <span class="sidebar__app-name">Nombre de la App</span>
             </div>
 
             <nav class="sidebar__nav">
@@ -59,68 +150,146 @@
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Dashboard</h1>
+                <h1 class="main-content__title">Dashboard del Administrador</h1>
+                <p class="main-content__subtitle">
+                    Vista rápida del estado operativo, alertas críticas y rendimiento financiero de la flota.
+                </p>
             </header>
 
-            <section class="main-content__grid">
-                <div style="display: flex; flex-direction: column; gap: var(--space-xl);">
+            <section class="dashboard-columns">
+                <!-- Columna izquierda: Alertas + Estado Operativo -->
+                <div class="dashboard-column">
+                    <!-- Sección: Alertas críticas -->
                     <div class="card">
                         <div class="card__header">
-                            <h2 class="card__header-title">Tareas Pendientes (3)</h2>
-                            <a href="#" class="card__header-action">
-                                Ver Todo 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
-                            </a>
+                            <div>
+                                <h2 class="card__header-title">Alertas Críticas</h2>
+                                <p class="dashboard-section-subtitle">
+                                    Registros incompletos y documentación próxima a vencer (RF-031, RF-038, RF-039).
+                                </p>
+                            </div>
+                            <div class="summary-badges">
+                                <span class="summary-badge">2 registros incompletos</span>
+                                <span class="summary-badge">2 documentos por vencer</span>
+                            </div>
                         </div>
                         <div class="card__body card__body--no-padding"> 
+                            <!-- Registros incompletos -->
                             <div class="alert-row">
                                 <div class="alert-row__status-bar alert-row__status-bar--error"></div>
-                                <span class="alert-row__text">Máquina 05 (Ayer): Falta ingreso de Diésel.</span>
-                                <a href="#" class="alert-row__action-link">Ingresar Diésel</a>
+                                <span class="alert-row__text">
+                                    Máquina 05 (Ayer) · Estado: <strong>PENDIENTE_DIESEL</strong>.
+                                </span>
+                                <a href="admin-registro-diario.html" class="alert-row__action-link">Ingresar Diésel</a>
                             </div>
                             <div class="alert-row">
                                 <div class="alert-row__status-bar alert-row__status-bar--error"></div>
-                                <span class="alert-row__text">Máquina 02 (Ayer): Falta ingreso de Chofer.</span>
-                                <a href="admin-diesel-batch.html" class="alert-row__action-link">Ver Registro</a>
+                                <span class="alert-row__text">
+                                    Máquina 02 (Ayer) · Estado: <strong>PENDIENTE_TRABAJADOR</strong>.
+                                </span>
+                                <a href="admin-registro-diario.html" class="alert-row__action-link">Ver Registro</a>
+                            </div>
+
+                            <!-- Vencimientos -->
+                            <div class="alert-row">
+                                <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
+                                <span class="alert-row__text">
+                                    Licencia chofer "Juan Pérez" · vence en 3 días.
+                                </span>
+                                <a href="admin-driver-detail.html" class="alert-row__action-link">Ver Perfil</a>
                             </div>
                             <div class="alert-row">
                                 <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
-                                <span class="alert-row__text">Licencia Chofer 'Juan Pérez' (Vence en 3 días).</span>
-                                <a href="admin-driver-detail.html" class="alert-row__action-link">Ver Perfil</a>
+                                <span class="alert-row__text">
+                                    Rev. Técnica Máquina 03 · vence el 20 Nov.
+                                </span>
+                                <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Registro</a>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Sección: Estado de registros diarios -->
                     <div class="card">
                         <div class="card__header">
-                            <h2 class="card__header-title">Vencimientos Próximos (2)</h2>
-                            <a href="#" class="card__header-action">
-                                Ver Todos 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
-                            </a>
+                            <div>
+                                <h2 class="card__header-title">Estado de Registros Diarios</h2>
+                                <p class="dashboard-section-subtitle">
+                                    Resumen de registros por estado para el último día de operación (RF-037).
+                                </p>
+                            </div>
+                            <div class="summary-badges">
+                                <span class="status-pill status-pill--error">
+                                    <span class="status-pill__dot"></span>
+                                    2 pendientes
+                                </span>
+                                <span class="status-pill status-pill--ok">
+                                    <span class="status-pill__dot"></span>
+                                    5 completos
+                                </span>
+                            </div>
                         </div>
-                        <div class="card__body card__body--no-padding"> 
-                            <div class="alert-row">
-                                <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
-                                <span class="alert-row__text">Rev. Técnica Máquina 03 (Vence 20 Nov).</span>
-                                <a href="#" class="alert-row__action-link">Ver Registro</a>
+                        <div class="card__body">
+                            <div class="data-table-container">
+                                <table class="data-table data-table--compact">
+                                    <thead>
+                                        <tr>
+                                            <th>Máquina</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>05</td>
+                                            <td>2025-11-14</td>
+                                            <td><strong>PENDIENTE_DIESEL</strong></td>
+                                            <td><a href="admin-registro-diario.html" class="link-inline alert-row__action-link">Ingresar Diésel</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>02</td>
+                                            <td>2025-11-14</td>
+                                            <td><strong>PENDIENTE_TRABAJADOR</strong></td>
+                                            <td><a href="admin-registro-diario.html" class="link-inline">Ver Registro</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>01</td>
+                                            <td>2025-11-14</td>
+                                            <td>COMPLETO</td>
+                                            <td><span style="font-size: 0.75rem; color: var(--color-text-muted);">—</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>03</td>
+                                            <td>2025-11-14</td>
+                                            <td>COMPLETO</td>
+                                            <td><span style="font-size: 0.75rem; color: var(--color-text-muted);">—</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="alert-row">
-                                <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
-                                <span class="alert-row__text">Seguro Vehicular Máquina 07 (Vence 25 Nov).</span>
-                                <a href="#" class="alert-row__action-link">Ver Registro</a>
-                            </div>
+                            <p class="dashboard-section-subtitle" style="margin-top: var(--space-sm);">
+                                Los registros "PENDIENTE_DIESEL" y "PENDIENTE_TRABAJADOR" generan alertas en tiempo real (RF-038, RF-039).
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: var(--space-xl);">
+                <!-- Columna derecha: KPIs -->
+                <div class="dashboard-column">
+                    <!-- Resumen financiero -->
                     <div class="card">
                         <div class="card__header">
-                            <h2 class="card__header-title">Resumen Financiero</h2>
-                            <a href="#" class="card__header-action">
+                            <div>
+                                <h2 class="card__header-title">Resumen Financiero</h2>
+                                <p class="dashboard-section-subtitle">
+                                    Vista rápida de ganancia neta e ingreso total por máquina (RF-018–RF-021, RF-030).
+                                </p>
+                            </div>
+                            <a href="admin-reports.html" class="card__header-action">
                                 Ver Reporte Contable 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
                             </a>
                         </div>
                         <div class="card__body">
@@ -130,7 +299,9 @@
                                     <button class="segmented-button">Ingreso Total</button>
                                 </div>
                                 <div class="date-range-input">
-                                    <svg class="date-range-input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.5 0a.5.5 0 0 0-.5.5V1H4a2 2 0 0 0-2 2v1h12V3a2 2 0 0 0-2-2h-2.5V.5a.5.5 0 0 0-1 0V1H6V.5a.5.5 0 0 0-.5-.5zM14 4H2v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zM2 3a1 1 0 0 1 1-1h2.5V.5a.5.5 0 0 1 1 0V1H10V.5a.5.5 0 0 1 1 0V1h2.5a1 1 0 0 1 1 1V3H2z"/></svg>
+                                    <svg class="date-range-input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M6.5 0a.5.5 0 0 0-.5.5V1H4a2 2 0 0 0-2 2v1h12V3a2 2 0 0 0-2-2h-2.5V.5a.5.5 0 0 0-1 0V1H6V.5a.5.5 0 0 0-.5-.5zM14 4H2v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zM2 3a1 1 0 0 1 1-1h2.5V.5a.5.5 0 0 1 1 0V1H10V.5a.5.5 0 0 1 1 0V1h2.5a1 1 0 0 1 1 1V3H2z"/>
+                                    </svg>
                                     <input type="text" class="input-text date-range-input__field" value="Ene 1 - Dic 31">
                                 </div>
                             </div>
@@ -139,38 +310,63 @@
                                 <span class="chart-kpi__value">$ 12.345.678</span>
                             </div>
                             <div class="chart-container">
-                                <div class="chart-bar" style="height: 40%;"></div>
-                                <div class="chart-bar" style="height: 60%;"></div>
-                                <div class="chart-bar" style="height: 20%;"></div>
-                                <div class="chart-bar" style="height: 80%;"></div>
-                                <div class="chart-bar" style="height: 50%;"></div>
-                                <div class="chart-bar" style="height: 30%;"></div>
-                                <div class="chart-bar" style="height: 90%;"></div>
-                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 40%;" title="Máquina 01"></div>
+                                <div class="chart-bar" style="height: 60%;" title="Máquina 02"></div>
+                                <div class="chart-bar" style="height: 20%;" title="Máquina 03"></div>
+                                <div class="chart-bar" style="height: 80%;" title="Máquina 05"></div>
+                                <div class="chart-bar" style="height: 50%;" title="Máquina 07"></div>
                             </div>
+                            <div class="chart-axis-labels">
+                                <span>01</span>
+                                <span>02</span>
+                                <span>03</span>
+                                <span>05</span>
+                                <span>07</span>
+                            </div>
+                            <p class="chart-axis-caption">
+                                Eje Y: Ganancia neta por máquina (en proporción). Para detalle exacto, usar el Centro de Reportes (RF-030, RF-032).
+                            </p>
                         </div>
                     </div>
 
+                    <!-- Eficiencia de combustible -->
                     <div class="card">
                         <div class="card__header">
-                            <h2 class="card__header-title">Eficiencia de Combustible</h2>
-                            <a href="#" class="card__header-action">
+                            <div>
+                                <h2 class="card__header-title">Eficiencia de Combustible</h2>
+                                <p class="dashboard-section-subtitle">
+                                    Rendimiento promedio y comparación rápida entre máquinas (RF-016, RF-033).
+                                </p>
+                            </div>
+                            <a href="admin-reports.html" class="card__header-action">
                                 Ver Reporte 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
                             </a>
                         </div>
                         <div class="card__body">
-                             <div class="chart-kpi" style="text-align: left;">
+                            <div class="chart-kpi" style="text-align: left;">
                                 <span class="chart-kpi__label">Promedio Flota</span>
                                 <span class="chart-kpi__value">5.8 Km/L</span>
                             </div>
                             <div class="chart-container">
-                                <div class="chart-bar" style="height: 70%; background-color: #60A5FA;"></div>
-                                <div class="chart-bar" style="height: 85%; background-color: #60A5FA;"></div>
-                                <div class="chart-bar" style="height: 55%; background-color: #60A5FA;"></div>
-                                <div class="chart-bar" style="height: 95%; background-color: #60A5FA;"></div>
-                                <div class="chart-bar" style="height: 60%; background-color: #60A5FA;"></div>
+                                <div class="chart-bar" style="height: 70%;" title="Máquina 01"></div>
+                                <div class="chart-bar" style="height: 85%;" title="Máquina 05"></div>
+                                <div class="chart-bar" style="height: 55%;" title="Máquina 02"></div>
+                                <div class="chart-bar" style="height: 95%;" title="Máquina 07"></div>
+                                <div class="chart-bar" style="height: 60%;" title="Máquina 03"></div>
                             </div>
+                            <div class="chart-axis-labels">
+                                <span>01</span>
+                                <span>05</span>
+                                <span>02</span>
+                                <span>07</span>
+                                <span>03</span>
+                            </div>
+                            <p class="chart-axis-caption">
+                                Eje Y: Rendimiento relativo Km/L. Valores fuera de rango deben investigarse en el módulo de reportes (RF-016, RF-033).
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -180,27 +376,50 @@
 
     <script src="js/main.js"></script>
 
+    <!-- Modal Diésel con más contexto -->
     <div class="modal-overlay" id="diesel-modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-header__title">Ingresar Diésel - Máquina 05</h3>
+                <div>
+                    <h3 class="modal-header__title">Ingresar Diésel - Máquina 05</h3>
+                    <p class="dashboard-section-subtitle">
+                        Completa los datos faltantes para cerrar el registro diario como <strong>COMPLETO</strong> (RF-012, RF-016, RF-037).
+                    </p>
+                </div>
                 <button class="modal-close-btn" id="close-diesel-modal-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
+                <div class="card" style="margin-bottom: var(--space-md);">
+                    <div class="card__body">
+                        <p class="dashboard-section-title">Resumen del día</p>
+                        <p class="dashboard-section-subtitle">
+                            Fecha: <strong>2025-11-14</strong> · Monto recaudado (chofer): <strong>$ 450.000</strong> · Km recorridos: <strong>180 Km</strong>.
+                        </p>
+                    </div>
+                </div>
                 <div class="form-field">
                     <label for="modal-diesel-quantity" class="form-field__label">Cantidad de Diésel (Litros)</label>
-                    <input type="number" id="modal-diesel-quantity" class="input-text" placeholder="0.00" step="0.01">
+                    <input type="number" id="modal-diesel-quantity" class="input-text" placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="form-field">
+                    <label for="modal-diesel-cost" class="form-field__label">Costo Total Diésel ($)</label>
+                    <input type="number" id="modal-diesel-cost" class="input-text" placeholder="0" step="100" min="0">
                 </div>
                 <div class="form-field">
                     <label for="modal-diesel-date" class="form-field__label">Fecha de Ingreso</label>
                     <input type="date" id="modal-diesel-date" class="input-text">
                 </div>
+                <p class="dashboard-section-subtitle">
+                    El sistema calculará automáticamente <strong>Km/L</strong> y <strong>$ / Km</strong> (RF-016). Valores fuera de rango deben generar revisión.
+                </p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="cancel-diesel-modal-button">Cancelar</button>
-                <button class="btn btn-primary" id="save-diesel-modal-button">Guardar</button>
+                <button class="btn btn-primary btn-primary--disabled" id="save-diesel-modal-button" disabled>Guardar</button>
             </div>
         </div>
     </div>
@@ -212,6 +431,7 @@
             const dieselModalOverlay = document.getElementById('diesel-modal-overlay');
             const saveDieselModalBtn = document.getElementById('save-diesel-modal-button');
             const modalDieselQuantity = document.getElementById('modal-diesel-quantity');
+            const modalDieselCost = document.getElementById('modal-diesel-cost');
             const modalDieselDate = document.getElementById('modal-diesel-date');
 
             function openDieselModal() {
@@ -224,12 +444,21 @@
             function closeDieselModal() {
                 dieselModalOverlay.classList.remove('is-active');
                 modalDieselQuantity.value = '';
+                modalDieselCost.value = '';
                 modalDieselDate.value = '';
+                checkDieselInputs();
             }
 
             function checkDieselInputs() {
-                const quantity = modalDieselQuantity.value.trim();
-                if (quantity !== '' && parseFloat(quantity) > 0) {
+                const quantity = parseFloat(modalDieselQuantity.value);
+                const cost = parseFloat(modalDieselCost.value);
+                const date = modalDieselDate.value;
+
+                const validQuantity = !isNaN(quantity) && quantity > 0;
+                const validCost = !isNaN(cost) && cost >= 0;
+                const validDate = !!date;
+
+                if (validQuantity && validCost && validDate) {
                     saveDieselModalBtn.removeAttribute('disabled');
                     saveDieselModalBtn.classList.remove('btn-primary--disabled');
                 } else {
@@ -238,12 +467,17 @@
                 }
             }
 
-            // Delegar el evento click para el enlace "Ingresar Diésel" dentro de las alertas
-            const mainGrid = document.querySelector('.main-content__grid');
+            // Delegar click en "Ingresar Diésel"
+            const mainGrid = document.querySelector('.dashboard-columns');
             if (mainGrid) {
                 mainGrid.addEventListener('click', (e) => {
                     const target = e.target;
-                    if (target && target.classList && target.classList.contains('alert-row__action-link') && target.textContent.trim().startsWith('Ingresar')) {
+                    if (
+                        target &&
+                        target.classList &&
+                        target.classList.contains('alert-row__action-link') &&
+                        target.textContent.trim().startsWith('Ingresar')
+                    ) {
                         e.preventDefault();
                         openDieselModal();
                     }
@@ -252,7 +486,10 @@
 
             if (closeDieselModalBtn) closeDieselModalBtn.addEventListener('click', closeDieselModal);
             if (cancelDieselModalBtn) cancelDieselModalBtn.addEventListener('click', closeDieselModal);
+
             if (modalDieselQuantity) modalDieselQuantity.addEventListener('input', checkDieselInputs);
+            if (modalDieselCost) modalDieselCost.addEventListener('input', checkDieselInputs);
+            if (modalDieselDate) modalDieselDate.addEventListener('change', checkDieselInputs);
 
             dieselModalOverlay.addEventListener('click', (e) => {
                 if (e.target === dieselModalOverlay) {
@@ -268,7 +505,9 @@
 
             saveDieselModalBtn.addEventListener('click', () => {
                 if (!saveDieselModalBtn.hasAttribute('disabled')) {
-                    alert(`Diésel de ${modalDieselQuantity.value} Lts para Máquina 05, en fecha ${modalDieselDate.value}, guardado.`);
+                    alert(
+                        `Diésel de ${modalDieselQuantity.value} Lts, costo $${modalDieselCost.value} para Máquina 05, fecha ${modalDieselDate.value}, guardado (simulado).`
+                    );
                     closeDieselModal();
                 }
             });

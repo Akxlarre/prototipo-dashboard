@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Registro Diario</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_alert-row.css">
+
+    <style>
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .view-mode-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            padding: 0.5rem 0;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed var(--color-border-medium);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+            background-color: var(--color-surface-widget);
+        }
+        .file-upload-area:hover {
+            border-color: var(--color-action-primary);
+        }
+        .file-upload-area img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: var(--border-radius-sm);
+            margin-top: var(--space-md);
+        }
+        .edit-mode .file-upload-area p {
+            display: block;
+        }
+        .view-mode .file-upload-area {
+            border-style: solid;
+            cursor: default;
+        }
+        .view-mode .file-upload-area:hover {
+            border-color: var(--color-border-medium);
+        }
+        .view-mode .file-upload-area p {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo"></div>
+                <span class="sidebar__app-name">Nombre de la App</span>
+            </div>
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-dashboard"></span> Dashboard
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-maquinas"></span> Máquinas
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item is-active">
+                    <span class="sidebar__nav-item-icon icon-choferes"></span> Choferes
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-contabilidad"></span> Contabilidad
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-reportes"></span> Reportes
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-icon icon-configuracion"></span> Configuración
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-content__header">
+                <h1 class="main-content__title">Completar Registro Diario</h1>
+                <p class="main-content__subtitle">Corrija o complete la información del registro diario para la Máquina 05.</p>
+            </header>
+
+            <div id="confirmation-message" class="alert-row" style="display: none; background-color: var(--color-surface-success); margin-bottom: var(--space-lg);">
+                <div class="alert-row__status-bar alert-row__status-bar--approved"></div>
+                <span class="alert-row__text">Registro guardado y actualizado a "Completo" exitosamente.</span>
+            </div>
+
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__header-title">Registro del 2025-11-14</h2>
+                    <div id="view-mode-controls">
+                        <button class="btn btn-primary" id="edit-button">Completar Registro</button>
+                    </div>
+                    <div id="edit-mode-controls" style="display: none;">
+                        <button class="btn btn-secondary" id="cancel-button">Cancelar</button>
+                        <button class="btn btn-primary" id="save-button">Guardar Cambios</button>
+                    </div>
+                </div>
+
+                <div class="card__body">
+                    <div id="form-container" class="view-mode">
+                        <div class="form-grid">
+                            <!-- Kilometraje -->
+                            <div class="form-field">
+                                <label for="initial-km" class="form-field__label">Kilometraje Inicial</label>
+                                <p id="initial-km-view" class="view-mode-value">125000 Km</p>
+                                <input type="number" id="initial-km-edit" class="input-text" value="125000" style="display: none;">
+                            </div>
+                            <div class="form-field">
+                                <label for="final-km" class="form-field__label">Kilometraje Final</label>
+                                <p id="final-km-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
+                                <input type="number" id="final-km-edit" class="input-text" placeholder="Ingrese kilometraje final" style="display: none;">
+                            </div>
+
+                            <!-- Diésel -->
+                            <div class="form-field">
+                                <label for="diesel-quantity" class="form-field__label">Litros de Diésel</label>
+                                <p id="diesel-quantity-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
+                                <input type="number" id="diesel-quantity-edit" class="input-text" placeholder="0.00" style="display: none;">
+                            </div>
+                            <div class="form-field">
+                                <label for="diesel-cost" class="form-field__label">Costo Total Diésel ($)</label>
+                                <p id="diesel-cost-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
+                                <input type="number" id="diesel-cost-edit" class="input-text" placeholder="0" style="display: none;">
+                            </div>
+                        </div>
+
+                        <!-- Comprobante -->
+                        <div class="form-field" style="margin-top: var(--space-lg);">
+                            <label class="form-field__label">Comprobante de Diésel</label>
+                            <div class="file-upload-area" id="file-upload-area">
+                                <input type="file" id="comprobante-file" accept="image/*" style="display: none;">
+                                <p>Haz clic para subir o arrastra una imagen</p>
+                                <p style="font-size: 0.8rem; color: var(--color-text-disabled);">Formatos: JPG, PNG. Máx. 5MB.</p>
+                                <img id="preview-image" src="https://via.placeholder.com/300x200.png?text=COMPROBANTE+PENDIENTE" alt="Previsualización">
+                            </div>
+                        </div>
+                         <div class="form-field" style="margin-top: var(--space-lg);">
+                            <label class="form-field__label">Historial de Cambios (RF-011)</label>
+                            <p class="form-field__helper-text">v1: Creado por Juan Pérez (Chofer) - 2025-11-14 18:30</p>
+                            <p class="form-field__helper-text">v2: Modificado por Administrador - 2025-11-15 10:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const formContainer = document.getElementById('form-container');
+            const editButton = document.getElementById('edit-button');
+            const saveButton = document.getElementById('save-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const viewModeControls = document.getElementById('view-mode-controls');
+            const editModeControls = document.getElementById('edit-mode-controls');
+            const confirmationMessage = document.getElementById('confirmation-message');
+
+            const fileUploadArea = document.getElementById('file-upload-area');
+            const fileInput = document.getElementById('comprobante-file');
+            const previewImage = document.getElementById('preview-image');
+
+            const fields = {
+                'initial-km': { view: 'initial-km-view', edit: 'initial-km-edit', value: '125000' },
+                'final-km': { view: 'final-km-view', edit: 'final-km-edit', value: '' },
+                'diesel-quantity': { view: 'diesel-quantity-view', edit: 'diesel-quantity-edit', value: '' },
+                'diesel-cost': { view: 'diesel-cost-view', edit: 'diesel-cost-edit', value: '' }
+            };
+
+            function setMode(mode) {
+                formContainer.classList.remove('view-mode', 'edit-mode');
+                formContainer.classList.add(mode + '-mode');
+
+                if (mode === 'edit') {
+                    viewModeControls.style.display = 'none';
+                    editModeControls.style.display = 'flex';
+                } else {
+                    viewModeControls.style.display = 'flex';
+                    editModeControls.style.display = 'none';
+                }
+
+                for (const key in fields) {
+                    const viewEl = document.getElementById(fields[key].view);
+                    const editEl = document.getElementById(fields[key].edit);
+                    if (mode === 'edit') {
+                        viewEl.style.display = 'none';
+                        editEl.style.display = 'block';
+                        editEl.value = fields[key].value;
+                    } else {
+                        viewEl.style.display = 'block';
+                        editEl.style.display = 'none';
+                        if (fields[key].value) {
+                            viewEl.textContent = fields[key].value + (key.includes('km') ? ' Km' : '');
+                            viewEl.style.color = 'var(--color-text-primary)';
+                        } else {
+                            viewEl.textContent = '-- PENDIENTE --';
+                            viewEl.style.color = 'var(--color-state-error)';
+                        }
+                    }
+                }
+            }
+
+            editButton.addEventListener('click', () => setMode('edit'));
+            
+            cancelButton.addEventListener('click', () => {
+                // Restore initial values if needed
+                setMode('view');
+            });
+
+            saveButton.addEventListener('click', () => {
+                // Save new values
+                for (const key in fields) {
+                    fields[key].value = document.getElementById(fields[key].edit).value;
+                }
+                setMode('view');
+                confirmationMessage.style.display = 'flex';
+                setTimeout(() => { confirmationMessage.style.display = 'none'; }, 5000);
+            });
+
+            fileUploadArea.addEventListener('click', () => {
+                if (formContainer.classList.contains('edit-mode')) {
+                    fileInput.click();
+                }
+            });
+
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        previewImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Initial state
+            setMode('view');
+        });
+    </script>
+</body>
+</html>

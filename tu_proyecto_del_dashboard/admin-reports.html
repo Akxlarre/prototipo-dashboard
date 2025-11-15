@@ -20,6 +20,30 @@
     <link rel="stylesheet" href="css/components/_tabs.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_export-button.css"> 
+
+    <style>
+        .report-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .chart-axis-caption {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .chart-axis-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -45,7 +69,7 @@
                     <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                     Contabilidad
                 </a>
-                <a href="admin-reports.html" class="sidebar__nav-item">
+                <a href="admin-reports.html" class="sidebar__nav-item is-active">
                     <span class="sidebar__nav-item-icon icon-reportes"></span>
                     Reportes
                 </a>
@@ -56,35 +80,41 @@
                 </a>
             </nav>
         </aside>
+
         <main class="main-content">
             <header class="main-content__header">
                 <h1 class="main-content__title">Centro de Reportes y Análisis</h1>
-                <p class="main-content__subtitle">Filtra y exporta métricas detalladas de rendimiento y finanzas.</p>
+                <p class="main-content__subtitle">
+                    Analiza el rendimiento financiero y de combustible de la flota. Todos los reportes pueden exportarse (RF-030, RF-032, RF-033).
+                </p>
             </header>
             
             <div class="card">
                 <div class="card__header">
                     <div style="flex-grow: 1;">
-                         <h2 class="card__header-title" style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-medium); color: var(--color-text-secondary);">Filtros Globales</h2>
-                         <div style="display: flex; gap: var(--space-md); align-items: center; margin-top: var(--space-xs);">
-                            <div class="date-range-input">
-                                <svg class="date-range-input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.5 0a.5.5 0 0 0-.5.5V1H4a2 2 0 0 0-2 2v1h12V3a2 2 0 0 0-2-2h-2.5V.5a.5.5 0 0 0-1 0V1H6V.5a.5.5 0 0 0-.5-.5zM14 4H2v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zM2 3a1 1 0 0 1 1-1h2.5V.5a.5.5 0 0 1 1 0V1H10V.5a.5.5 0 0 1 1 0V1h2.5a1 1 0 0 1 1 1V3H2z"/></svg>
-                                <input type="text" class="input-text date-range-input__field" value="2025-01-01 - 2025-12-31">
-                            </div>
-                            <div class="export-group">
-                                <button class="btn btn-secondary export-button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793l-1.854-1.854a.5.5 0 1 0-.708.708l3 3z"/></svg>
-                                    Exportar Datos
-                                </button>
-                                <button class="export-dropdown-toggle" id="export-toggle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
-                                </button>
-                                <div class="export-menu" id="export-menu">
-                                    <div class="export-menu__item">Exportar a PDF</div>
-                                    <div class="export-menu__item">Exportar a Excel</div>
+                        <h2 class="card__header-title" style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-medium); color: var(--color-text-secondary);">
+                            Filtros Globales
+                        </h2>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-sm); margin-top: var(--space-xs);">
+                            <div class="chart-controls" style="padding: 0;">
+                                <div class="segmented-button-group">
+                                    <button class="segmented-button is-active">Año</button>
+                                    <button class="segmented-button">Mes</button>
+                                    <button class="segmented-button">Rango personalizado</button>
                                 </div>
                             </div>
-                         </div>
+                            <div style="display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap;">
+                                <div class="date-range-input">
+                                    <svg class="date-range-input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M6.5 0a.5.5 0 0 0-.5.5V1H4a2 2 0 0 0-2 2v1h12V3a2 2 0 0 0-2-2h-2.5V.5a.5.5 0 0 0-1 0V1H6V.5a.5.5 0 0 0-.5-.5zM14 4H2v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zM2 3a1 1 0 0 1 1-1h2.5V.5a.5.5 0 0 1 1 0V1H10V.5a.5.5 0 0 1 1 0V1h2.5a1 1 0 0 1 1 1V3H2z"/>
+                                    </svg>
+                                    <input type="text" class="input-text date-range-input__field" value="2025-01-01 - 2025-12-31">
+                                </div>
+                                <p style="font-size: 0.8rem; color: var(--color-text-muted);">
+                                    Los filtros se aplican a todos los reportes activos.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -100,29 +130,62 @@
                         </div>
                     </div>
                     
+                    <!-- TAB: Ranking Financiero -->
                     <div class="tab-content is-active" id="content-ranking" role="tabpanel" aria-labelledby="tab-ranking">
-                         <div class="chart-controls" style="padding-bottom: 0;">
+                        <div class="report-header-row" style="padding-top: var(--space-xl);">
+                            <div class="chart-kpi">
+                                <span class="chart-kpi__label">Ganancia Neta Total (periodo seleccionado)</span>
+                                <span class="chart-kpi__value">$ 12.345.678</span>
+                            </div>
+                            <div class="export-group">
+                                <button class="btn btn-secondary export-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793l-1.854-1.854a.5.5 0 1 0-.708.708l3 3z"/>
+                                    </svg>
+                                    Exportar Ranking
+                                </button>
+                                <button class="export-dropdown-toggle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </button>
+                                <div class="export-menu">
+                                    <div class="export-menu__item">Exportar a PDF</div>
+                                    <div class="export-menu__item">Exportar a Excel</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-controls" style="padding-bottom: 0; margin-top: var(--space-lg);">
                             <div class="segmented-button-group">
                                 <button class="segmented-button is-active">Ganancia Neta</button>
                                 <button class="segmented-button">Ingreso Total</button>
                             </div>
-                         </div>
+                        </div>
 
-                         <div style="padding: var(--space-xl) 0;">
-                            <div class="chart-kpi">
-                                <span class="chart-kpi__label">Ganancia Neta Total Anual</span>
-                                <span class="chart-kpi__value">$ 12.345.678</span>
-                            </div>
+                        <div style="padding: var(--space-lg) 0;">
                             <div class="chart-container">
-                                <div class="chart-bar" style="height: 40%;"></div>
-                                <div class="chart-bar" style="height: 60%;"></div>
-                                <div class="chart-bar" style="height: 20%;"></div>
-                                <div class="chart-bar" style="height: 80%;"></div>
+                                <div class="chart-bar" style="height: 80%;" title="Máquina 05"></div>
+                                <div class="chart-bar" style="height: 65%;" title="Máquina 02"></div>
+                                <div class="chart-bar" style="height: 45%;" title="Máquina 01"></div>
+                                <div class="chart-bar" style="height: 30%;" title="Máquina 07"></div>
                             </div>
-                         </div>
+                            <div class="chart-axis-labels">
+                                <span>05</span>
+                                <span>02</span>
+                                <span>01</span>
+                                <span>07</span>
+                            </div>
+                            <p class="chart-axis-caption">
+                                Eje Y: Ganancia neta relativa por máquina. El orden también se refleja en la tabla de ranking inferior (RF-032).
+                            </p>
+                        </div>
 
-                         <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">Detalle de Ranking por Máquina</h3>
-                         <div class="data-table-container">
+                        <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">
+                            Detalle de Ranking por Máquina
+                        </h3>
+                        <div class="data-table-container">
                             <table class="data-table">
                                 <thead>
                                     <tr>
@@ -136,25 +199,60 @@
                                 <tbody>
                                     <tr><td>#1</td><td>05</td><td>$ 3.500.000</td><td>45,000 Km</td><td>2</td></tr>
                                     <tr><td>#2</td><td>02</td><td>$ 2.900.000</td><td>40,000 Km</td><td>1</td></tr>
-                                    </tbody>
+                                    <tr><td>#3</td><td>01</td><td>$ 2.400.000</td><td>38,500 Km</td><td>1</td></tr>
+                                    <tr><td>#4</td><td>07</td><td>$ 1.800.000</td><td>33,200 Km</td><td>2</td></tr>
+                                </tbody>
                             </table>
                         </div>
-
                     </div>
                     
+                    <!-- TAB: Rendimiento de combustible -->
                     <div class="tab-content" id="content-fuel" role="tabpanel" aria-labelledby="tab-fuel">
-                        <div style="padding: var(--space-xl) 0;">
+                        <div class="report-header-row" style="padding-top: var(--space-xl);">
                             <div class="chart-kpi">
-                                <span class="chart-kpi__label">Rendimiento Promedio de Flota</span>
+                                <span class="chart-kpi__label">Rendimiento Promedio de Flota (periodo seleccionado)</span>
                                 <span class="chart-kpi__value">5.8 Km/L</span>
                             </div>
-                            <div class="chart-container">
-                                <div class="chart-bar" style="height: 75%;"></div>
-                                <div class="chart-bar" style="height: 60%;"></div>
-                                <div class="chart-bar" style="height: 80%;"></div>
-                                <div class="chart-bar" style="height: 55%;"></div>
+                            <div class="export-group">
+                                <button class="btn btn-secondary export-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793l-1.854-1.854a.5.5 0 1 0-.708.708l3 3z"/>
+                                    </svg>
+                                    Exportar Rendimiento
+                                </button>
+                                <button class="export-dropdown-toggle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </button>
+                                <div class="export-menu">
+                                    <div class="export-menu__item">Exportar a PDF</div>
+                                    <div class="export-menu__item">Exportar a Excel</div>
+                                </div>
                             </div>
-                            <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">Tabla de Rendimiento Detallado (Km/L)</h3>
+                        </div>
+
+                        <div style="padding: var(--space-lg) 0;">
+                            <div class="chart-container">
+                                <div class="chart-bar" style="height: 75%;" title="Máquina 05 · 6.2 Km/L"></div>
+                                <div class="chart-bar" style="height: 60%;" title="Máquina 07 · 5.9 Km/L"></div>
+                                <div class="chart-bar" style="height: 80%;" title="Máquina 01 · 6.5 Km/L"></div>
+                                <div class="chart-bar" style="height: 55%;" title="Máquina 03 · 5.5 Km/L"></div>
+                            </div>
+                            <div class="chart-axis-labels">
+                                <span>05</span>
+                                <span>07</span>
+                                <span>01</span>
+                                <span>03</span>
+                            </div>
+                            <p class="chart-axis-caption">
+                                Eje Y: Rendimiento relativo Km/L por máquina. Úsalo para detectar máquinas con consumo anómalo (RF-033).
+                            </p>
+
+                            <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">
+                                Tabla de Rendimiento Detallado (Km/L)
+                            </h3>
                             <div class="data-table-container">
                                 <table class="data-table">
                                     <thead>
@@ -168,7 +266,9 @@
                                     </thead>
                                     <tbody>
                                         <tr><td>#1</td><td>05</td><td>6.2 Km/L</td><td>7,500 Lts</td><td>46,500 Km</td></tr>
-                                        <tr><td>#2</td><td>07</td><td>5.9 Km/L</td><td>8,000 Lts</td><td>47,200 Km</td></tr>
+                                        <tr><td>#2</td><td>01</td><td>6.0 Km/L</td><td>7,200 Lts</td><td>43,200 Km</td></tr>
+                                        <tr><td>#3</td><td>07</td><td>5.9 Km/L</td><td>8,000 Lts</td><td>47,200 Km</td></tr>
+                                        <tr><td>#4</td><td>03</td><td>5.5 Km/L</td><td>7,800 Lts</td><td>42,900 Km</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -204,35 +304,57 @@
                 });
             });
 
+            // Lógica Export por grupo (por tab)
+            const exportGroups = document.querySelectorAll('.export-group');
 
-            // Lógica del Export Button
-            const exportToggle = document.getElementById('export-toggle');
-            const exportMenu = document.getElementById('export-menu');
+            function closeAllExportMenus() {
+                document.querySelectorAll('.export-menu.is-visible').forEach(menu => {
+                    menu.classList.remove('is-visible');
+                });
+            }
 
-            exportToggle.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evita que el clic se propague al documento inmediatamente
-                exportMenu.classList.toggle('is-visible');
-            });
+            exportGroups.forEach(group => {
+                const toggle = group.querySelector('.export-dropdown-toggle');
+                const menu = group.querySelector('.export-menu');
+                const items = group.querySelectorAll('.export-menu__item');
+                const mainButton = group.querySelector('.export-button');
 
-            // Ocultar menú si se hace clic en cualquier otro lugar
-            document.addEventListener('click', (e) => {
-                if (exportMenu.classList.contains('is-visible') && !exportToggle.contains(e.target)) {
-                    exportMenu.classList.remove('is-visible');
+                if (toggle && menu) {
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isVisible = menu.classList.contains('is-visible');
+                        closeAllExportMenus();
+                        if (!isVisible) {
+                            menu.classList.add('is-visible');
+                        }
+                    });
                 }
-            });
-            
-            // Lógica para cerrar la modal de reportes
-            const exportMenuItems = document.querySelectorAll('.export-menu__item');
-            exportMenuItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const format = item.textContent.replace('Exportar a ', '');
-                    const activeTab = document.querySelector('.tab-item.is-active').textContent.trim();
-                    alert(`Simulando la exportación del reporte "${activeTab}" a formato ${format}.`);
-                    exportMenu.classList.remove('is-visible');
+
+                if (mainButton) {
+                    mainButton.addEventListener('click', () => {
+                        const activeTab = document.querySelector('.tab-item.is-active');
+                        const tabName = activeTab ? activeTab.textContent.trim() : 'Reporte';
+                        alert(`Simulando exportación rápida del ${tabName} en formato predeterminado (ej. Excel).`);
+                    });
+                }
+
+                items.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const format = item.textContent.replace('Exportar a ', '').trim();
+                        const activeTab = document.querySelector('.tab-item.is-active');
+                        const tabName = activeTab ? activeTab.textContent.trim() : 'Reporte';
+                        alert(`Simulando la exportación del reporte "${tabName}" a formato ${format}.`);
+                        menu.classList.remove('is-visible');
+                    });
                 });
             });
 
-            // Inicialización: Asegurar que el contenido activo se muestre
+            // Cerrar menús de export al hacer clic fuera
+            document.addEventListener('click', () => {
+                closeAllExportMenus();
+            });
+
+            // Inicialización: asegurar que el contenido activo se muestre
             const activeTab = document.querySelector('.tab-item.is-active');
             if (activeTab) {
                 const contentId = activeTab.getAttribute('aria-controls');

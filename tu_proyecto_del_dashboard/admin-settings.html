@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador - Configuración</title>
+    <title>Administrador - Configuración General</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Tu sistema de diseño atómico -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_icons.css">
@@ -22,9 +23,139 @@
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
+
+    <style>
+        /* Pequeñas utilidades locales, sin romper tu sistema atómico */
+
+        .settings-layout {
+            max-width: 880px;
+        }
+
+        .settings-card__header-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted, #6b7280);
+        }
+
+        .settings-section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .settings-section-description {
+            font-size: 0.875rem;
+            color: var(--text-muted, #6b7280);
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-view-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle, #E5E7EB);
+        }
+
+        .settings-view-row:last-child {
+            border-bottom: none;
+        }
+
+        .settings-view-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-strong, #111827);
+        }
+
+        .settings-view-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted, #6b7280);
+        }
+
+        .settings-view-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+
+        .settings-view-helper {
+            font-size: 0.8rem;
+            color: var(--text-muted, #6b7280);
+            margin-top: 0.125rem;
+        }
+
+        .settings-card__footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle, #E5E7EB);
+        }
+
+        .settings-card__footer--spaced {
+            margin-top: 0.5rem;
+        }
+
+        .settings-mode-tag {
+            font-size: 0.75rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-subtle, #E5E7EB);
+            color: var(--text-muted, #6b7280);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .settings-mode-tag-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background-color: #10B981; /* verde lectura */
+        }
+
+        .settings-mode-tag--edit .settings-mode-tag-dot {
+            background-color: #F97316; /* naranja edición */
+        }
+
+        .settings-mode-tag--edit {
+            border-color: #FED7AA;
+            background-color: #FFFBEB;
+            color: #9A3412;
+        }
+
+        .settings-card--editing .card__header-title {
+            color: var(--accent-strong, #111827);
+        }
+
+        .settings-card--editing .card__header-title::after {
+            content: " (modo edición)";
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #F97316;
+        }
+
+        @media (min-width: 768px) {
+            .settings-view-row {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .settings-view-row-main {
+                flex: 1;
+            }
+
+            .settings-view-row-side {
+                text-align: right;
+                min-width: 220px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar__header">
                 <div class="sidebar__logo"></div>
@@ -52,88 +183,406 @@
                     Reportes
                 </a>
                 <div class="sidebar__nav-separator"></div>
-                <a href="admin-settings.html" class="sidebar__nav-item">
+                <a href="admin-settings.html" class="sidebar__nav-item sidebar__nav-item--active">
                     <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                    Configuración
+                    Configuración General
                 </a>
             </nav>
         </aside>
 
+        <!-- Main content -->
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Configuración del Sistema</h1>
-                <p class="main-content__subtitle">Administra las preferencias generales de la aplicación.</p>
+                <h1 class="main-content__title">Configuración General del Sistema</h1>
+                <p class="main-content__subtitle">
+                    Parámetros globales de alto impacto. Estos valores afectan cálculos de nómina, alertas y reportes.
+                </p>
             </header>
 
-            <div class="card" style="max-width: 800px;">
-                <div class="card__header">
-                    <h2 class="card__header-title">Preferencias de Interfaz</h2>
-                </div>
-                <div class="card__body">
-                    <form>
-                        <div class="form-field">
-                            <label for="default-view-mode" class="form-field__label">
-                                Modo de Vista por Defecto para Detalles (RF-026)
-                            </label>
-                            <p class="form-field__helper-text">Define si las páginas de detalle (Chofer, Máquina) se abren en modo de visualización o edición por defecto.</p>
-                            <select id="default-view-mode" class="input-text" style="width: auto;">
-                                <option value="view">Modo de Lectura</option>
-                                <option value="edit">Modo de Edición</option>
-                            </select>
+            <section class="settings-layout">
+                <article class="card settings-card" id="settings-card">
+                    <div class="card__header">
+                        <div>
+                            <h2 class="card__header-title" id="settings-title">
+                                Configuración General (RF-036)
+                            </h2>
+                            <p class="settings-card__header-meta">
+                                Solo visible para Administradores. Los cambios impactan RF-023, RF-031, RF-034 y cálculos contables.
+                            </p>
+                        </div>
+                        <div>
+                            <span class="settings-mode-tag" id="settings-mode-tag">
+                                <span class="settings-mode-tag-dot"></span>
+                                <span id="settings-mode-label">Modo lectura</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card__body">
+                        <!-- Vista 1: Modo Lectura (por defecto) -->
+                        <div id="settings-view-mode">
+                            <div class="settings-section">
+                                <p class="settings-section-title">Parámetros de Nómina</p>
+                                <p class="settings-section-description">
+                                    Montos y porcentajes usados en la <strong>Liquidación de Choferes</strong> y en los cálculos de porcentaje mínimo garantizado.
+                                </p>
+
+                                <div class="settings-view-row">
+                                    <div class="settings-view-row-main">
+                                        <div class="settings-view-label">
+                                            Sueldo mínimo garantizado
+                                            <span class="settings-view-meta">(RF-023, RF-036)</span>
+                                        </div>
+                                        <p class="settings-view-helper">
+                                            Este es el monto usado en <strong>"Liquidación por Chofer"</strong> para comparar el total ganado (RF-022) 
+                                            y determinar si se debe ingresar un <em>"Monto Faltante"</em> (RF-024).
+                                        </p>
+                                    </div>
+                                    <div class="settings-view-row-side">
+                                        <div class="settings-view-value" id="view-sueldo-minimo">
+                                            <!-- $400.000 CLP -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="settings-view-row">
+                                    <div class="settings-view-row-main">
+                                        <div class="settings-view-label">
+                                            Porcentaje por defecto de choferes
+                                            <span class="settings-view-meta">(RF-007, RF-036)</span>
+                                        </div>
+                                        <p class="settings-view-helper">
+                                            Porcentaje base que se asignará automáticamente a todos los nuevos choferes registrados. 
+                                            Este valor se usa para calcular el <strong>"porcentaje ganado"</strong> (RF-015) cuando aún no se define un porcentaje individual.
+                                        </p>
+                                    </div>
+                                    <div class="settings-view-row-side">
+                                        <div class="settings-view-value" id="view-porcentaje-defecto">
+                                            <!-- 30 % -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-section" style="margin-top: 2rem;">
+                                <p class="settings-section-title">Parámetros de Alertas y Vencimientos</p>
+                                <p class="settings-section-description">
+                                    Controla cuántos días antes se generan alertas visuales para documentación próxima a vencer.
+                                </p>
+
+                                <div class="settings-view-row">
+                                    <div class="settings-view-row-main">
+                                        <div class="settings-view-label">
+                                            Días de alerta para vencimientos
+                                            <span class="settings-view-meta">(RF-031, RF-036)</span>
+                                        </div>
+                                        <p class="settings-view-helper">
+                                            El Dashboard mostrará alertas (RF-031) para documentación de máquinas y choferes 
+                                            cuya fecha de vencimiento (RF-007, RF-008) esté dentro de este número de días.
+                                        </p>
+                                    </div>
+                                    <div class="settings-view-row-side">
+                                        <div class="settings-view-value" id="view-dias-alerta">
+                                            <!-- 15 días -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-field">
-                            <label for="notifications-enabled" class="form-field__label">
-                                Habilitar Notificaciones de Alertas Críticas (RF-027)
-                            </label>
-                            <p class="form-field__helper-text">Recibe alertas sobre vencimiento de licencias, mantenimiento de máquinas, etc.</p>
-                            <input type="checkbox" id="notifications-enabled" class="input-checkbox" checked>
-                        </div>
+                        <!-- Vista 2: Modo Edición -->
+                        <div id="settings-edit-mode" style="display: none;">
+                            <form id="settings-form">
+                                <div class="settings-section">
+                                    <p class="settings-section-title">Parámetros de Nómina</p>
+                                    <p class="settings-section-description">
+                                        Ajusta estos valores solo cuando haya una decisión explícita de cambiar las reglas generales de pago.
+                                    </p>
 
-                        <div class="form-field">
-                            <label for="theme-preference" class="form-field__label">
-                                Preferencia de Tema
-                            </label>
-                            <p class="form-field__helper-text">Selecciona entre tema claro u oscuro.</p>
-                            <select id="theme-preference" class="input-text" style="width: auto;">
-                                <option value="light">Claro</option>
-                                <option value="dark">Oscuro</option>
-                                <option value="system">Sistema</option>
-                            </select>
+                                    <div class="form-field">
+                                        <label for="input-sueldo-minimo" class="form-field__label">
+                                            Sueldo mínimo garantizado (RF-023, RF-036)
+                                        </label>
+                                        <p class="form-field__helper-text">
+                                            Monto mensual en pesos chilenos usado como base mínima de pago.  
+                                            Se compara contra el total de porcentaje ganado (RF-022) y habilita el ingreso del 
+                                            <strong>"Monto Faltante"</strong> (RF-024) cuando el total es inferior.
+                                        </p>
+                                        <div class="form-field__control">
+                                            <span>$</span>
+                                            <input 
+                                                type="number" 
+                                                min="0"
+                                                step="1000"
+                                                id="input-sueldo-minimo" 
+                                                class="input-text" 
+                                                style="max-width: 220px;"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label for="input-porcentaje-defecto" class="form-field__label">
+                                            Porcentaje por defecto de choferes (RF-007, RF-036)
+                                        </label>
+                                        <p class="form-field__helper-text">
+                                            Porcentaje base aplicado a nuevos choferes si no se configura uno individual (RF-005).  
+                                            Se utiliza para calcular el <strong>pago del chofer</strong> (RF-015) a partir del monto recaudado.
+                                        </p>
+                                        <div class="form-field__control">
+                                            <input 
+                                                type="number" 
+                                                min="0"
+                                                max="100"
+                                                step="0.5"
+                                                id="input-porcentaje-defecto" 
+                                                class="input-text" 
+                                                style="max-width: 140px;"
+                                            />
+                                            <span>%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section" style="margin-top: 2rem;">
+                                    <p class="settings-section-title">Parámetros de Alertas y Vencimientos</p>
+                                    <p class="settings-section-description">
+                                        Define con cuánta anticipación el sistema debe alertar sobre documentación próxima a vencer.
+                                    </p>
+
+                                    <div class="form-field">
+                                        <label for="input-dias-alerta" class="form-field__label">
+                                            Días de alerta para vencimientos (RF-031, RF-036)
+                                        </label>
+                                        <p class="form-field__helper-text">
+                                            Número de días antes de la fecha de vencimiento (RF-007, RF-008) a partir del cual 
+                                            el Dashboard comenzará a mostrar alertas visuales (RF-031).
+                                        </p>
+                                        <div class="form-field__control">
+                                            <input 
+                                                type="number" 
+                                                min="0"
+                                                step="1"
+                                                id="input-dias-alerta" 
+                                                class="input-text" 
+                                                style="max-width: 140px;"
+                                            />
+                                            <span>días</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-                <div class="card__footer">
-                    <button type="submit" class="btn btn-primary" id="save-settings-button">Guardar Configuración</button>
-                </div>
-            </div>
+                    </div>
+
+                    <!-- Footer con acciones según modo -->
+                    <div class="card__footer settings-card__footer settings-card__footer--spaced">
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            id="btn-cancelar" 
+                            style="display: none;"
+                        >
+                            Cancelar
+                        </button>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" 
+                            id="btn-guardar" 
+                            style="display: none;"
+                        >
+                            Guardar cambios
+                        </button>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" 
+                            id="btn-editar"
+                        >
+                            Editar configuración
+                        </button>
+                    </div>
+                </article>
+            </section>
         </main>
     </div>
 
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const saveButton = document.getElementById('save-settings-button');
-            const defaultViewModeSelect = document.getElementById('default-view-mode');
-            const notificationsEnabledCheckbox = document.getElementById('notifications-enabled');
-            const themePreferenceSelect = document.getElementById('theme-preference');
+            // Elementos base
+            const card = document.getElementById('settings-card');
+            const titleEl = document.getElementById('settings-title');
+            const modeTag = document.getElementById('settings-mode-tag');
+            const modeLabel = document.getElementById('settings-mode-label');
 
-            const savedDefaultViewMode = localStorage.getItem('defaultViewMode') || 'view';
-            const savedNotificationsEnabled = localStorage.getItem('notificationsEnabled');
-            const savedThemePreference = localStorage.getItem('themePreference') || 'light';
+            const viewModeEl = document.getElementById('settings-view-mode');
+            const editModeEl = document.getElementById('settings-edit-mode');
 
-            defaultViewModeSelect.value = savedDefaultViewMode;
-            notificationsEnabledCheckbox.checked = savedNotificationsEnabled === null ? true : savedNotificationsEnabled === 'true';
-            themePreferenceSelect.value = savedThemePreference;
+            // Vista lectura
+            const viewSueldoMinimo = document.getElementById('view-sueldo-minimo');
+            const viewPorcentajeDefecto = document.getElementById('view-porcentaje-defecto');
+            const viewDiasAlerta = document.getElementById('view-dias-alerta');
 
-            saveButton.addEventListener('click', (e) => {
-                e.preventDefault();
+            // Inputs edición
+            const inputSueldoMinimo = document.getElementById('input-sueldo-minimo');
+            const inputPorcentajeDefecto = document.getElementById('input-porcentaje-defecto');
+            const inputDiasAlerta = document.getElementById('input-dias-alerta');
 
-                localStorage.setItem('defaultViewMode', defaultViewModeSelect.value);
-                localStorage.setItem('notificationsEnabled', notificationsEnabledCheckbox.checked);
-                localStorage.setItem('themePreference', themePreferenceSelect.value);
+            // Botones
+            const btnEditar = document.getElementById('btn-editar');
+            const btnGuardar = document.getElementById('btn-guardar');
+            const btnCancelar = document.getElementById('btn-cancelar');
 
-                alert('Configuración guardada exitosamente (simulado)!');
+            // Defaults seguros
+            const DEFAULTS = {
+                sueldoMinimo: 400000,
+                porcentajeDefecto: 30,
+                diasAlerta: 15
+            };
+
+            // Claves de almacenamiento (simulación)
+            const STORAGE_KEYS = {
+                sueldoMinimo: 'cfg_sueldoMinimo',
+                porcentajeDefecto: 'cfg_porcentajeDefectoChofer',
+                diasAlerta: 'cfg_diasAlertaVencimientos'
+            };
+
+            let currentConfig = {
+                sueldoMinimo: DEFAULTS.sueldoMinimo,
+                porcentajeDefecto: DEFAULTS.porcentajeDefecto,
+                diasAlerta: DEFAULTS.diasAlerta
+            };
+
+            function loadFromStorage() {
+                const sueldo = localStorage.getItem(STORAGE_KEYS.sueldoMinimo);
+                const porcentaje = localStorage.getItem(STORAGE_KEYS.porcentajeDefecto);
+                const dias = localStorage.getItem(STORAGE_KEYS.diasAlerta);
+
+                currentConfig.sueldoMinimo = sueldo ? Number(sueldo) : DEFAULTS.sueldoMinimo;
+                currentConfig.porcentajeDefecto = porcentaje ? Number(porcentaje) : DEFAULTS.porcentajeDefecto;
+                currentConfig.diasAlerta = dias ? Number(dias) : DEFAULTS.diasAlerta;
+            }
+
+            function saveToStorage() {
+                localStorage.setItem(STORAGE_KEYS.sueldoMinimo, String(currentConfig.sueldoMinimo));
+                localStorage.setItem(STORAGE_KEYS.porcentajeDefecto, String(currentConfig.porcentajeDefecto));
+                localStorage.setItem(STORAGE_KEYS.diasAlerta, String(currentConfig.diasAlerta));
+            }
+
+            function formatCurrencyCLP(value) {
+                try {
+                    return value.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+                } catch {
+                    return '$' + value.toLocaleString('es-CL');
+                }
+            }
+
+            function renderViewMode() {
+                viewSueldoMinimo.textContent = formatCurrencyCLP(currentConfig.sueldoMinimo);
+                viewPorcentajeDefecto.textContent = currentConfig.porcentajeDefecto + ' %';
+                viewDiasAlerta.textContent = currentConfig.diasAlerta + ' días';
+            }
+
+            function renderEditMode() {
+                inputSueldoMinimo.value = currentConfig.sueldoMinimo;
+                inputPorcentajeDefecto.value = currentConfig.porcentajeDefecto;
+                inputDiasAlerta.value = currentConfig.diasAlerta;
+            }
+
+            function setMode(mode) {
+                const isEdit = mode === 'edit';
+
+                if (isEdit) {
+                    // Editando
+                    card.classList.add('settings-card--editing');
+                    viewModeEl.style.display = 'none';
+                    editModeEl.style.display = 'block';
+
+                    btnEditar.style.display = 'none';
+                    btnGuardar.style.display = 'inline-flex';
+                    btnCancelar.style.display = 'inline-flex';
+
+                    modeTag.classList.add('settings-mode-tag--edit');
+                    modeLabel.textContent = 'Modo edición';
+
+                    titleEl.textContent = 'Editando configuración general…';
+                    renderEditMode();
+                } else {
+                    // Lectura
+                    card.classList.remove('settings-card--editing');
+                    viewModeEl.style.display = 'block';
+                    editModeEl.style.display = 'none';
+
+                    btnEditar.style.display = 'inline-flex';
+                    btnGuardar.style.display = 'none';
+                    btnCancelar.style.display = 'none';
+
+                    modeTag.classList.remove('settings-mode-tag--edit');
+                    modeLabel.textContent = 'Modo lectura';
+
+                    titleEl.textContent = 'Configuración General (RF-036)';
+                    renderViewMode();
+                }
+            }
+
+            function validateInputs() {
+                const sueldo = Number(inputSueldoMinimo.value);
+                const porcentaje = Number(inputPorcentajeDefecto.value);
+                const dias = Number(inputDiasAlerta.value);
+
+                if (isNaN(sueldo) || sueldo <= 0) {
+                    alert('El sueldo mínimo garantizado debe ser un número mayor a 0.');
+                    return null;
+                }
+
+                if (isNaN(porcentaje) || porcentaje < 0 || porcentaje > 100) {
+                    alert('El porcentaje por defecto debe estar entre 0 y 100.');
+                    return null;
+                }
+
+                if (isNaN(dias) || dias < 0) {
+                    alert('Los días de alerta deben ser un número mayor o igual a 0.');
+                    return null;
+                }
+
+                return {
+                    sueldoMinimo: sueldo,
+                    porcentajeDefecto: porcentaje,
+                    diasAlerta: dias
+                };
+            }
+
+            // Inicialización
+            loadFromStorage();
+            renderViewMode();
+            setMode('view');
+
+            // Eventos
+            btnEditar.addEventListener('click', () => {
+                setMode('edit');
+            });
+
+            btnCancelar.addEventListener('click', () => {
+                // Resetea inputs a la config actual y vuelve a lectura
+                renderEditMode();
+                setMode('view');
+            });
+
+            btnGuardar.addEventListener('click', () => {
+                const validated = validateInputs();
+                if (!validated) return;
+
+                // Actualiza estado en memoria
+                currentConfig = validated;
+
+                // Simulación de persistencia
+                saveToStorage();
+
+                // Vuelve a modo lectura
+                setMode('view');
+
+                // Mensaje de feedback (puedes reemplazar por tu sistema de alerts)
+                alert('Configuración general guardada correctamente (simulado).');
             });
         });
     </script>
