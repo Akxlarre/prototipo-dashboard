@@ -100,7 +100,7 @@
         <main class="main-content">
             <header class="main-content__header">
                 <h1 class="main-content__title">Completar Registro Diario</h1>
-                <p class="main-content__subtitle">Corrija o complete la información del registro diario para la Máquina 05.</p>
+                <p class="main-content__subtitle" id="subtitle-text">Corrija o complete la información del registro diario.</p>
             </header>
 
             <div id="confirmation-message" class="alert-row" style="display: none; background-color: var(--color-surface-success); margin-bottom: var(--space-lg);">
@@ -108,9 +108,16 @@
                 <span class="alert-row__text">Registro guardado y actualizado a "Completo" exitosamente.</span>
             </div>
 
+            <div id="incidente-alert" class="alert-row" style="display: none; background-color: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--color-state-error); margin-bottom: var(--space-lg);">
+                <div class="alert-row__status-bar" style="background-color: var(--color-state-error);"></div>
+                <span class="alert-row__text" style="font-weight: var(--font-weight-medium);">
+                    ⚠️ <strong>INCIDENTE CRÍTICO REPORTADO:</strong> Este registro contiene un incidente que requiere atención inmediata.
+                </span>
+            </div>
+
             <div class="card">
                 <div class="card__header">
-                    <h2 class="card__header-title">Registro del 2025-11-14</h2>
+                    <h2 class="card__header-title" id="record-date-title">Registro del 2025-11-14</h2>
                     <div id="view-mode-controls">
                         <button class="btn btn-primary" id="edit-button">Completar Registro</button>
                     </div>
@@ -158,6 +165,14 @@
                                 <img id="preview-image" src="https://via.placeholder.com/300x200.png?text=COMPROBANTE+PENDIENTE" alt="Previsualización">
                             </div>
                         </div>
+
+                        <!-- Observaciones -->
+                        <div class="form-field" style="margin-top: var(--space-lg);">
+                            <label class="form-field__label">Observaciones</label>
+                            <p id="observaciones-view" class="view-mode-value" style="white-space: pre-wrap; min-height: 1.5rem;">Sin observaciones</p>
+                            <textarea id="observaciones-edit" class="input-text" placeholder="Notas adicionales (opcional)" rows="4" style="display: none; resize: vertical;"></textarea>
+                        </div>
+
                          <div class="form-field" style="margin-top: var(--space-lg);">
                             <label class="form-field__label">Historial de Cambios (RF-011)</label>
                             <p class="form-field__helper-text">v1: Creado por Juan Pérez (Chofer) - 2025-11-14 18:30</p>
@@ -171,6 +186,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Función para obtener parámetros de URL
+            const getUrlParams = () => {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    maquina: params.get('maquina') || '05',
+                    chofer: params.get('chofer') || 'Juan Pérez',
+                    fecha: params.get('fecha') || '2025-11-14',
+                    estado: params.get('estado') || 'pending-diesel'
+                };
+            };
+
+            const urlParams = getUrlParams();
             const formContainer = document.getElementById('form-container');
             const editButton = document.getElementById('edit-button');
             const saveButton = document.getElementById('save-button');
@@ -178,17 +205,87 @@
             const viewModeControls = document.getElementById('view-mode-controls');
             const editModeControls = document.getElementById('edit-mode-controls');
             const confirmationMessage = document.getElementById('confirmation-message');
+            const subtitleText = document.getElementById('subtitle-text');
+            const recordDateTitle = document.getElementById('record-date-title');
 
             const fileUploadArea = document.getElementById('file-upload-area');
             const fileInput = document.getElementById('comprobante-file');
             const previewImage = document.getElementById('preview-image');
 
-            const fields = {
-                'initial-km': { view: 'initial-km-view', edit: 'initial-km-edit', value: '125000' },
-                'final-km': { view: 'final-km-view', edit: 'final-km-edit', value: '' },
-                'diesel-quantity': { view: 'diesel-quantity-view', edit: 'diesel-quantity-edit', value: '' },
-                'diesel-cost': { view: 'diesel-cost-view', edit: 'diesel-cost-edit', value: '' }
+            // Datos de ejemplo según el estado del registro
+            const getRecordData = (estado, maquina) => {
+                const baseData = {
+                    'initial-km': '125000',
+                    'final-km': '',
+                    'diesel-quantity': '',
+                    'diesel-cost': '',
+                    'observaciones': '',
+                    hasComprobante: false
+                };
+
+                if (estado === 'complete') {
+                    // Registros completos tienen todos los datos
+                    return {
+                        'initial-km': '125000',
+                        'final-km': '125450',
+                        'diesel-quantity': '120.5',
+                        'diesel-cost': '85000',
+                        'observaciones': 'Día normal de operación. Todo en orden.',
+                        hasComprobante: true
+                    };
+                } else if (estado === 'incidente') {
+                    // Registros con incidente crítico
+                    return {
+                        'initial-km': '125000',
+                        'final-km': '125380',
+                        'diesel-quantity': '95.0',
+                        'diesel-cost': '67000',
+                        'observaciones': 'Choque menor en intersección. Daños en parachoques delantero. Pasajeros ilesos.',
+                        hasComprobante: true
+                    };
+                } else {
+                    // Registros pendientes pueden tener algunos datos
+                    if (estado === 'pending-diesel') {
+                        return {
+                            ...baseData,
+                            'final-km': maquina === '05' ? '125450' : '',
+                            'observaciones': maquina === '05' ? 'Máquina en pana, no hubo recorrido completo.' : ''
+                        };
+                    } else if (estado === 'pending-trabajador') {
+                        return {
+                            ...baseData,
+                            'final-km': maquina === '02' ? '125200' : '',
+                            'diesel-quantity': maquina === '02' ? '80.0' : '',
+                            'diesel-cost': maquina === '02' ? '56000' : '',
+                            'observaciones': maquina === '02' ? 'Se derramó combustible en la estación de servicio.' : ''
+                        };
+                    }
+                }
+                return baseData;
             };
+
+            const recordData = getRecordData(urlParams.estado, urlParams.maquina);
+
+            const fields = {
+                'initial-km': { view: 'initial-km-view', edit: 'initial-km-edit', value: recordData['initial-km'] },
+                'final-km': { view: 'final-km-view', edit: 'final-km-edit', value: recordData['final-km'] },
+                'diesel-quantity': { view: 'diesel-quantity-view', edit: 'diesel-quantity-edit', value: recordData['diesel-quantity'] },
+                'diesel-cost': { view: 'diesel-cost-view', edit: 'diesel-cost-edit', value: recordData['diesel-cost'] },
+                'observaciones': { view: 'observaciones-view', edit: 'observaciones-edit', value: recordData['observaciones'] }
+            };
+
+            // Actualizar título y subtítulo según parámetros
+            recordDateTitle.textContent = `Registro del ${urlParams.fecha}`;
+            subtitleText.textContent = `Corrija o complete la información del registro diario para la Máquina ${urlParams.maquina}.`;
+
+            // Mostrar alerta de incidente si aplica
+            const incidenteAlert = document.getElementById('incidente-alert');
+            if (urlParams.estado === 'incidente') {
+                incidenteAlert.style.display = 'flex';
+            }
+
+            // Determinar modo inicial según el estado
+            const initialMode = (urlParams.estado === 'complete') ? 'view' : 'edit';
 
             function setMode(mode) {
                 formContainer.classList.remove('view-mode', 'edit-mode');
@@ -212,8 +309,25 @@
                     } else {
                         viewEl.style.display = 'block';
                         editEl.style.display = 'none';
-                        if (fields[key].value) {
-                            viewEl.textContent = fields[key].value + (key.includes('km') ? ' Km' : '');
+                        if (key === 'observaciones') {
+                            // Manejo especial para observaciones
+                            if (fields[key].value && fields[key].value.trim() !== '') {
+                                viewEl.textContent = fields[key].value;
+                                viewEl.style.color = 'var(--color-text-primary)';
+                            } else {
+                                viewEl.textContent = 'Sin observaciones';
+                                viewEl.style.color = 'var(--color-text-secondary)';
+                            }
+                        } else if (fields[key].value) {
+                            if (key.includes('km')) {
+                                viewEl.textContent = fields[key].value + ' Km';
+                            } else if (key.includes('cost')) {
+                                viewEl.textContent = '$ ' + parseFloat(fields[key].value).toLocaleString('es-CL');
+                            } else if (key.includes('quantity')) {
+                                viewEl.textContent = fields[key].value + ' L';
+                            } else {
+                                viewEl.textContent = fields[key].value;
+                            }
                             viewEl.style.color = 'var(--color-text-primary)';
                         } else {
                             viewEl.textContent = '-- PENDIENTE --';
@@ -221,6 +335,22 @@
                         }
                     }
                 }
+
+                // Actualizar imagen de comprobante
+                if (recordData.hasComprobante && mode === 'view') {
+                    previewImage.src = 'https://via.placeholder.com/300x200.png?text=COMPROBANTE+SUBIDO';
+                } else if (!recordData.hasComprobante) {
+                    previewImage.src = 'https://via.placeholder.com/300x200.png?text=COMPROBANTE+PENDIENTE';
+                }
+            }
+
+            // Cambiar texto del botón según el estado
+            if (urlParams.estado === 'complete') {
+                editButton.textContent = 'Editar Registro';
+            } else if (urlParams.estado === 'incidente') {
+                editButton.textContent = 'Revisar Incidente';
+            } else {
+                editButton.textContent = 'Completar Registro';
             }
 
             editButton.addEventListener('click', () => setMode('edit'));
@@ -231,9 +361,22 @@
             });
 
             saveButton.addEventListener('click', () => {
+                // Validar campos requeridos
+                const finalKm = document.getElementById('final-km-edit').value;
+                const dieselQuantity = document.getElementById('diesel-quantity-edit').value;
+                const dieselCost = document.getElementById('diesel-cost-edit').value;
+
+                if (!finalKm || !dieselQuantity || !dieselCost) {
+                    alert('Por favor complete todos los campos requeridos.');
+                    return;
+                }
+
                 // Save new values
                 for (const key in fields) {
-                    fields[key].value = document.getElementById(fields[key].edit).value;
+                    const editEl = document.getElementById(fields[key].edit);
+                    if (editEl) {
+                        fields[key].value = editEl.value;
+                    }
                 }
                 setMode('view');
                 confirmationMessage.style.display = 'flex';
@@ -257,8 +400,8 @@
                 }
             });
 
-            // Initial state
-            setMode('view');
+            // Initial state según parámetros de URL
+            setMode(initialMode);
         });
     </script>
 </body>

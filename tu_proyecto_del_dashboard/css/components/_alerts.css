@@ -1,0 +1,305 @@
+/* ==================================== */
+/* _alerts.css - Sistema de Alertas Modular */
+/* ==================================== */
+
+/* ------------------------------------ */
+/* Organismo: Barra de Resumen de Alertas */
+/* ------------------------------------ */
+.alert-summary-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-xl);
+    background-color: var(--color-surface-page);
+    border-bottom: 1px solid var(--color-border-light);
+    gap: var(--space-xl);
+}
+
+.alert-summary-bar__counters {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.alert-summary-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-desktop-label);
+    line-height: var(--line-height-desktop-label);
+}
+
+.alert-summary-counter__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.alert-summary-counter__number {
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-text-primary);
+    min-width: 20px;
+    text-align: center;
+}
+
+.alert-summary-counter__label {
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-desktop-small);
+}
+
+.alert-summary-counter--critical .alert-summary-counter__icon {
+    color: var(--color-alert-critical);
+}
+
+.alert-summary-counter--warning .alert-summary-counter__icon {
+    color: var(--color-alert-warning);
+}
+
+.alert-summary-counter--info .alert-summary-counter__icon {
+    color: var(--color-alert-info);
+}
+
+.alert-summary-bar__toggle {
+    font-size: var(--font-size-desktop-label);
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-action-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 40px;
+    min-width: 40px;
+}
+
+.alert-summary-bar__toggle:hover {
+    background-color: var(--color-surface-widget);
+}
+
+.alert-summary-bar__toggle:focus-visible {
+    outline: 2px solid var(--color-action-focus-outline);
+    outline-offset: 2px;
+}
+
+.alert-summary-bar__toggle-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.alert-summary-bar__toggle-icon--rotated {
+    transform: rotate(180deg);
+}
+
+/* ------------------------------------ */
+/* Organismo: Panel de Lista de Alertas */
+/* ------------------------------------ */
+.alert-list-panel {
+    background-color: var(--color-surface-widget);
+    border-bottom: 1px solid var(--color-border-light);
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+
+.alert-list-panel--collapsed {
+    max-height: 0;
+    opacity: 0;
+    border-bottom: none;
+}
+
+.alert-list-panel--expanded {
+    max-height: 1000px;
+    opacity: 1;
+}
+
+.alert-list-panel__container {
+    padding: var(--space-md) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.alert-list-panel__container--scrollable {
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Scrollbar personalizado para el panel */
+.alert-list-panel__container--scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.alert-list-panel__container--scrollable::-webkit-scrollbar-track {
+    background: var(--color-surface-page);
+}
+
+.alert-list-panel__container--scrollable::-webkit-scrollbar-thumb {
+    background: var(--color-border-medium);
+    border-radius: 4px;
+}
+
+.alert-list-panel__container--scrollable::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-disabled);
+}
+
+/* ------------------------------------ */
+/* Molécula: Item de Alerta (Componente Atómico Unificado) */
+/* ------------------------------------ */
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-left: 4px solid transparent;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-surface-page);
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.alert-item:hover {
+    background-color: var(--color-surface-widget);
+    transform: translateX(2px);
+}
+
+.alert-item__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+.alert-item__texts {
+    flex: 1;
+    min-width: 0;
+}
+
+.alert-item__title {
+    font-size: var(--font-size-desktop-label);
+    font-weight: var(--font-weight-semi-bold);
+    line-height: 1.4;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xxs);
+}
+
+.alert-item__description {
+    font-size: 13px;
+    font-weight: var(--font-weight-regular);
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+}
+
+.alert-item__action {
+    flex-shrink: 0;
+    font-size: var(--font-size-desktop-label);
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-action-primary);
+    text-decoration: none;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    min-height: 40px;
+    min-width: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.alert-item__action:hover {
+    background-color: var(--color-action-focus-outline);
+    background-color: rgba(59, 130, 246, 0.1);
+    text-decoration: none;
+}
+
+.alert-item__action:focus-visible {
+    outline: 2px solid var(--color-action-focus-outline);
+    outline-offset: 2px;
+}
+
+/* Variantes de severidad */
+.alert-item--critical {
+    border-left-color: var(--color-alert-critical);
+    background-color: var(--color-alert-critical-soft);
+}
+
+.alert-item--critical .alert-item__icon {
+    color: var(--color-alert-critical);
+}
+
+.alert-item--warning {
+    border-left-color: var(--color-alert-warning);
+    background-color: var(--color-alert-warning-soft);
+}
+
+.alert-item--warning .alert-item__icon {
+    color: var(--color-alert-warning);
+}
+
+.alert-item--info {
+    border-left-color: var(--color-alert-info);
+    background-color: var(--color-alert-info-soft);
+}
+
+.alert-item--info .alert-item__icon {
+    color: var(--color-alert-info);
+}
+
+.alert-item--success {
+    border-left-color: var(--color-alert-success);
+    background-color: var(--color-alert-success-soft);
+}
+
+.alert-item--success .alert-item__icon {
+    color: var(--color-alert-success);
+}
+
+/* ------------------------------------ */
+/* Organismo: Estado Vacío Premium */
+/* ------------------------------------ */
+.alert-empty-state {
+    padding: var(--space-xl);
+    text-align: center;
+    background-color: var(--color-alert-success-soft);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--color-alert-success);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.alert-empty-state__icon {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--color-alert-success);
+}
+
+.alert-empty-state__title {
+    font-size: var(--font-size-desktop-base);
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xxs);
+}
+
+.alert-empty-state__text {
+    font-size: var(--font-size-desktop-label);
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+

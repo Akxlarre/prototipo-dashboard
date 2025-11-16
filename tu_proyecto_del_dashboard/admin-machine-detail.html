@@ -340,12 +340,18 @@
                                         <th>Estado</th>
                                         <th>Recaudado</th>
                                         <th>Diésel</th>
+                                        <th title="Observaciones" style="text-align: center; width: 40px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="opacity: 0.6;">
+                                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                                <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                            </svg>
+                                        </th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="daily-records-body">
                                     <tr>
-                                        <td colspan="6" style="text-align: center; font-size: 0.9rem; color: var(--color-text-muted);">
+                                        <td colspan="7" style="text-align: center; font-size: 0.9rem; color: var(--color-text-muted);">
                                             Cargando registros...
                                         </td>
                                     </tr>
@@ -427,11 +433,11 @@
             const clearFiltersBtn = document.getElementById('clear-record-filters');
 
             const dailyRecords = [
-                { date: '2025-11-14', driver: 'Juan Perez', status: 'PENDIENTE_DIESEL', revenue: 450000, diesel: 'Pendiente', link: 'admin-registro-diario.html' },
-                { date: '2025-11-13', driver: 'Juan Perez', status: 'COMPLETO', revenue: 420000, diesel: '$ 180.000', link: 'admin-registro-diario.html' },
-                { date: '2025-11-12', driver: 'Maria Gomez', status: 'COMPLETO', revenue: 395000, diesel: '$ 150.000', link: 'admin-registro-diario.html' },
-                { date: '2025-11-11', driver: 'Pedro Lopez', status: 'PENDIENTE_TRABAJADOR', revenue: 380000, diesel: '$ 120.000', link: 'admin-registro-diario.html' },
-                { date: '2025-11-10', driver: 'Juan Perez', status: 'COMPLETO', revenue: 410000, diesel: '$ 160.000', link: 'admin-registro-diario.html' }
+                { date: '2025-11-14', driver: 'Juan Perez', status: 'PENDIENTE_DIESEL', revenue: 450000, diesel: 'Pendiente', hasObservaciones: true, link: 'admin-registro-diario.html' },
+                { date: '2025-11-13', driver: 'Juan Perez', status: 'COMPLETO', revenue: 420000, diesel: '$ 180.000', hasObservaciones: false, link: 'admin-registro-diario.html' },
+                { date: '2025-11-12', driver: 'Maria Gomez', status: 'COMPLETO', revenue: 395000, diesel: '$ 150.000', hasObservaciones: true, link: 'admin-registro-diario.html' },
+                { date: '2025-11-11', driver: 'Pedro Lopez', status: 'PENDIENTE_TRABAJADOR', revenue: 380000, diesel: '$ 120.000', hasObservaciones: true, link: 'admin-registro-diario.html' },
+                { date: '2025-11-10', driver: 'Juan Perez', status: 'COMPLETO', revenue: 410000, diesel: '$ 160.000', hasObservaciones: false, link: 'admin-registro-diario.html' }
             ];
             let assignmentState = null;
 
@@ -554,19 +560,26 @@
                 recordsBody.innerHTML = '';
                 if (!records.length) {
                     const emptyRow = document.createElement('tr');
-                    emptyRow.innerHTML = `<td colspan="6" style="text-align:center; color: var(--color-text-muted); font-size: 0.9rem;">Sin resultados para los filtros seleccionados.</td>`;
+                    emptyRow.innerHTML = `<td colspan="7" style="text-align:center; color: var(--color-text-muted); font-size: 0.9rem;">Sin resultados para los filtros seleccionados.</td>`;
                     recordsBody.appendChild(emptyRow);
                     return;
                 }
 
                 records.forEach(record => {
                     const row = document.createElement('tr');
+                    const observacionesIcon = record.hasObservaciones 
+                        ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="color: var(--color-action-primary);" title="Tiene observaciones">
+                             <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                             <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                           </svg>`
+                        : '';
                     row.innerHTML = `
                         <td>${record.date}</td>
                         <td>${record.driver}</td>
                         <td><strong>${record.status}</strong></td>
                         <td>${formatCurrency(record.revenue)}</td>
                         <td>${record.diesel}</td>
+                        <td style="text-align: center;">${observacionesIcon}</td>
                         <td><a href="${record.link}" class="btn btn-secondary btn-sm">Ver Registro</a></td>
                     `;
                     recordsBody.appendChild(row);

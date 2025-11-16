@@ -25,6 +25,16 @@
     --color-state-warning: #F59E0B; /* Ámbar-500 */
     --color-state-success: #16A34A; /* Verde-600 */
 
+    /* Alertas - Tokens de Color */
+    --color-alert-critical: #EF4444;
+    --color-alert-critical-soft: rgba(239, 68, 68, 0.12);
+    --color-alert-warning: #F59E0B;
+    --color-alert-warning-soft: rgba(245, 158, 11, 0.15);
+    --color-alert-info: #3B82F6;
+    --color-alert-info-soft: rgba(59, 130, 246, 0.15);
+    --color-alert-success: #10B981;
+    --color-alert-success-soft: rgba(16, 185, 129, 0.15);
+
     /* ------------------------------------ */
     /* 2. Escala de Espaciado (8pt Grid)    */
     /* ------------------------------------ */

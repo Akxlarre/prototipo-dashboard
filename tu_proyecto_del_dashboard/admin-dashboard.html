@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/components/_forms.css">
     <link rel="stylesheet" href="css/components/_cards.css">
     <link rel="stylesheet" href="css/components/_alert-row.css">
+    <link rel="stylesheet" href="css/components/_alerts.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_modal.css">
@@ -51,7 +52,7 @@
 
         .dashboard-section-subtitle {
             font-size: 0.8rem;
-            color: var(--color-text-muted);
+            color: var(--color-text-disabled);
             margin-bottom: var(--space-sm);
         }
 
@@ -62,7 +63,7 @@
             padding: 0.125rem 0.6rem;
             border-radius: 999px;
             font-size: 0.75rem;
-            border: 1px solid var(--color-border-subtle);
+            border: 1px solid var(--color-border-light);
             color: var(--color-text-secondary);
         }
 
@@ -87,27 +88,93 @@
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
             border-radius: 999px;
-            background-color: var(--color-surface-subtle);
+            background-color: var(--color-surface-page);
             color: var(--color-text-secondary);
         }
+
 
         .chart-axis-labels {
             display: flex;
             justify-content: space-between;
             margin-top: 0.5rem;
             font-size: 0.75rem;
-            color: var(--color-text-muted);
+            color: var(--color-text-disabled);
         }
 
         .chart-axis-caption {
             font-size: 0.75rem;
-            color: var(--color-text-muted);
+            color: var(--color-text-disabled);
             margin-top: 0.5rem;
         }
 
         .data-table--compact td,
         .data-table--compact th {
             padding-block: 0.5rem;
+        }
+
+        /* Mejoras UX conservadoras para tabla de registros diarios */
+        .data-table-container {
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-md);
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--color-surface-page);
+        }
+
+        /* Indicador visual sutil para registros pendientes */
+        .record-row--pending {
+            border-left: 3px solid var(--color-state-error);
+        }
+
+        .record-row--pending-warning {
+            border-left: 3px solid var(--color-state-warning);
+        }
+
+        /* Badge de estado visual mejorado */
+        .record-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .record-status-badge--pending-diesel {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #DC2626;
+        }
+
+        .record-status-badge--pending-trabajador {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #D97706;
+        }
+
+        .record-status-badge--complete {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #047857;
+        }
+
+        .record-status-badge--incidente {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #DC2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Formato de fecha más legible */
+        .record-date {
+            font-variant-numeric: tabular-nums;
+            color: var(--color-text-secondary);
         }
     </style>
 </head>
@@ -150,51 +217,53 @@
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Dashboard del Administrador</h1>
-                <p class="main-content__subtitle">
-                    Vista rápida del estado operativo, alertas críticas y rendimiento financiero de la flota.
-                </p>
+                <div>
+                    <h1 class="main-content__title">
+                        Dashboard del Administrador
+                    </h1>
+                    <p class="main-content__subtitle">
+                        Vista rápida del estado operativo, alertas críticas y rendimiento financiero de la flota.
+                    </p>
+                </div>
             </header>
 
-            <section class="dashboard-columns">
-                <!-- Columna izquierda: Alertas + Estado Operativo -->
-                <div class="dashboard-column">
-                    <!-- Sección: Alertas críticas -->
-                    <div class="card">
-                        <div class="card__header">
-                            <div>
-                                <h2 class="card__header-title">Alertas Críticas</h2>
-                                <p class="dashboard-section-subtitle">
-                                    Registros incompletos y documentación próxima a vencer (RF-031, RF-038, RF-039).
-                                </p>
-                            </div>
-                            <div class="summary-badges">
-                                <span class="summary-badge">1 registros incompletos</span>
-                                <span class="summary-badge">3 documentos por vencer</span>
-                            </div>
+            <!-- Sistema de Alertas Modular -->
+            <div class="card" style="margin-bottom: var(--space-xl);">
+                <div class="alert-summary-bar" id="alert-summary-bar">
+                    <div class="alert-summary-bar__counters">
+                        <div class="alert-summary-counter alert-summary-counter--critical">
+                            <span class="alert-summary-counter__icon">🔴</span>
+                            <span class="alert-summary-counter__number" id="counter-critical">0</span>
+                            <span class="alert-summary-counter__label">críticas</span>
                         </div>
-                        <div class="card__body card__body--no-padding"> 
-                            <!-- Registros incompletos -->        
-                            <div class="alert-row">
-                                <div class="alert-row__status-bar alert-row__status-bar--error"></div>
-                                <span class="alert-row__text">
-                                    Máquina 02 (Ayer) · Estado: <strong>PENDIENTE_TRABAJADOR</strong>.
-                                </span>
-                                <a href="admin-registro-diario.html" class="alert-row__action-link">Ver Registro</a>
-                            </div>
-
-                            <!-- Vencimientos -->
-                            <div id="document-alerts">
-                                <div class="alert-row">
-                                    <div class="alert-row__status-bar alert-row__status-bar--warning"></div>
-                                    <span class="alert-row__text">
-                                        Sin registros recientes de documentación. Se mostrarán aquí cuando existan datos.
-                                    </span>
-                                    <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Fichas</a>
-                                </div>
-                            </div>
+                        <div class="alert-summary-counter alert-summary-counter--warning">
+                            <span class="alert-summary-counter__icon">🟠</span>
+                            <span class="alert-summary-counter__number" id="counter-warning">0</span>
+                            <span class="alert-summary-counter__label">advertencias</span>
+                        </div>
+                        <div class="alert-summary-counter alert-summary-counter--info">
+                            <span class="alert-summary-counter__icon">🔵</span>
+                            <span class="alert-summary-counter__number" id="counter-info">0</span>
+                            <span class="alert-summary-counter__label">informativas</span>
                         </div>
                     </div>
+                    <button class="alert-summary-bar__toggle" id="alert-toggle-btn" aria-expanded="true" aria-controls="alert-list-panel">
+                        <span>Ver todas las alertas</span>
+                        <svg class="alert-summary-bar__toggle-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="alert-list-panel alert-list-panel--expanded" id="alert-list-panel">
+                    <div class="alert-list-panel__container" id="alert-list-container">
+                        <!-- Las alertas se renderizarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <section class="dashboard-columns">
+                <!-- Columna izquierda: Estado Operativo -->
+                <div class="dashboard-column">
 
                     <!-- Sección: Estado de registros diarios -->
                     <div class="card">
@@ -210,6 +279,10 @@
                                     <span class="status-pill__dot"></span>
                                     2 pendientes
                                 </span>
+                                <span class="status-pill status-pill--error">
+                                    <span class="status-pill__dot"></span>
+                                    1 incidente
+                                </span>
                                 <span class="status-pill status-pill--ok">
                                     <span class="status-pill__dot"></span>
                                     5 completos
@@ -222,41 +295,182 @@
                                     <thead>
                                         <tr>
                                             <th>Máquina</th>
+                                            <th>Chofer</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
+                                            <th>Recaudación</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>05</td>
-                                            <td>2025-11-14</td>
-                                            <td><strong>PENDIENTE_DIESEL</strong></td>
-                                            <td><a href="admin-machine-detail.html#daily-records-section" class="link-inline alert-row__action-link">Ver Detalle</a></td>
+                                    <tbody class="space-between-rows">
+                                        <!-- Registros pendientes primero (prioridad visual) -->
+                                        <tr class="record-row--pending">
+                                            <td><strong>05</strong></td>
+                                            <td>Juan Pérez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--pending-diesel">
+                                                    Pendiente Diesel
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=05&chofer=Juan Pérez&fecha=2025-11-14&estado=pending-diesel" class="link-inline alert-row__action-link">
+                                                    Resolver
+                                                </a>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>02</td>
-                                            <td>2025-11-14</td>
-                                            <td><strong>PENDIENTE_TRABAJADOR</strong></td>
-                                            <td><a href="admin-registro-diario.html" class="link-inline">Ver Registro</a></td>
+                                        <tr class="record-row--pending-warning">
+                                            <td><strong>02</strong></td>
+                                            <td>Ana Gómez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--pending-trabajador">
+                                                    Pendiente Trabajador
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=02&chofer=Ana Gómez&fecha=2025-11-14&estado=pending-trabajador" class="link-inline alert-row__action-link">
+                                                    Resolver
+                                                </a>
+                                            </td>
                                         </tr>
+                                        <!-- Registro con incidente crítico (alta prioridad visual) -->
+                                        <tr class="record-row--pending">
+                                            <td><strong>04</strong></td>
+                                            <td>Luis Martínez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--incidente">
+                                                    ⚠️ Incidente Reportado
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 85.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=04&chofer=Luis Martínez&fecha=2025-11-14&estado=incidente" class="link-inline alert-row__action-link" style="color: var(--color-state-error); font-weight: var(--font-weight-medium);">
+                                                    Revisar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <!-- Registros completos después -->
                                         <tr>
                                             <td>01</td>
-                                            <td>2025-11-14</td>
-                                            <td>COMPLETO</td>
-                                            <td><span style="font-size: 0.75rem; color: var(--color-text-muted);">—</span></td>
+                                            <td>Carlos Rodríguez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--complete">
+                                                    Completo
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=01&chofer=Carlos Rodríguez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                    Ver detalle
+                                                </a>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>03</td>
-                                            <td>2025-11-14</td>
-                                            <td>COMPLETO</td>
-                                            <td><span style="font-size: 0.75rem; color: var(--color-text-muted);">—</span></td>
+                                            <td>María López</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--complete">
+                                                    Completo
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=03&chofer=María López&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                    Ver detalle
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>07</td>
+                                            <td>Pedro Gómez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--complete">
+                                                    Completo
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=07&chofer=Pedro Gómez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                    Ver detalle
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>08</td>
+                                            <td>Juan Pérez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--complete">
+                                                    Completo
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=08&chofer=Juan Pérez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                    Ver detalle
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>09</td>
+                                            <td>Juan Pérez</td>
+                                            <td class="record-date">2025-11-14</td>
+                                            <td>
+                                                <span class="record-status-badge record-status-badge--complete">
+                                                    Completo
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="record-recaudacion">
+                                                    $ 100.000
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="admin-registro-diario.html?maquina=09&chofer=Juan Pérez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                    Ver detalle
+                                                </a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <p class="dashboard-section-subtitle" style="margin-top: var(--space-sm);">
-                                Los registros "PENDIENTE_DIESEL" y "PENDIENTE_TRABAJADOR" generan alertas en tiempo real (RF-038, RF-039).
+                                Los registros "PENDIENTE_DIESEL", "PENDIENTE_TRABAJADOR" e "INCIDENTE_REPORTADO" generan alertas en tiempo real (RF-038, RF-039).
                             </p>
                         </div>
                     </div>
@@ -316,47 +530,6 @@
                             </p>
                         </div>
                     </div>
-
-                    <!-- Eficiencia de combustible -->
-                    <div class="card">
-                        <div class="card__header">
-                            <div>
-                                <h2 class="card__header-title">Eficiencia de Combustible</h2>
-                                <p class="dashboard-section-subtitle">
-                                    Rendimiento promedio y comparación rápida entre máquinas (RF-016, RF-033).
-                                </p>
-                            </div>
-                            <a href="admin-reports.html" class="card__header-action">
-                                Ver Reporte 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="card__body">
-                            <div class="chart-kpi" style="text-align: left;">
-                                <span class="chart-kpi__label">Promedio Flota</span>
-                                <span class="chart-kpi__value">5.8 Km/L</span>
-                            </div>
-                            <div class="chart-container">
-                                <div class="chart-bar" style="height: 70%;" title="Máquina 01"></div>
-                                <div class="chart-bar" style="height: 85%;" title="Máquina 05"></div>
-                                <div class="chart-bar" style="height: 55%;" title="Máquina 02"></div>
-                                <div class="chart-bar" style="height: 95%;" title="Máquina 07"></div>
-                                <div class="chart-bar" style="height: 60%;" title="Máquina 03"></div>
-                            </div>
-                            <div class="chart-axis-labels">
-                                <span>01</span>
-                                <span>05</span>
-                                <span>02</span>
-                                <span>07</span>
-                                <span>03</span>
-                            </div>
-                            <p class="chart-axis-caption">
-                                Eje Y: Rendimiento relativo Km/L. Valores fuera de rango deben investigarse en el módulo de reportes (RF-016, RF-033).
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </section>
         </main>
@@ -366,9 +539,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const docAlertsContainer = document.getElementById('document-alerts');
+            // ============================================
+            // SISTEMA UNIFICADO DE ALERTAS
+            // ============================================
+            
             const DOC_STORAGE_KEY = 'machineDocuments';
+            const DAILY_RECORDS_KEY = 'dailyRecords';
+            
+            const alertListContainer = document.getElementById('alert-list-container');
+            const alertListPanel = document.getElementById('alert-list-panel');
+            const alertToggleBtn = document.getElementById('alert-toggle-btn');
+            const counterCritical = document.getElementById('counter-critical');
+            const counterWarning = document.getElementById('counter-warning');
+            const counterInfo = document.getElementById('counter-info');
 
+            // Utilidades
             const safeJSONParse = (value, fallback = {}) => {
                 try {
                     return value ? JSON.parse(value) : fallback;
@@ -382,24 +567,20 @@
                     return { text: 'Sin fecha registrada', severity: 'warning' };
                 }
                 const today = new Date();
+                today.setHours(0, 0, 0, 0);
                 const date = new Date(dateValue);
+                date.setHours(0, 0, 0, 0);
                 const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
                 if (Number.isNaN(diffDays)) {
-                    return { text: 'Fecha inválida', severity: 'error' };
+                    return { text: 'Fecha inválida', severity: 'critical' };
                 }
                 if (diffDays < 0) {
-                    return { text: `Vencido hace ${Math.abs(diffDays)} días`, severity: 'error' };
+                    return { text: `Vencido hace ${Math.abs(diffDays)} días`, severity: 'critical' };
                 }
                 if (diffDays <= 10) {
                     return { text: `Vence en ${diffDays} días`, severity: 'warning' };
                 }
                 return { text: 'Al día', severity: 'ok' };
-            };
-
-            const severityToClass = {
-                error: 'alert-row__status-bar--error',
-                warning: 'alert-row__status-bar--warning',
-                ok: 'alert-row__status-bar--approved'
             };
 
             const docTypeLabel = {
@@ -408,10 +589,76 @@
                 insurance: 'Seguro Obligatorio'
             };
 
-            const renderDocumentAlerts = () => {
-                if (!docAlertsContainer) return;
+            // ============================================
+            // RECOLECCIÓN DE ALERTAS
+            // ============================================
+
+            // 1. Alertas de Registros Diarios (RF-037, RF-038, RF-039)
+            const getDailyRecordAlerts = () => {
+                const alerts = [];
+                const today = new Date().toISOString().split('T')[0];
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                
+                // Datos de ejemplo (en producción vendría de localStorage o API)
+                const dailyRecords = [
+                    { machineId: '05', driver: 'Juan Pérez', date: yesterday, status: 'PENDIENTE_DIESEL' },
+                    { machineId: '02', driver: 'Ana Gómez', date: yesterday, status: 'PENDIENTE_TRABAJADOR' },
+                    { machineId: '04', driver: 'Luis Martínez', date: today, status: 'INCIDENTE_REPORTADO' },
+                    { machineId: '01', driver: 'Carlos Rodríguez', date: today, status: 'COMPLETO' }
+                ];
+
+                dailyRecords.forEach(record => {
+                    if (record.status === 'PENDIENTE_DIESEL') {
+                        alerts.push({
+                            id: `record-diesel-${record.machineId}-${record.date}`,
+                            type: 'operational',
+                            severity: 'critical',
+                            title: `Registro Incompleto - Máquina ${record.machineId}`,
+                            description: `Falta ingresar datos de diésel para el registro del ${record.date}. Chofer: ${record.driver}.`,
+                            machineId: record.machineId,
+                            driverName: record.driver,
+                            date: record.date,
+                            actionLabel: 'Resolver',
+                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-diesel`
+                        });
+                    } else if (record.status === 'PENDIENTE_TRABAJADOR') {
+                        alerts.push({
+                            id: `record-worker-${record.machineId}-${record.date}`,
+                            type: 'operational',
+                            severity: 'critical',
+                            title: `Registro Incompleto - Máquina ${record.machineId}`,
+                            description: `Falta completar información del trabajador para el registro del ${record.date}. Chofer: ${record.driver}.`,
+                            machineId: record.machineId,
+                            driverName: record.driver,
+                            date: record.date,
+                            actionLabel: 'Resolver',
+                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-trabajador`
+                        });
+                    } else if (record.status === 'INCIDENTE_REPORTADO') {
+                        alerts.push({
+                            id: `record-incidente-${record.machineId}-${record.date}`,
+                            type: 'incident',
+                            severity: 'critical',
+                            title: `⚠️ Incidente Crítico - Máquina ${record.machineId}`,
+                            description: `El chofer ${record.driver} reportó un incidente crítico el ${record.date}. Revisar.`,
+                            machineId: record.machineId,
+                            driverName: record.driver,
+                            date: record.date,
+                            actionLabel: 'Revisar',
+                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=incidente`
+                        });
+                    }
+                });
+
+                return alerts;
+            };
+
+            // 2. Alertas de Documentación (RF-031)
+            const getDocumentAlerts = () => {
+                const alerts = [];
                 const storedDocs = safeJSONParse(localStorage.getItem(DOC_STORAGE_KEY));
-                const dataset = Object.keys(storedDocs).length ? storedDocs : {
+                // Usar datos de ejemplo solo si no hay datos en localStorage
+                const dataset = Object.keys(storedDocs).length > 0 ? storedDocs : {
                     '05': {
                         revision: '2023-11-20',
                         permit: '2024-03-31',
@@ -420,52 +667,192 @@
                     }
                 };
 
-                const alerts = [];
+                // Verificar si hay datos para procesar
+                if (Object.keys(dataset).length === 0) {
+                    return alerts; // Retornar array vacío si no hay datos
+                }
+
                 Object.entries(dataset).forEach(([machineId, doc]) => {
                     const meta = doc.meta || { number: machineId, brand: '', driver: '' };
                     ['revision', 'permit', 'insurance'].forEach((key) => {
                         const status = getDocStatus(doc[key]);
                         if (status.severity !== 'ok') {
+                            const severity = status.severity === 'error' ? 'critical' : status.severity;
                             alerts.push({
-                                machine: meta.number || machineId,
-                                driver: meta.driver || 'Sin chofer',
-                                label: docTypeLabel[key] || key,
-                                status
+                                id: `doc-${key}-${machineId}`,
+                                type: 'document',
+                                severity: severity,
+                                title: `Documentación - Máquina ${meta.number || machineId}`,
+                                description: `${docTypeLabel[key] || key}: ${status.text}.`,
+                                machineId: meta.number || machineId,
+                                driverName: meta.driver || 'Sin chofer',
+                                actionLabel: 'Ver Detalle',
+                                actionHref: 'admin-machine-detail.html'
                             });
                         }
                     });
                 });
 
-                docAlertsContainer.innerHTML = '';
-                if (!alerts.length) {
-                    const row = document.createElement('div');
-                    row.className = 'alert-row';
-                    row.innerHTML = `
-                        <div class="alert-row__status-bar ${severityToClass.ok}"></div>
-                        <span class="alert-row__text">
-                            Documentación al día para todas las máquinas.
-                        </span>
-                        <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Fichas</a>
-                    `;
-                    docAlertsContainer.appendChild(row);
-                    return;
-                }
+                return alerts;
+            };
 
-                alerts.slice(0, 4).forEach((alert) => {
-                    const row = document.createElement('div');
-                    row.className = 'alert-row';
-                    row.innerHTML = `
-                        <div class="alert-row__status-bar ${severityToClass[alert.status.severity] || severityToClass.warning}"></div>
-                        <span class="alert-row__text">
-                            Máquina ${alert.machine} · ${alert.label} · ${alert.status.text}
-                        </span>
-                        <a href="admin-machine-detail.html" class="alert-row__action-link">Ver Detalle</a>
-                    `;
-                    docAlertsContainer.appendChild(row);
+            // 3. Unificar todas las alertas
+            const getAllAlerts = () => {
+                const dailyAlerts = getDailyRecordAlerts();
+                const docAlerts = getDocumentAlerts();
+                return [...dailyAlerts, ...docAlerts];
+            };
+
+            // ============================================
+            // ORDENAMIENTO Y CONTEO
+            // ============================================
+
+            const sortAlertsBySeverity = (alerts) => {
+                const severityOrder = { critical: 0, warning: 1, info: 2, success: 3 };
+                return alerts.sort((a, b) => {
+                    const severityDiff = severityOrder[a.severity] - severityOrder[b.severity];
+                    if (severityDiff !== 0) return severityDiff;
+                    // Si misma severidad, más reciente primero
+                    if (a.date && b.date) {
+                        return new Date(b.date) - new Date(a.date);
+                    }
+                    return 0;
                 });
             };
 
-            renderDocumentAlerts();
+            const countAlertsBySeverity = (alerts) => {
+                return {
+                    critical: alerts.filter(a => a.severity === 'critical').length,
+                    warning: alerts.filter(a => a.severity === 'warning').length,
+                    info: alerts.filter(a => a.severity === 'info').length
+                };
+            };
+
+            // ============================================
+            // RENDERIZADO
+            // ============================================
+
+            const getSeverityIcon = (severity) => {
+                const icons = {
+                    critical: '🔴',
+                    warning: '🟠',
+                    info: '🔵',
+                    success: '✅'
+                };
+                return icons[severity] || '🔵';
+            };
+
+            const renderAlertItem = (alert) => {
+                const item = document.createElement('div');
+                item.className = `alert-item alert-item--${alert.severity}`;
+                item.innerHTML = `
+                    <div class="alert-item__icon">${getSeverityIcon(alert.severity)}</div>
+                    <div class="alert-item__texts">
+                        <div class="alert-item__title">${alert.title}</div>
+                        <div class="alert-item__description">${alert.description}</div>
+                    </div>
+                    <a href="${alert.actionHref}" class="alert-item__action">${alert.actionLabel}</a>
+                `;
+                return item;
+            };
+
+            const renderEmptyState = (hasData = true) => {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'alert-empty-state';
+                
+                if (hasData) {
+                    // Estado OK: Hay datos pero no hay alertas
+                    emptyState.innerHTML = `
+                        <div class="alert-empty-state__icon">✅</div>
+                        <div class="alert-empty-state__title">Documentación al día</div>
+                        <p class="alert-empty-state__text">No hay alertas pendientes</p>
+                    `;
+                } else {
+                    // Estado Vacío: No hay datos para monitorear
+                    emptyState.innerHTML = `
+                        <div class="alert-empty-state__icon">📋</div>
+                        <div class="alert-empty-state__title">Sin datos</div>
+                        <p class="alert-empty-state__text">No hay documentos registrados para monitorear</p>
+                    `;
+                }
+                
+                return emptyState;
+            };
+
+            const renderAlerts = () => {
+                const allAlerts = getAllAlerts();
+                const sortedAlerts = sortAlertsBySeverity(allAlerts);
+                const counts = countAlertsBySeverity(allAlerts);
+
+                // Verificar si hay datos en localStorage para determinar el estado
+                const storedDocs = safeJSONParse(localStorage.getItem(DOC_STORAGE_KEY));
+                const hasData = Object.keys(storedDocs).length > 0 || Object.keys(safeJSONParse(localStorage.getItem(DAILY_RECORDS_KEY))).length > 0;
+
+                // Actualizar contadores
+                counterCritical.textContent = counts.critical;
+                counterWarning.textContent = counts.warning;
+                counterInfo.textContent = counts.info;
+
+                // Limpiar contenedor
+                alertListContainer.innerHTML = '';
+
+                if (sortedAlerts.length === 0) {
+                    // Diferenciar entre "no hay alertas" (hay datos) y "no hay datos"
+                    alertListContainer.appendChild(renderEmptyState(hasData));
+                    // Mantener panel expandido para mostrar estado vacío
+                    alertListPanel.classList.remove('alert-list-panel--collapsed');
+                    alertListPanel.classList.add('alert-list-panel--expanded');
+                    return;
+                }
+
+                // Renderizar alertas
+                sortedAlerts.forEach(alert => {
+                    alertListContainer.appendChild(renderAlertItem(alert));
+                });
+
+                // Ajustar scroll si hay más de 5 alertas
+                if (sortedAlerts.length > 5) {
+                    alertListContainer.classList.add('alert-list-panel__container--scrollable');
+                } else {
+                    alertListContainer.classList.remove('alert-list-panel__container--scrollable');
+                }
+
+                // Expandir panel si hay alertas
+                alertListPanel.classList.remove('alert-list-panel--collapsed');
+                alertListPanel.classList.add('alert-list-panel--expanded');
+            };
+
+            // ============================================
+            // TOGGLE PANEL
+            // ============================================
+
+            alertToggleBtn.addEventListener('click', () => {
+                const isExpanded = alertListPanel.classList.contains('alert-list-panel--expanded');
+                const icon = alertToggleBtn.querySelector('.alert-summary-bar__toggle-icon');
+                
+                if (isExpanded) {
+                    alertListPanel.classList.remove('alert-list-panel--expanded');
+                    alertListPanel.classList.add('alert-list-panel--collapsed');
+                    alertToggleBtn.setAttribute('aria-expanded', 'false');
+                    icon.classList.add('alert-summary-bar__toggle-icon--rotated');
+                } else {
+                    alertListPanel.classList.remove('alert-list-panel--collapsed');
+                    alertListPanel.classList.add('alert-list-panel--expanded');
+                    alertToggleBtn.setAttribute('aria-expanded', 'true');
+                    icon.classList.remove('alert-summary-bar__toggle-icon--rotated');
+                }
+            });
+
+            // ============================================
+            // INICIALIZACIÓN
+            // ============================================
+
+            renderAlerts();
+
+            // Re-renderizar cuando cambien los datos (ej: después de guardar un registro)
+            window.addEventListener('storage', () => {
+                renderAlerts();
+            });
         });
     </script>
 </body>
