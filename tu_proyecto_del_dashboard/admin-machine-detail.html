@@ -62,10 +62,14 @@
         <main class="main-content">
             <header class="main-content__header">
                 <div>
-                    <h1 class="main-content__title">Detalle de Maquina: <span id="machine-number-header">Maquina 05 - Mercedes-Benz</span></h1>
-                    <p class="main-content__subtitle">Gestiona informacion general, documentacion y registros diarios.</p>
+                <h1 class="main-content__title">Detalle de Maquina: <span id="machine-number-header">Maquina 05 - Mercedes-Benz</span></h1>
+                <p class="main-content__subtitle">Gestiona informacion general, documentacion y registros diarios.</p>
                 </div>
-                <button class="btn btn-primary" id="edit-machine-btn">Editar Máquina</button>
+                <div style="display: flex; gap: var(--space-md); align-items: center;">
+                    <button class="btn btn-secondary" id="cancel-machine-btn" style="display: none;">Cancelar</button>
+                    <button class="btn btn-primary" id="save-machine-btn" style="display: none;">Guardar Cambios</button>
+                    <button class="btn btn-primary" id="edit-machine-btn">Editar Máquina</button>
+                </div>
             </header>
 
             <div class="main-content__grid" style="grid-template-columns: 1fr;">
@@ -88,11 +92,11 @@
                         
                         <!-- PESTAÑA 1: Información General (combina Info General + Documentación) -->
                         <div class="tab-content is-active" id="content-info" role="tabpanel" aria-labelledby="tab-info">
-                            <!-- Información General -->
+                <!-- Información General -->
                             <div class="card" id="general-info-card" style="border: none; box-shadow: none; margin-bottom: var(--space-xl);">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
-                                    <h2 class="card__header-title">Información General</h2>
-                                </div>
+                        <h2 class="card__header-title">Información General</h2>
+                    </div>
                     <div class="card__body">
                         <div class="view-mode" id="general-info-view">
                             <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
@@ -110,67 +114,59 @@
                         <div class="edit-mode" id="general-info-edit">
                             <div id="machine-form-container-edit">
                                 <!-- El formulario se renderizará aquí dinámicamente usando machine-form.js -->
-                            </div>
-                        </div>
+                                </div>
+                                </div>
                     </div>
-                    <div class="card__footer" id="general-info-footer">
-                        <button class="btn btn-secondary" id="cancel-general-info-btn">Cancelar</button>
-                        <button class="btn btn-primary" id="save-general-info-btn">Guardar Cambios</button>
-                    </div>
-                            </div>
-                            
+                </div>
+
                             <!-- Documentación (dentro de la misma pestaña) -->
                             <div class="card" id="documentation-card" style="border: none; box-shadow: none;">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
-                                    <div>
-                                        <h2 class="card__header-title">Documentación Obligatoria</h2>
-                                        <p class="dashboard-section-subtitle">
-                                            Control de fechas de Revisión Técnica, Permiso de Circulación y Seguro (RF‑031).
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="card__body">
-                                    <div class="view-mode" id="documentation-view">
-                                        <div class="form-field">
-                                            <label class="form-field__label">Revisión Técnica</label>
-                                            <p><span id="rev-date-view">2023-11-20</span></p>
-                                            <span class="doc-status-pill doc-status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="form-field__label">Permiso de Circulación</label>
-                                            <p><span id="permit-date-view">2024-03-31</span></p>
-                                            <span class="doc-status-pill doc-status-pill--ok" id="permit-status-pill">Al día</span>
-                                        </div>
-                                        <div class="form-field">
-                                            <label class="form-field__label">Seguro Obligatorio</label>
-                                            <p><span id="insurance-date-view">2024-01-15</span></p>
-                                            <span class="doc-status-pill doc-status-pill--warning" id="insurance-status-pill">Renovar pronto</span>
-                                        </div>
-                                    </div>
-                                    <div class="edit-mode" id="documentation-edit">
-                                        <form id="documentation-form">
-                                            <div class="form-field">
-                                                <label for="rev-date-input" class="form-field__label">Revisión Técnica</label>
-                                                <input type="date" id="rev-date-input" class="input-text" value="2023-11-20">
-                                            </div>
-                                            <div class="form-field">
-                                                <label for="permit-date-input" class="form-field__label">Permiso de Circulación</label>
-                                                <input type="date" id="permit-date-input" class="input-text" value="2024-03-31">
-                                            </div>
-                                            <div class="form-field">
-                                                <label for="insurance-date-input" class="form-field__label">Seguro Obligatorio</label>
-                                                <input type="date" id="insurance-date-input" class="input-text" value="2024-01-15">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="card__footer" id="documentation-footer">
-                                    <button class="btn btn-secondary" id="cancel-documentation-btn">Cancelar</button>
-                                    <button class="btn btn-primary" id="save-documentation-btn">Guardar Documentación</button>
-                                </div>
+                        <div>
+                            <h2 class="card__header-title">Documentación Obligatoria</h2>
+                            <p class="dashboard-section-subtitle">
+                                Control de fechas de Revisión Técnica, Permiso de Circulación y Seguro (RF‑031).
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="view-mode" id="documentation-view">
+                            <div class="form-field">
+                                <label class="form-field__label">Revisión Técnica</label>
+                                <p><span id="rev-date-view">2023-11-20</span></p>
+                                            <span class="status-pill status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-field__label">Permiso de Circulación</label>
+                                <p><span id="permit-date-view">2024-03-31</span></p>
+                                            <span class="status-pill status-pill--ok" id="permit-status-pill">Al día</span>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-field__label">Seguro Obligatorio</label>
+                                <p><span id="insurance-date-view">2024-01-15</span></p>
+                                            <span class="status-pill status-pill--warning" id="insurance-status-pill">Renovar pronto</span>
                             </div>
                         </div>
-                        
+                                    <div class="edit-mode" id="documentation-edit">
+                            <form id="documentation-form">
+                                <div class="form-field">
+                                    <label for="rev-date-input" class="form-field__label">Revisión Técnica</label>
+                                    <input type="date" id="rev-date-input" class="input-text" value="2023-11-20">
+                                </div>
+                                <div class="form-field">
+                                    <label for="permit-date-input" class="form-field__label">Permiso de Circulación</label>
+                                    <input type="date" id="permit-date-input" class="input-text" value="2024-03-31">
+                                </div>
+                                <div class="form-field">
+                                    <label for="insurance-date-input" class="form-field__label">Seguro Obligatorio</label>
+                                    <input type="date" id="insurance-date-input" class="input-text" value="2024-01-15">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
                         <!-- PESTAÑA 2: Registros Diarios -->
                         <div class="tab-content" id="content-records" role="tabpanel" aria-labelledby="tab-records">
                             <div class="card" id="daily-records-section" style="border: none; box-shadow: none;">
@@ -320,10 +316,6 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="card__footer" id="assignment-footer">
-                                    <button class="btn btn-secondary" id="cancel-assignment-btn">Cancelar</button>
-                                    <button class="btn btn-primary" id="save-assignment-btn">Guardar Asignacion</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -331,7 +323,7 @@
             </div>
         </main>
     </div>
-    <script src="js/main.js"></script>
+<script src="js/main.js"></script>
     <script src="js/machine-form.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -340,12 +332,45 @@
             // Usa clases CSS (.is-editing) en lugar de manipulación directa de display
             // ============================================
             
+            // ============================================
+            // FUENTE ÚNICA DE VERDAD (Single Source of Truth)
+            // currentMachineData es el estado centralizado
+            // ============================================
+            let currentMachineData = {
+                general: {
+                    number: '05',
+                    brand: 'Mercedes-Benz',
+                    plate: 'ABCD-12',
+                    year: '2018',
+                    status: 'Operativa',
+                    driver: 'Juan Pérez'
+                },
+                documentation: {
+                    revision: '2023-11-20',
+                    permit: '2024-03-31',
+                    insurance: '2024-01-15'
+                },
+                assignment: {
+                    current: {
+                        driver: 'Juan Perez',
+                        start: '2025-10-01',
+                        end: null
+                    },
+                    history: [
+                        { driver: 'Laura Diaz', start: '2025-08-01', end: '2025-09-30' }
+                    ]
+                }
+            };
+            
             // Referencias principales
             const machineDetailCard = document.getElementById('machine-detail-card');
             const tabsContainer = document.querySelector('.tabs-container');
             const editMachineBtn = document.getElementById('edit-machine-btn');
+            const cancelMachineBtn = document.getElementById('cancel-machine-btn');
+            const saveMachineBtn = document.getElementById('save-machine-btn');
             const generalInfoCard = document.getElementById('general-info-card');
             const documentationCard = document.getElementById('documentation-card');
+            const assignmentCard = document.getElementById('assignment-card');
             
             // Referencias de vista/edición
             const generalInfoView = document.getElementById('general-info-view');
@@ -422,7 +447,7 @@
                 { date: '2025-11-11', driver: 'Pedro Lopez', status: 'PENDIENTE_TRABAJADOR', revenue: 380000, diesel: '$ 120.000', hasObservaciones: true, link: 'admin-registro-diario.html' },
                 { date: '2025-11-10', driver: 'Juan Perez', status: 'COMPLETO', revenue: 410000, diesel: '$ 160.000', hasObservaciones: false, link: 'admin-registro-diario.html' }
             ];
-            let assignmentState = null;
+            // assignmentState eliminado - usar currentMachineData.assignment
 
             const STORAGE_KEYS = {
                 docs: 'machineDocuments',
@@ -452,6 +477,8 @@
 
             const getMachineIdentifier = () => getMachineMeta().number || 'SIN-ID';
             let currentMachineId = getMachineIdentifier();
+            
+            // Nota: assignmentState ha sido eliminado - usar currentMachineData.assignment
 
             const formatMachineHeader = () => {
                 const meta = getMachineMeta();
@@ -498,62 +525,83 @@
             });
             
             // ============================================
-            // EDICIÓN CONSOLIDADA - Usa clases CSS (.is-editing)
+            // EDICIÓN CONSOLIDADA - Un solo flujo de edición
             // ============================================
-            let initialData = {};
+            let initialData = {}; // Snapshot para cancelar cambios
             
-            const saveInitialData = () => {
-                initialData = {
-                    general: {
-                        number: machineNumberView.textContent,
-                        brand: machineBrandView.textContent,
-                        plate: machinePlateView.textContent,
-                        year: machineYearView.textContent,
-                        status: machineStatusView.textContent,
-                        driver: machineDriverView.textContent
-                    },
-                    documentation: {
-                        revision: revDateView.textContent.trim(),
-                        permit: permitDateView.textContent.trim(),
-                        insurance: insuranceDateView.textContent.trim()
-                    }
-                };
-                // Renderizar formulario con datos iniciales
+            // Renderizar formulario desde currentMachineData (fuente de verdad)
+            const renderFormFromData = () => {
                 const formContainer = document.getElementById('machine-form-container-edit');
                 if (formContainer) {
-                    formContainer.innerHTML = generateMachineForm(initialData.general, {
+                    formContainer.innerHTML = generateMachineForm(currentMachineData.general, {
                         showDriver: true,
                         showStatus: true,
                         showYear: true,
-                        showInitialKm: false, // No mostrar en edición
+                        showInitialKm: false,
                         formId: 'machine-form-edit'
                     });
                     getFormInputs(); // Actualizar referencias después de renderizar
                 }
-                // Poblar inputs de documentación
-                revDateInput.value = sanitizeViewValue(initialData.documentation.revision);
-                permitDateInput.value = sanitizeViewValue(initialData.documentation.permit);
-                insuranceDateInput.value = sanitizeViewValue(initialData.documentation.insurance);
+                // Poblar inputs de documentación desde currentMachineData
+                if (revDateInput) revDateInput.value = currentMachineData.documentation.revision || '';
+                if (permitDateInput) permitDateInput.value = currentMachineData.documentation.permit || '';
+                if (insuranceDateInput) insuranceDateInput.value = currentMachineData.documentation.insurance || '';
+            };
+            
+            // Actualizar vista desde currentMachineData (fuente de verdad)
+            const renderViewFromData = () => {
+                // Actualizar vista de información general
+                if (machineNumberView) machineNumberView.textContent = currentMachineData.general.number;
+                if (machineBrandView) machineBrandView.textContent = currentMachineData.general.brand;
+                if (machinePlateView) machinePlateView.textContent = currentMachineData.general.plate;
+                if (machineYearView) machineYearView.textContent = currentMachineData.general.year;
+                if (machineStatusView) machineStatusView.textContent = currentMachineData.general.status;
+                if (machineDriverView) machineDriverView.textContent = currentMachineData.general.driver || '(Sin Asignar)';
+                
+                // Actualizar vista de documentación
+                if (revDateView) revDateView.textContent = currentMachineData.documentation.revision || '';
+                if (permitDateView) permitDateView.textContent = currentMachineData.documentation.permit || '';
+                if (insuranceDateView) insuranceDateView.textContent = currentMachineData.documentation.insurance || '';
+                
+                // Actualizar status pills
+                if (revStatusPill) applyDocStatus(revStatusPill, getDocStatus(currentMachineData.documentation.revision));
+                if (permitStatusPill) applyDocStatus(permitStatusPill, getDocStatus(currentMachineData.documentation.permit));
+                if (insuranceStatusPill) applyDocStatus(insuranceStatusPill, getDocStatus(currentMachineData.documentation.insurance));
+                
+                // Actualizar header
+                updateHeaderLabel();
+            };
+
+            const saveInitialData = () => {
+                // Crear snapshot de currentMachineData para poder cancelar
+                initialData = JSON.parse(JSON.stringify(currentMachineData));
+                renderFormFromData();
             };
             
             const toggleEditMode = (enable) => {
                 if (enable) {
                     saveInitialData();
-                    // Activar modo edición usando clases CSS
+                    // Activar modo edición en TODAS las tarjetas simultáneamente
                     generalInfoCard.classList.add('is-editing');
                     documentationCard.classList.add('is-editing');
+                    assignmentCard.classList.add('is-editing');
                     if (tabsContainer) tabsContainer.classList.add('is-editing');
-                    editMachineBtn.textContent = 'Cancelar Edición';
-                    editMachineBtn.classList.remove('btn-primary');
-                    editMachineBtn.classList.add('btn-secondary');
+                    
+                    // Mostrar botones globales, ocultar botón editar
+                    editMachineBtn.style.display = 'none';
+                    cancelMachineBtn.style.display = 'inline-flex';
+                    saveMachineBtn.style.display = 'inline-flex';
                 } else {
-                    // Desactivar modo edición
+                    // Desactivar modo edición en todas las tarjetas
                     generalInfoCard.classList.remove('is-editing');
                     documentationCard.classList.remove('is-editing');
+                    assignmentCard.classList.remove('is-editing');
                     if (tabsContainer) tabsContainer.classList.remove('is-editing');
-                    editMachineBtn.textContent = 'Editar Máquina';
-                    editMachineBtn.classList.remove('btn-secondary');
-                    editMachineBtn.classList.add('btn-primary');
+                    
+                    // Ocultar botones globales, mostrar botón editar
+                    editMachineBtn.style.display = 'inline-flex';
+                    cancelMachineBtn.style.display = 'none';
+                    saveMachineBtn.style.display = 'none';
                 }
             };
 
@@ -561,25 +609,25 @@
 
             const getDocStatus = (dateValue) => {
                 if (!dateValue) {
-                    return { text: 'Sin fecha registrada', className: 'doc-status-pill--warning', severity: 'warning' };
+                    return { text: 'Sin fecha registrada', className: 'status-pill--warning', severity: 'warning' };
                 }
                 const today = new Date();
                 const date = new Date(dateValue);
                 const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
                 if (Number.isNaN(diffDays)) {
-                    return { text: 'Fecha invalida', className: 'doc-status-pill--error', severity: 'error' };
+                    return { text: 'Fecha invalida', className: 'status-pill--error', severity: 'error' };
                 }
                 if (diffDays < 0) {
-                    return { text: `Vencido hace ${Math.abs(diffDays)} dias`, className: 'doc-status-pill--error', severity: 'error' };
+                    return { text: `Vencido hace ${Math.abs(diffDays)} dias`, className: 'status-pill--error', severity: 'error' };
                 }
                 if (diffDays <= 10) {
-                    return { text: `Vence en ${diffDays} dias`, className: 'doc-status-pill--warning', severity: 'warning' };
+                    return { text: `Vence en ${diffDays} dias`, className: 'status-pill--warning', severity: 'warning' };
                 }
-                return { text: 'Al dia', className: 'doc-status-pill--ok', severity: 'ok' };
+                return { text: 'Al dia', className: 'status-pill--ok', severity: 'ok' };
             };
 
             const applyDocStatus = (pill, status) => {
-                pill.classList.remove('doc-status-pill--error', 'doc-status-pill--warning', 'doc-status-pill--ok');
+                pill.classList.remove('status-pill--error', 'status-pill--warning', 'status-pill--ok');
                 pill.classList.add(status.className);
                 pill.textContent = status.text;
             };
@@ -668,9 +716,9 @@
             };
 
             const readDocumentationValues = () => ({
-                revision: revDateInput.value,
-                permit: permitDateInput.value,
-                insurance: insuranceDateInput.value
+                revision: currentMachineData.documentation.revision,
+                permit: currentMachineData.documentation.permit,
+                insurance: currentMachineData.documentation.insurance
             });
 
             const updateDocumentationView = () => {
@@ -683,13 +731,19 @@
                 applyDocStatus(insuranceStatusPill, getDocStatus(insuranceDateInput.value));
             };
 
-            const persistDocumentationData = (values = readDocumentationValues()) => {
+            const persistDocumentationData = () => {
                 const store = loadStorage(STORAGE_KEYS.docs);
-                const existing = store[currentMachineId] || {};
                 store[currentMachineId] = {
-                    ...existing,
-                    ...values,
-                    meta: getMachineMeta(),
+                    ...(store[currentMachineId] || {}),
+                    revision: currentMachineData.documentation.revision,
+                    permit: currentMachineData.documentation.permit,
+                    insurance: currentMachineData.documentation.insurance,
+                    meta: {
+                        number: currentMachineData.general.number,
+                        brand: currentMachineData.general.brand,
+                        plate: currentMachineData.general.plate,
+                        driver: currentMachineData.general.driver
+                    },
                     updatedAt: new Date().toISOString()
                 };
                 saveStorage(STORAGE_KEYS.docs, store);
@@ -699,57 +753,80 @@
                 const store = loadStorage(STORAGE_KEYS.docs);
                 const existing = store[currentMachineId];
                 if (existing) {
-                    revDateInput.value = existing.revision || '';
-                    permitDateInput.value = existing.permit || '';
-                    insuranceDateInput.value = existing.insurance || '';
+                    currentMachineData.documentation.revision = existing.revision || currentMachineData.documentation.revision;
+                    currentMachineData.documentation.permit = existing.permit || currentMachineData.documentation.permit;
+                    currentMachineData.documentation.insurance = existing.insurance || currentMachineData.documentation.insurance;
                 } else {
-                    revDateInput.value = sanitizeViewValue(revDateView.textContent.trim());
-                    permitDateInput.value = sanitizeViewValue(permitDateView.textContent.trim());
-                    insuranceDateInput.value = sanitizeViewValue(insuranceDateView.textContent.trim());
                     persistDocumentationData();
                 }
-                updateDocumentationView();
+                renderViewFromData(); // Renderizar vista desde currentMachineData
             };
 
-            const populateDocumentationInputs = () => {
-                revDateInput.value = sanitizeViewValue(initialDocumentationData.revision);
-                permitDateInput.value = sanitizeViewValue(initialDocumentationData.permit);
-                insuranceDateInput.value = sanitizeViewValue(initialDocumentationData.insurance);
-            };
+            // populateDocumentationInputs ya no es necesario - se maneja en renderFormFromData()
 
-            // Función para restaurar datos iniciales
+            // Función para restaurar datos iniciales (cancelar cambios)
             const restoreInitialData = () => {
-                // Re-renderizar formulario con datos iniciales
-                const formContainer = document.getElementById('machine-form-container-edit');
-                if (formContainer && initialData.general) {
-                    formContainer.innerHTML = generateMachineForm(initialData.general, {
-                        showDriver: true,
-                        showStatus: true,
-                        showYear: true,
-                        showInitialKm: false,
-                        formId: 'machine-form-edit'
-                    });
-                    getFormInputs(); // Actualizar referencias
-                }
-                revDateInput.value = sanitizeViewValue(initialData.documentation.revision);
-                permitDateInput.value = sanitizeViewValue(initialData.documentation.permit);
-                insuranceDateInput.value = sanitizeViewValue(initialData.documentation.insurance);
+                // Restaurar currentMachineData desde snapshot
+                currentMachineData = JSON.parse(JSON.stringify(initialData));
+                renderFormFromData(); // Re-renderizar formulario
             };
             
-            // Función para actualizar vista desde inputs
-            const updateGeneralView = () => {
+            // Función para guardar: actualizar currentMachineData desde formularios
+            const saveAllChanges = () => {
                 getFormInputs(); // Asegurar que las referencias estén actualizadas
-                if (machineNumberInput) machineNumberView.textContent = machineNumberInput.value;
-                if (machineBrandInput) machineBrandView.textContent = machineBrandInput.value;
-                if (machinePlateInput) machinePlateView.textContent = machinePlateInput.value;
-                if (machineYearInput) machineYearView.textContent = machineYearInput.value;
-                if (machineStatusInput) machineStatusView.textContent = machineStatusInput.value;
-                if (machineDriverInput) machineDriverView.textContent = machineDriverInput.value || '(Sin Asignar)';
-                updateHeaderLabel();
+                
+                // Actualizar currentMachineData desde formulario de información general
+                if (machineNumberInput) currentMachineData.general.number = machineNumberInput.value;
+                if (machineBrandInput) currentMachineData.general.brand = machineBrandInput.value;
+                if (machinePlateInput) currentMachineData.general.plate = machinePlateInput.value;
+                if (machineYearInput) currentMachineData.general.year = machineYearInput.value;
+                if (machineStatusInput) currentMachineData.general.status = machineStatusInput.value;
+                if (machineDriverInput) currentMachineData.general.driver = machineDriverInput.value || '';
+                
+                // Actualizar currentMachineData desde formulario de documentación
+                if (revDateInput) currentMachineData.documentation.revision = revDateInput.value;
+                if (permitDateInput) currentMachineData.documentation.permit = permitDateInput.value;
+                if (insuranceDateInput) currentMachineData.documentation.insurance = insuranceDateInput.value;
+                
+                // Actualizar currentMachineData desde formulario de asignación
+                if (assignmentDriverSelect && assignmentStartInput) {
+                    const driver = assignmentDriverSelect.value;
+                    const start = assignmentStartInput.value;
+                    const end = assignmentEndInput.value || null;
+                    
+                    if (driver && start) {
+                        // Cerrar asignación anterior
+                        if (currentMachineData.assignment.current && currentMachineData.assignment.current.driver) {
+                            const previous = { ...currentMachineData.assignment.current };
+                            previous.end = previous.end || start;
+                            currentMachineData.assignment.history = currentMachineData.assignment.history || [];
+                            currentMachineData.assignment.history.unshift(previous);
+                        }
+                        // Crear nueva asignación
+                        currentMachineData.assignment.current = { driver, start, end };
+                    }
+                }
+                
+                // Re-renderizar vista desde currentMachineData (fuente de verdad)
+                renderViewFromData();
+                
+                // Persistir datos
+                persistDocumentationData();
+                persistAssignmentState();
+                
+                // Actualizar ID si cambió
+                const newId = currentMachineData.general.number || 'SIN-ID';
+                if (newId && newId !== currentMachineId) {
+                    moveDataToNewIdentifier(newId);
+                    currentMachineId = newId;
+                }
+                
+                alert('Información actualizada (simulado)!');
+                toggleEditMode(false);
             };
             const getDefaultAssignmentState = () => ({
                 current: {
-                    driver: 'Juan Perez',
+                    driver: currentMachineData.general.driver || 'Juan Perez',
                     start: '2025-10-01',
                     end: null
                 },
@@ -760,21 +837,21 @@
             });
 
             const persistAssignmentState = () => {
-                if (!assignmentState) return;
                 const store = loadStorage(STORAGE_KEYS.assignments);
-                store[currentMachineId] = assignmentState;
+                store[currentMachineId] = currentMachineData.assignment;
                 saveStorage(STORAGE_KEYS.assignments, store);
             };
 
             const renderAssignmentHistory = () => {
                 assignmentHistoryBody.innerHTML = '';
-                if (!assignmentState || !assignmentState.history || !assignmentState.history.length) {
+                const history = currentMachineData.assignment.history || [];
+                if (!history.length) {
                     const emptyRow = document.createElement('tr');
                     emptyRow.innerHTML = '<td colspan="4" style="text-align:center; color: var(--color-text-muted);">Aun no hay historial.</td>';
                     assignmentHistoryBody.appendChild(emptyRow);
                     return;
                 }
-                assignmentState.history.forEach((record) => {
+                history.forEach((record) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${record.driver || 'Sin dato'}</td>
@@ -803,58 +880,40 @@
 
             const loadAssignmentState = () => {
                 const store = loadStorage(STORAGE_KEYS.assignments);
-                assignmentState = store[currentMachineId] || getDefaultAssignmentState();
-                assignmentState.history = assignmentState.history || [];
-                store[currentMachineId] = assignmentState;
+                const stored = store[currentMachineId];
+                if (stored) {
+                    currentMachineData.assignment = stored;
+                } else {
+                    // Usar datos por defecto si no hay almacenados
+                    currentMachineData.assignment = getDefaultAssignmentState();
+                }
+                currentMachineData.assignment.history = currentMachineData.assignment.history || [];
+                store[currentMachineId] = currentMachineData.assignment;
                 saveStorage(STORAGE_KEYS.assignments, store);
                 renderAssignmentView();
             };
 
             // ============================================
-            // EVENT LISTENERS - Edición Consolidada
+            // EVENT LISTENERS - Edición Consolidada (Un solo flujo)
             // ============================================
-            const saveGeneralInfoBtn = document.getElementById('save-general-info-btn');
-            const cancelGeneralInfoBtn = document.getElementById('cancel-general-info-btn');
-            const saveDocumentationBtn = document.getElementById('save-documentation-btn');
-            const cancelDocumentationBtn = document.getElementById('cancel-documentation-btn');
             
             // Botón principal "Editar Máquina"
-            editMachineBtn.addEventListener('click', () => {
-                const isEditing = generalInfoCard.classList.contains('is-editing');
-                toggleEditMode(!isEditing);
-            });
-            
-            // Guardar cambios
-            const saveAllChanges = () => {
-                updateGeneralView();
-                updateDocumentationView();
-                persistDocumentationData();
-                persistAssignmentState();
-                const newId = getMachineIdentifier();
-                if (newId && newId !== currentMachineId) {
-                    moveDataToNewIdentifier(newId);
-                    currentMachineId = newId;
-                }
-                alert('Información actualizada (simulado)!');
-                toggleEditMode(false);
-            };
-            
-            if (saveGeneralInfoBtn) {
-                saveGeneralInfoBtn.addEventListener('click', saveAllChanges);
-            }
-            if (saveDocumentationBtn) {
-                saveDocumentationBtn.addEventListener('click', saveAllChanges);
-            }
-            
-            // Cancelar edición
-            if (cancelGeneralInfoBtn) {
-                cancelGeneralInfoBtn.addEventListener('click', () => {
-                    restoreInitialData();
-                    toggleEditMode(false);
+            if (editMachineBtn) {
+                editMachineBtn.addEventListener('click', () => {
+                    toggleEditMode(true);
                 });
             }
-            if (cancelDocumentationBtn) {
-                cancelDocumentationBtn.addEventListener('click', () => {
+            
+            // Botón global "Guardar Cambios"
+            if (saveMachineBtn) {
+                saveMachineBtn.addEventListener('click', () => {
+                    saveAllChanges();
+                });
+            }
+            
+            // Botón global "Cancelar"
+            if (cancelMachineBtn) {
+                cancelMachineBtn.addEventListener('click', () => {
                     restoreInitialData();
                     toggleEditMode(false);
                 });
@@ -863,8 +922,15 @@
                 const docStore = loadStorage(STORAGE_KEYS.docs);
                 const payload = {
                     ...(docStore[currentMachineId] || {}),
-                    ...readDocumentationValues(),
-                    meta: getMachineMeta(),
+                    revision: currentMachineData.documentation.revision,
+                    permit: currentMachineData.documentation.permit,
+                    insurance: currentMachineData.documentation.insurance,
+                    meta: {
+                        number: currentMachineData.general.number,
+                        brand: currentMachineData.general.brand,
+                        plate: currentMachineData.general.plate,
+                        driver: currentMachineData.general.driver
+                    },
                     updatedAt: new Date().toISOString()
                 };
                 docStore[nextId] = payload;
@@ -872,84 +938,20 @@
                 saveStorage(STORAGE_KEYS.docs, docStore);
 
                 const assignmentStore = loadStorage(STORAGE_KEYS.assignments);
-                const assignmentPayload = assignmentState || assignmentStore[currentMachineId] || getDefaultAssignmentState();
-                assignmentStore[nextId] = assignmentPayload;
+                assignmentStore[nextId] = currentMachineData.assignment;
                 delete assignmentStore[currentMachineId];
                 saveStorage(STORAGE_KEYS.assignments, assignmentStore);
-                assignmentState = assignmentPayload;
             };
 
-            // Asignaciones - mantener lógica separada (no se edita con el botón principal)
-            const assignmentCard = document.getElementById('assignment-card');
-            const editAssignmentBtn = document.getElementById('edit-assignment-btn');
-            const saveAssignmentBtn = document.getElementById('save-assignment-btn');
-            const cancelAssignmentBtn = document.getElementById('cancel-assignment-btn');
-            
-            if (editAssignmentBtn && assignmentCard) {
-                editAssignmentBtn.addEventListener('click', () => {
-                    assignmentCard.classList.add('is-editing');
-                });
-            }
-            
-            if (cancelAssignmentBtn && assignmentCard) {
-                cancelAssignmentBtn.addEventListener('click', () => {
-                    assignmentCard.classList.remove('is-editing');
-                });
-            }
-            
-            if (saveAssignmentBtn) {
-                saveAssignmentBtn.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    if (!assignmentState) {
-                        assignmentState = getDefaultAssignmentState();
-                    }
-                    const driver = assignmentDriverSelect.value;
-                    const start = assignmentStartInput.value;
-                    const end = assignmentEndInput.value || null;
-                    if (!driver || !start) {
-                        alert('Selecciona un chofer y la fecha de inicio.');
-                        return;
-                    }
-                    assignmentState.history = assignmentState.history || [];
-                    if (assignmentState.current && assignmentState.current.driver) {
-                        const previous = { ...assignmentState.current };
-                        previous.end = previous.end || start;
-                        assignmentState.history.unshift(previous);
-                    }
-                    assignmentState.current = { driver, start, end };
-                    persistAssignmentState();
-                    renderAssignmentView();
-                    persistDocumentationData();
-                    alert('Asignacion actualizada (simulado)!');
-                    if (assignmentCard) assignmentCard.classList.remove('is-editing');
-                });
-            }
+            // Asignaciones ahora se editan con el botón principal "Editar Máquina"
+            // No necesita lógica separada - se maneja en saveAllChanges()
 
-            // Inicializar: renderizar formulario con datos actuales (para modo edición)
-            const formContainerEdit = document.getElementById('machine-form-container-edit');
-            if (formContainerEdit) {
-                // Datos iniciales desde la vista
-                const initialFormData = {
-                    number: machineNumberView.textContent,
-                    brand: machineBrandView.textContent,
-                    plate: machinePlateView.textContent,
-                    year: machineYearView.textContent,
-                    status: machineStatusView.textContent,
-                    driver: machineDriverView.textContent
-                };
-                formContainerEdit.innerHTML = generateMachineForm(initialFormData, {
-                    showDriver: true,
-                    showStatus: true,
-                    showYear: true,
-                    showInitialKm: false,
-                    formId: 'machine-form-edit'
-                });
-                getFormInputs(); // Obtener referencias iniciales
-            }
-            
+            // Inicializar: renderizar todo desde currentMachineData (fuente de verdad)
+            renderViewFromData(); // Renderizar vista inicial
+            renderFormFromData(); // Renderizar formulario inicial (oculto hasta edición)
+
             loadDocumentationFromStorage();
             loadAssignmentState();
-            updateGeneralView();
 
             if (recordsBody) {
                 populateRecordFilters();

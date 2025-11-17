@@ -98,7 +98,8 @@
             
             const saveButton = document.getElementById('save-machine-button');
             
-            function checkFormValidity() {
+            // Función para actualizar estado del botón usando validateMachineForm del componente
+            const updateSaveButtonState = () => {
                 const validation = validateMachineForm('machine-form');
                 
                 if (validation.valid) {
@@ -108,22 +109,23 @@
                     saveButton.setAttribute('disabled', 'true');
                     saveButton.classList.add('btn-primary--disabled');
                 }
-            }
+            };
             
             // Agregar listeners a los campos del formulario
             const form = document.getElementById('machine-form');
             if (form) {
                 const formFields = form.querySelectorAll('input, select');
                 formFields.forEach(field => {
-                    field.addEventListener('input', checkFormValidity);
-                    field.addEventListener('change', checkFormValidity);
+                    field.addEventListener('input', updateSaveButtonState);
+                    field.addEventListener('change', updateSaveButtonState);
                 });
             }
             
-            checkFormValidity();
+            updateSaveButtonState();
             
             saveButton.addEventListener('click', (e) => {
                 e.preventDefault();
+                // Usar validación del componente (DRY)
                 const validation = validateMachineForm('machine-form');
                 
                 if (!validation.valid) {
@@ -131,6 +133,7 @@
                     return;
                 }
                 
+                // Usar extracción de datos del componente (DRY)
                 const formData = getMachineFormData('machine-form');
                 console.log('Datos del formulario:', formData);
                 alert('Máquina registrada exitosamente (simulado)!');
