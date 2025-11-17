@@ -20,33 +20,8 @@
     <link rel="stylesheet" href="css/components/_table.css">
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_modal.css">
-
-    <style>
-        .doc-status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-xxs);
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: var(--font-weight-medium);
-        }
-
-        .doc-status-pill--ok {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: #047857;
-        }
-
-        .doc-status-pill--warning {
-            background-color: rgba(234, 179, 8, 0.15);
-            color: #b45309;
-        }
-
-        .doc-status-pill--error {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: #b91c1c;
-        }
-    </style>
+    <link rel="stylesheet" href="css/components/_status-pill.css">
+    <link rel="stylesheet" href="css/components/_tabs.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -86,17 +61,38 @@
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Detalle de Maquina: <span id="machine-number-header">Maquina 05 - Mercedes-Benz</span></h1>
-                <p class="main-content__subtitle">Gestiona informacion general, documentacion y registros diarios.</p>
+                <div>
+                    <h1 class="main-content__title">Detalle de Maquina: <span id="machine-number-header">Maquina 05 - Mercedes-Benz</span></h1>
+                    <p class="main-content__subtitle">Gestiona informacion general, documentacion y registros diarios.</p>
+                </div>
+                <button class="btn btn-primary" id="edit-machine-btn">Editar Máquina</button>
             </header>
 
             <div class="main-content__grid" style="grid-template-columns: 1fr;">
-                <!-- Información General -->
-                <div class="card" id="general-info-card">
-                    <div class="card__header">
-                        <h2 class="card__header-title">Información General</h2>
-                        <button class="btn btn-secondary" id="edit-general-info-btn">Editar</button>
-                    </div>
+                <!-- Card Principal con Pestañas -->
+                <div class="card" id="machine-detail-card">
+                    <div class="card__body">
+                        <div class="tabs-container" style="border-bottom: none;">
+                            <div class="tabs-list" role="tablist">
+                                <button class="tab-item is-active" id="tab-info" role="tab" aria-controls="content-info" aria-selected="true">
+                                    Información General
+                                </button>
+                                <button class="tab-item" id="tab-records" role="tab" aria-controls="content-records" aria-selected="false">
+                                    Registros Diarios
+                                </button>
+                                <button class="tab-item" id="tab-assignments" role="tab" aria-controls="content-assignments" aria-selected="false">
+                                    Historial de Asignaciones
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- PESTAÑA 1: Información General (combina Info General + Documentación) -->
+                        <div class="tab-content is-active" id="content-info" role="tabpanel" aria-labelledby="tab-info">
+                            <!-- Información General -->
+                            <div class="card" id="general-info-card" style="border: none; box-shadow: none; margin-bottom: var(--space-xl);">
+                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
+                                    <h2 class="card__header-title">Información General</h2>
+                                </div>
                     <div class="card__body">
                         <div class="view-mode" id="general-info-view">
                             <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
@@ -111,181 +107,73 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="edit-mode" id="general-info-edit" style="display: none;">
-                            <form id="general-info-form">
-                                <div class="form-field">
-                                    <label for="machine-number-input" class="form-field__label">Número de Máquina</label>
-                                    <input type="text" id="machine-number-input" class="input-text" value="05">
-                                </div>
-                                <div class="form-field">
-                                    <label for="machine-brand-input" class="form-field__label">Marca</label>
-                                    <input type="text" id="machine-brand-input" class="input-text" value="Mercedes-Benz">
-                                </div>
-                                <div class="form-field">
-                                    <label for="machine-plate-input" class="form-field__label">Patente</label>
-                                    <input type="text" id="machine-plate-input" class="input-text" value="ABCD-12">
-                                </div>
-                                <div class="form-field">
-                                    <label for="machine-year-input" class="form-field__label">Año de Fabricación</label>
-                                    <input type="number" id="machine-year-input" class="input-text" value="2018" min="1990" max="2035">
-                                </div>
-                                <div class="form-field">
-                                    <label for="machine-status-input" class="form-field__label">Estado Operativo</label>
-                                    <select id="machine-status-input" class="input-text">
-                                        <option value="Operativa">Operativa</option>
-                                        <option value="En Taller">En Taller</option>
-                                        <option value="Inactiva">Inactiva</option>
-                                    </select>
-                                </div>
-                                <div class="form-field">
-                                    <label for="machine-driver-input" class="form-field__label">Chofer Asignado</label>
-                                    <select id="machine-driver-input" class="input-text">
-                                        <option value="Juan Pérez">Juan Pérez</option>
-                                        <option value="María Gómez">María Gómez</option>
-                                        <option value="Pedro López">Pedro López</option>
-                                        <option value="(Sin Asignar)">(Sin Asignar)</option>
-                                    </select>
-                                </div>
-                            </form>
+                        <div class="edit-mode" id="general-info-edit">
+                            <div id="machine-form-container-edit">
+                                <!-- El formulario se renderizará aquí dinámicamente usando machine-form.js -->
+                            </div>
                         </div>
                     </div>
-                    <div class="card__footer" id="general-info-footer" style="display: none;">
+                    <div class="card__footer" id="general-info-footer">
                         <button class="btn btn-secondary" id="cancel-general-info-btn">Cancelar</button>
                         <button class="btn btn-primary" id="save-general-info-btn">Guardar Cambios</button>
                     </div>
-                </div>
-
-                <!-- Documentación -->
-                <div class="card" id="documentation-card">
-                    <div class="card__header">
-                        <div>
-                            <h2 class="card__header-title">Documentación Obligatoria</h2>
-                            <p class="dashboard-section-subtitle">
-                                Control de fechas de Revisión Técnica, Permiso de Circulación y Seguro (RF‑031).
-                            </p>
-                        </div>
-                        <button class="btn btn-secondary" id="edit-documentation-btn">Actualizar</button>
-                    </div>
-                    <div class="card__body">
-                        <div class="view-mode" id="documentation-view">
-                            <div class="form-field">
-                                <label class="form-field__label">Revisión Técnica</label>
-                                <p><span id="rev-date-view">2023-11-20</span></p>
-                                <span class="doc-status-pill doc-status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
                             </div>
-                            <div class="form-field">
-                                <label class="form-field__label">Permiso de Circulación</label>
-                                <p><span id="permit-date-view">2024-03-31</span></p>
-                                <span class="doc-status-pill doc-status-pill--ok" id="permit-status-pill">Al día</span>
-                            </div>
-                            <div class="form-field">
-                                <label class="form-field__label">Seguro Obligatorio</label>
-                                <p><span id="insurance-date-view">2024-01-15</span></p>
-                                <span class="doc-status-pill doc-status-pill--warning" id="insurance-status-pill">Renovar pronto</span>
-                            </div>
-                        </div>
-                        <div class="edit-mode" id="documentation-edit" style="display: none;">
-                            <form id="documentation-form">
-                                <div class="form-field">
-                                    <label for="rev-date-input" class="form-field__label">Revisión Técnica</label>
-                                    <input type="date" id="rev-date-input" class="input-text" value="2023-11-20">
-                                </div>
-                                <div class="form-field">
-                                    <label for="permit-date-input" class="form-field__label">Permiso de Circulación</label>
-                                    <input type="date" id="permit-date-input" class="input-text" value="2024-03-31">
-                                </div>
-                                <div class="form-field">
-                                    <label for="insurance-date-input" class="form-field__label">Seguro Obligatorio</label>
-                                    <input type="date" id="insurance-date-input" class="input-text" value="2024-01-15">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card__footer" id="documentation-footer" style="display: none;">
-                        <button class="btn btn-secondary" id="cancel-documentation-btn">Cancelar</button>
-                        <button class="btn btn-primary" id="save-documentation-btn">Guardar Documentación</button>
-                    </div>
-                </div>
-
-
-                <!-- Historial de Asignaciones -->
-                <div class="card" id="assignment-card">
-                    <div class="card__header">
-                        <div>
-                            <h2 class="card__header-title">Historial de Asignaciones</h2>
-                            <p class="dashboard-section-subtitle">
-                                Define el chofer activo y guarda el historial por maquina (RF-002, RF-003, RF-006, RF-007).
-                            </p>
-                        </div>
-                        <button class="btn btn-secondary" id="edit-assignment-btn">Asignar Chofer</button>
-                    </div>
-                    <div class="card__body">
-                        <div class="view-mode" id="assignment-view">
-                            <div class="form-field">
-                                <label class="form-field__label">Asignacion activa</label>
-                                <p>
-                                    <strong id="current-assignment-driver">Juan Perez</strong>
-                                    <span style="display: block; font-size: 0.9rem; color: var(--color-text-secondary);">
-                                        Desde <span id="current-assignment-start">2025-10-01</span>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="data-table-container">
-                                <table class="data-table data-table--compact">
-                                    <thead>
-                                        <tr>
-                                            <th>Chofer</th>
-                                            <th>Fecha Inicio</th>
-                                            <th>Fecha Fin</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="assignment-history-body">
-                                        <tr>
-                                            <td>Laura Diaz</td>
-                                            <td>2025-08-01</td>
-                                            <td>2025-09-30</td>
-                                            <td>Cerrada</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="edit-mode" id="assignment-edit" style="display: none;">
-                            <form id="assignment-form">
-                                <div class="form-field">
-                                    <label for="assignment-driver-select" class="form-field__label">Chofer</label>
-                                    <select id="assignment-driver-select" class="input-text">
-                                        <option value="">Selecciona un chofer</option>
-                                        <option value="Juan Perez">Juan Perez</option>
-                                        <option value="Pedro Lopez">Pedro Lopez</option>
-                                        <option value="Maria Gomez">Maria Gomez</option>
-                                        <option value="Laura Diaz">Laura Diaz</option>
-                                    </select>
-                                </div>
-                                <div class="form-field form-field--inline" style="gap: var(--space-md);">
-                                    <div style="flex: 1;">
-                                        <label for="assignment-start-input" class="form-field__label">Fecha Inicio</label>
-                                        <input type="date" id="assignment-start-input" class="input-text">
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <label for="assignment-end-input" class="form-field__label">Fecha Fin (opcional)</label>
-                                        <input type="date" id="assignment-end-input" class="input-text">
+                            
+                            <!-- Documentación (dentro de la misma pestaña) -->
+                            <div class="card" id="documentation-card" style="border: none; box-shadow: none;">
+                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
+                                    <div>
+                                        <h2 class="card__header-title">Documentación Obligatoria</h2>
+                                        <p class="dashboard-section-subtitle">
+                                            Control de fechas de Revisión Técnica, Permiso de Circulación y Seguro (RF‑031).
+                                        </p>
                                     </div>
                                 </div>
-                                <p class="form-field__help-text">
-                                    Al crear una nueva asignacion se cerrara automaticamente la asignacion anterior.
-                                </p>
-                            </form>
+                                <div class="card__body">
+                                    <div class="view-mode" id="documentation-view">
+                                        <div class="form-field">
+                                            <label class="form-field__label">Revisión Técnica</label>
+                                            <p><span id="rev-date-view">2023-11-20</span></p>
+                                            <span class="doc-status-pill doc-status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field__label">Permiso de Circulación</label>
+                                            <p><span id="permit-date-view">2024-03-31</span></p>
+                                            <span class="doc-status-pill doc-status-pill--ok" id="permit-status-pill">Al día</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <label class="form-field__label">Seguro Obligatorio</label>
+                                            <p><span id="insurance-date-view">2024-01-15</span></p>
+                                            <span class="doc-status-pill doc-status-pill--warning" id="insurance-status-pill">Renovar pronto</span>
+                                        </div>
+                                    </div>
+                                    <div class="edit-mode" id="documentation-edit">
+                                        <form id="documentation-form">
+                                            <div class="form-field">
+                                                <label for="rev-date-input" class="form-field__label">Revisión Técnica</label>
+                                                <input type="date" id="rev-date-input" class="input-text" value="2023-11-20">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="permit-date-input" class="form-field__label">Permiso de Circulación</label>
+                                                <input type="date" id="permit-date-input" class="input-text" value="2024-03-31">
+                                            </div>
+                                            <div class="form-field">
+                                                <label for="insurance-date-input" class="form-field__label">Seguro Obligatorio</label>
+                                                <input type="date" id="insurance-date-input" class="input-text" value="2024-01-15">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card__footer" id="documentation-footer">
+                                    <button class="btn btn-secondary" id="cancel-documentation-btn">Cancelar</button>
+                                    <button class="btn btn-primary" id="save-documentation-btn">Guardar Documentación</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card__footer" id="assignment-footer" style="display: none;">
-                        <button class="btn btn-secondary" id="cancel-assignment-btn">Cancelar</button>
-                        <button class="btn btn-primary" id="save-assignment-btn">Guardar Asignacion</button>
-                    </div>
-                </div>
-                <!-- Historial de Registros Diarios -->
-                <div class="card" id="daily-records-section">
+                        
+                        <!-- PESTAÑA 2: Registros Diarios -->
+                        <div class="tab-content" id="content-records" role="tabpanel" aria-labelledby="tab-records">
+                            <div class="card" id="daily-records-section" style="border: none; box-shadow: none;">
                     <div class="card__header">
                         <div>
                             <h2 class="card__header-title">Historial de Registros Diarios</h2>
@@ -358,21 +246,110 @@
                                 </tbody>
                             </table>
                         </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PESTAÑA 3: Historial de Asignaciones -->
+                        <div class="tab-content" id="content-assignments" role="tabpanel" aria-labelledby="tab-assignments">
+                            <div class="card" id="assignment-card" style="border: none; box-shadow: none;">
+                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
+                                    <div>
+                                        <h2 class="card__header-title">Historial de Asignaciones</h2>
+                                        <p class="dashboard-section-subtitle">
+                                            Define el chofer activo y guarda el historial por maquina (RF-002, RF-003, RF-006, RF-007).
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="card__body">
+                                    <div class="view-mode" id="assignment-view">
+                                        <div class="form-field">
+                                            <label class="form-field__label">Asignacion activa</label>
+                                            <p>
+                                                <strong id="current-assignment-driver">Juan Perez</strong>
+                                                <span style="display: block; font-size: 0.9rem; color: var(--color-text-secondary);">
+                                                    Desde <span id="current-assignment-start">2025-10-01</span>
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div class="data-table-container">
+                                            <table class="data-table data-table--compact">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Chofer</th>
+                                                        <th>Fecha Inicio</th>
+                                                        <th>Fecha Fin</th>
+                                                        <th>Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="assignment-history-body">
+                                                    <tr>
+                                                        <td>Laura Diaz</td>
+                                                        <td>2025-08-01</td>
+                                                        <td>2025-09-30</td>
+                                                        <td>Cerrada</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="edit-mode" id="assignment-edit">
+                                        <form id="assignment-form">
+                                            <div class="form-field">
+                                                <label for="assignment-driver-select" class="form-field__label">Chofer</label>
+                                                <select id="assignment-driver-select" class="input-text">
+                                                    <option value="">Selecciona un chofer</option>
+                                                    <option value="Juan Perez">Juan Perez</option>
+                                                    <option value="Pedro Lopez">Pedro Lopez</option>
+                                                    <option value="Maria Gomez">Maria Gomez</option>
+                                                    <option value="Laura Diaz">Laura Diaz</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field form-field--inline" style="gap: var(--space-md);">
+                                                <div style="flex: 1;">
+                                                    <label for="assignment-start-input" class="form-field__label">Fecha Inicio</label>
+                                                    <input type="date" id="assignment-start-input" class="input-text">
+                                                </div>
+                                                <div style="flex: 1;">
+                                                    <label for="assignment-end-input" class="form-field__label">Fecha Fin (opcional)</label>
+                                                    <input type="date" id="assignment-end-input" class="input-text">
+                                                </div>
+                                            </div>
+                                            <p class="form-field__help-text">
+                                                Al crear una nueva asignacion se cerrara automaticamente la asignacion anterior.
+                                            </p>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card__footer" id="assignment-footer">
+                                    <button class="btn btn-secondary" id="cancel-assignment-btn">Cancelar</button>
+                                    <button class="btn btn-primary" id="save-assignment-btn">Guardar Asignacion</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-<script src="js/main.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/machine-form.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // General Info toggle
+            // ============================================
+            // REFACTORIZACIÓN: Edición Consolidada y Declarativa
+            // Usa clases CSS (.is-editing) en lugar de manipulación directa de display
+            // ============================================
+            
+            // Referencias principales
+            const machineDetailCard = document.getElementById('machine-detail-card');
+            const tabsContainer = document.querySelector('.tabs-container');
+            const editMachineBtn = document.getElementById('edit-machine-btn');
+            const generalInfoCard = document.getElementById('general-info-card');
+            const documentationCard = document.getElementById('documentation-card');
+            
+            // Referencias de vista/edición
             const generalInfoView = document.getElementById('general-info-view');
-            const generalInfoEdit = document.getElementById('general-info-edit');
-            const generalInfoFooter = document.getElementById('general-info-footer');
-            const editGeneralInfoBtn = document.getElementById('edit-general-info-btn');
-            const saveGeneralInfoBtn = document.getElementById('save-general-info-btn');
-            const cancelGeneralInfoBtn = document.getElementById('cancel-general-info-btn');
+            const documentationView = document.getElementById('documentation-view');
 
             const machineNumberView = document.getElementById('machine-number-view');
             const machineBrandView = document.getElementById('machine-brand-view');
@@ -381,12 +358,18 @@
             const machineStatusView = document.getElementById('machine-status-view');
             const machineDriverView = document.getElementById('machine-driver-view');
 
-            const machineNumberInput = document.getElementById('machine-number-input');
-            const machineBrandInput = document.getElementById('machine-brand-input');
-            const machinePlateInput = document.getElementById('machine-plate-input');
-            const machineYearInput = document.getElementById('machine-year-input');
-            const machineStatusInput = document.getElementById('machine-status-input');
-            const machineDriverInput = document.getElementById('machine-driver-input');
+            // Referencias a inputs del formulario (se actualizarán después de renderizar)
+            let machineNumberInput, machineBrandInput, machinePlateInput, machineYearInput, machineStatusInput, machineDriverInput;
+            
+            // Función para obtener referencias a los inputs
+            const getFormInputs = () => {
+                machineNumberInput = document.getElementById('machine-number');
+                machineBrandInput = document.getElementById('machine-brand');
+                machinePlateInput = document.getElementById('machine-plate');
+                machineYearInput = document.getElementById('machine-year');
+                machineStatusInput = document.getElementById('machine-status');
+                machineDriverInput = document.getElementById('machine-driver');
+            };
             const machineNumberHeader = document.getElementById('machine-number-header');
 
             const documentationView = document.getElementById('documentation-view');
@@ -457,12 +440,15 @@
             const loadStorage = (key) => safeJSONParse(localStorage.getItem(key), {});
             const saveStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
-            const getMachineMeta = () => ({
-                number: (machineNumberInput.value || '').trim(),
-                brand: (machineBrandInput.value || '').trim(),
-                plate: (machinePlateInput.value || '').trim(),
-                driver: (machineDriverInput.value || '').trim()
-            });
+            const getMachineMeta = () => {
+                getFormInputs(); // Asegurar que las referencias estén actualizadas
+                return {
+                    number: (machineNumberInput?.value || '').trim(),
+                    brand: (machineBrandInput?.value || '').trim(),
+                    plate: (machinePlateInput?.value || '').trim(),
+                    driver: (machineDriverInput?.value || '').trim()
+                };
+            };
 
             const getMachineIdentifier = () => getMachineMeta().number || 'SIN-ID';
             let currentMachineId = getMachineIdentifier();
@@ -481,45 +467,93 @@
                 }
             };
 
-            const updateGeneralView = () => {
-                machineNumberView.textContent = machineNumberInput.value;
-                machineBrandView.textContent = machineBrandInput.value;
-                machinePlateView.textContent = machinePlateInput.value;
-                machineYearView.textContent = machineYearInput.value;
-                machineStatusView.textContent = machineStatusInput.value;
-                machineDriverView.textContent = machineDriverInput.value;
-                updateHeaderLabel();
-            };
+            // populateGeneralInputs ya no es necesario - se maneja en saveInitialData
 
-            const populateGeneralInputs = () => {
-                machineNumberInput.value = initialGeneralData.number;
-                machineBrandInput.value = initialGeneralData.brand;
-                machinePlateInput.value = initialGeneralData.plate;
-                machineYearInput.value = initialGeneralData.year;
-                machineStatusInput.value = initialGeneralData.status;
-                machineDriverInput.value = initialGeneralData.driver;
-            };
-
-            const toggleGeneralEdit = (enable) => {
-                if (enable) {
-                    initialGeneralData = {
+            // ============================================
+            // LÓGICA DE PESTAÑAS (Tabs)
+            // ============================================
+            const tabButtons = document.querySelectorAll('.tabs-list .tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Solo permitir cambio de pestaña si no está en modo edición
+                    if (machineDetailCard && machineDetailCard.classList.contains('is-editing')) {
+                        return;
+                    }
+                    
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('is-active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    tabContents.forEach(content => {
+                        content.classList.remove('is-active');
+                    });
+                    
+                    button.classList.add('is-active');
+                    button.setAttribute('aria-selected', 'true');
+                    const contentId = button.getAttribute('aria-controls');
+                    document.getElementById(contentId).classList.add('is-active');
+                });
+            });
+            
+            // ============================================
+            // EDICIÓN CONSOLIDADA - Usa clases CSS (.is-editing)
+            // ============================================
+            let initialData = {};
+            
+            const saveInitialData = () => {
+                initialData = {
+                    general: {
                         number: machineNumberView.textContent,
                         brand: machineBrandView.textContent,
                         plate: machinePlateView.textContent,
                         year: machineYearView.textContent,
                         status: machineStatusView.textContent,
                         driver: machineDriverView.textContent
-                    };
-                    populateGeneralInputs();
-                    generalInfoView.style.display = 'none';
-                    generalInfoEdit.style.display = 'block';
-                    generalInfoFooter.style.display = 'flex';
-                    editGeneralInfoBtn.style.display = 'none';
+                    },
+                    documentation: {
+                        revision: revDateView.textContent.trim(),
+                        permit: permitDateView.textContent.trim(),
+                        insurance: insuranceDateView.textContent.trim()
+                    }
+                };
+                // Renderizar formulario con datos iniciales
+                const formContainer = document.getElementById('machine-form-container-edit');
+                if (formContainer) {
+                    formContainer.innerHTML = generateMachineForm(initialData.general, {
+                        showDriver: true,
+                        showStatus: true,
+                        showYear: true,
+                        showInitialKm: false, // No mostrar en edición
+                        formId: 'machine-form-edit'
+                    });
+                    getFormInputs(); // Actualizar referencias después de renderizar
+                }
+                // Poblar inputs de documentación
+                revDateInput.value = sanitizeViewValue(initialData.documentation.revision);
+                permitDateInput.value = sanitizeViewValue(initialData.documentation.permit);
+                insuranceDateInput.value = sanitizeViewValue(initialData.documentation.insurance);
+            };
+            
+            const toggleEditMode = (enable) => {
+                if (enable) {
+                    saveInitialData();
+                    // Activar modo edición usando clases CSS
+                    generalInfoCard.classList.add('is-editing');
+                    documentationCard.classList.add('is-editing');
+                    if (tabsContainer) tabsContainer.classList.add('is-editing');
+                    editMachineBtn.textContent = 'Cancelar Edición';
+                    editMachineBtn.classList.remove('btn-primary');
+                    editMachineBtn.classList.add('btn-secondary');
                 } else {
-                    generalInfoView.style.display = 'block';
-                    generalInfoEdit.style.display = 'none';
-                    generalInfoFooter.style.display = 'none';
-                    editGeneralInfoBtn.style.display = 'inline-flex';
+                    // Desactivar modo edición
+                    generalInfoCard.classList.remove('is-editing');
+                    documentationCard.classList.remove('is-editing');
+                    if (tabsContainer) tabsContainer.classList.remove('is-editing');
+                    editMachineBtn.textContent = 'Editar Máquina';
+                    editMachineBtn.classList.remove('btn-secondary');
+                    editMachineBtn.classList.add('btn-primary');
                 }
             };
 
@@ -683,24 +717,35 @@
                 insuranceDateInput.value = sanitizeViewValue(initialDocumentationData.insurance);
             };
 
-            const toggleDocumentationEdit = (enable) => {
-                if (enable) {
-                    initialDocumentationData = {
-                        revision: revDateView.textContent.trim(),
-                        permit: permitDateView.textContent.trim(),
-                        insurance: insuranceDateView.textContent.trim()
-                    };
-                    populateDocumentationInputs();
-                    documentationView.style.display = 'none';
-                    documentationEdit.style.display = 'block';
-                    documentationFooter.style.display = 'flex';
-                    editDocumentationBtn.style.display = 'none';
-                } else {
-                    documentationView.style.display = 'block';
-                    documentationEdit.style.display = 'none';
-                    documentationFooter.style.display = 'none';
-                    editDocumentationBtn.style.display = 'inline-flex';
+            // Función para restaurar datos iniciales
+            const restoreInitialData = () => {
+                // Re-renderizar formulario con datos iniciales
+                const formContainer = document.getElementById('machine-form-container-edit');
+                if (formContainer && initialData.general) {
+                    formContainer.innerHTML = generateMachineForm(initialData.general, {
+                        showDriver: true,
+                        showStatus: true,
+                        showYear: true,
+                        showInitialKm: false,
+                        formId: 'machine-form-edit'
+                    });
+                    getFormInputs(); // Actualizar referencias
                 }
+                revDateInput.value = sanitizeViewValue(initialData.documentation.revision);
+                permitDateInput.value = sanitizeViewValue(initialData.documentation.permit);
+                insuranceDateInput.value = sanitizeViewValue(initialData.documentation.insurance);
+            };
+            
+            // Función para actualizar vista desde inputs
+            const updateGeneralView = () => {
+                getFormInputs(); // Asegurar que las referencias estén actualizadas
+                if (machineNumberInput) machineNumberView.textContent = machineNumberInput.value;
+                if (machineBrandInput) machineBrandView.textContent = machineBrandInput.value;
+                if (machinePlateInput) machinePlateView.textContent = machinePlateInput.value;
+                if (machineYearInput) machineYearView.textContent = machineYearInput.value;
+                if (machineStatusInput) machineStatusView.textContent = machineStatusInput.value;
+                if (machineDriverInput) machineDriverView.textContent = machineDriverInput.value || '(Sin Asignar)';
+                updateHeaderLabel();
             };
             const getDefaultAssignmentState = () => ({
                 current: {
@@ -765,22 +810,55 @@
                 renderAssignmentView();
             };
 
-            const toggleAssignmentEdit = (enable) => {
-                if (enable) {
-                    assignmentView.style.display = 'none';
-                    assignmentEdit.style.display = 'block';
-                    assignmentFooter.style.display = 'flex';
-                    editAssignmentBtn.style.display = 'none';
-                    assignmentDriverSelect.value = '';
-                    assignmentStartInput.value = new Date().toISOString().split('T')[0];
-                    assignmentEndInput.value = '';
-                } else {
-                    assignmentView.style.display = 'block';
-                    assignmentEdit.style.display = 'none';
-                    assignmentFooter.style.display = 'none';
-                    editAssignmentBtn.style.display = 'inline-flex';
+            // ============================================
+            // EVENT LISTENERS - Edición Consolidada
+            // ============================================
+            const saveGeneralInfoBtn = document.getElementById('save-general-info-btn');
+            const cancelGeneralInfoBtn = document.getElementById('cancel-general-info-btn');
+            const saveDocumentationBtn = document.getElementById('save-documentation-btn');
+            const cancelDocumentationBtn = document.getElementById('cancel-documentation-btn');
+            
+            // Botón principal "Editar Máquina"
+            editMachineBtn.addEventListener('click', () => {
+                const isEditing = generalInfoCard.classList.contains('is-editing');
+                toggleEditMode(!isEditing);
+            });
+            
+            // Guardar cambios
+            const saveAllChanges = () => {
+                updateGeneralView();
+                updateDocumentationView();
+                persistDocumentationData();
+                persistAssignmentState();
+                const newId = getMachineIdentifier();
+                if (newId && newId !== currentMachineId) {
+                    moveDataToNewIdentifier(newId);
+                    currentMachineId = newId;
                 }
+                alert('Información actualizada (simulado)!');
+                toggleEditMode(false);
             };
+            
+            if (saveGeneralInfoBtn) {
+                saveGeneralInfoBtn.addEventListener('click', saveAllChanges);
+            }
+            if (saveDocumentationBtn) {
+                saveDocumentationBtn.addEventListener('click', saveAllChanges);
+            }
+            
+            // Cancelar edición
+            if (cancelGeneralInfoBtn) {
+                cancelGeneralInfoBtn.addEventListener('click', () => {
+                    restoreInitialData();
+                    toggleEditMode(false);
+                });
+            }
+            if (cancelDocumentationBtn) {
+                cancelDocumentationBtn.addEventListener('click', () => {
+                    restoreInitialData();
+                    toggleEditMode(false);
+                });
+            }
             const moveDataToNewIdentifier = (nextId) => {
                 const docStore = loadStorage(STORAGE_KEYS.docs);
                 const payload = {
@@ -801,65 +879,74 @@
                 assignmentState = assignmentPayload;
             };
 
-            editGeneralInfoBtn.addEventListener('click', () => toggleGeneralEdit(true));
-            cancelGeneralInfoBtn.addEventListener('click', () => {
-                populateGeneralInputs();
-                toggleGeneralEdit(false);
-            });
-            saveGeneralInfoBtn.addEventListener('click', () => {
-                updateGeneralView();
-                const newId = getMachineIdentifier();
-                if (newId && newId !== currentMachineId) {
-                    moveDataToNewIdentifier(newId);
-                    currentMachineId = newId;
-                } else {
-                    persistDocumentationData();
+            // Asignaciones - mantener lógica separada (no se edita con el botón principal)
+            const assignmentCard = document.getElementById('assignment-card');
+            const editAssignmentBtn = document.getElementById('edit-assignment-btn');
+            const saveAssignmentBtn = document.getElementById('save-assignment-btn');
+            const cancelAssignmentBtn = document.getElementById('cancel-assignment-btn');
+            
+            if (editAssignmentBtn && assignmentCard) {
+                editAssignmentBtn.addEventListener('click', () => {
+                    assignmentCard.classList.add('is-editing');
+                });
+            }
+            
+            if (cancelAssignmentBtn && assignmentCard) {
+                cancelAssignmentBtn.addEventListener('click', () => {
+                    assignmentCard.classList.remove('is-editing');
+                });
+            }
+            
+            if (saveAssignmentBtn) {
+                saveAssignmentBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (!assignmentState) {
+                        assignmentState = getDefaultAssignmentState();
+                    }
+                    const driver = assignmentDriverSelect.value;
+                    const start = assignmentStartInput.value;
+                    const end = assignmentEndInput.value || null;
+                    if (!driver || !start) {
+                        alert('Selecciona un chofer y la fecha de inicio.');
+                        return;
+                    }
+                    assignmentState.history = assignmentState.history || [];
+                    if (assignmentState.current && assignmentState.current.driver) {
+                        const previous = { ...assignmentState.current };
+                        previous.end = previous.end || start;
+                        assignmentState.history.unshift(previous);
+                    }
+                    assignmentState.current = { driver, start, end };
                     persistAssignmentState();
-                }
-                alert('Informacion General actualizada (simulado)!');
-                toggleGeneralEdit(false);
-            });
+                    renderAssignmentView();
+                    persistDocumentationData();
+                    alert('Asignacion actualizada (simulado)!');
+                    if (assignmentCard) assignmentCard.classList.remove('is-editing');
+                });
+            }
 
-            editDocumentationBtn.addEventListener('click', () => toggleDocumentationEdit(true));
-            cancelDocumentationBtn.addEventListener('click', () => {
-                populateDocumentationInputs();
-                toggleDocumentationEdit(false);
-            });
-            saveDocumentationBtn.addEventListener('click', () => {
-                updateDocumentationView();
-                persistDocumentationData();
-                alert('Documentacion actualizada (simulado)!');
-                toggleDocumentationEdit(false);
-            });
-
-            editAssignmentBtn.addEventListener('click', () => toggleAssignmentEdit(true));
-            cancelAssignmentBtn.addEventListener('click', () => toggleAssignmentEdit(false));
-            saveAssignmentBtn.addEventListener('click', (event) => {
-                event.preventDefault();
-                if (!assignmentState) {
-                    assignmentState = getDefaultAssignmentState();
-                }
-                const driver = assignmentDriverSelect.value;
-                const start = assignmentStartInput.value;
-                const end = assignmentEndInput.value || null;
-                if (!driver || !start) {
-                    alert('Selecciona un chofer y la fecha de inicio.');
-                    return;
-                }
-                assignmentState.history = assignmentState.history || [];
-                if (assignmentState.current && assignmentState.current.driver) {
-                    const previous = { ...assignmentState.current };
-                    previous.end = previous.end || start;
-                    assignmentState.history.unshift(previous);
-                }
-                assignmentState.current = { driver, start, end };
-                persistAssignmentState();
-                renderAssignmentView();
-                persistDocumentationData();
-                alert('Asignacion actualizada (simulado)!');
-                toggleAssignmentEdit(false);
-            });
-
+            // Inicializar: renderizar formulario con datos actuales (para modo edición)
+            const formContainerEdit = document.getElementById('machine-form-container-edit');
+            if (formContainerEdit) {
+                // Datos iniciales desde la vista
+                const initialFormData = {
+                    number: machineNumberView.textContent,
+                    brand: machineBrandView.textContent,
+                    plate: machinePlateView.textContent,
+                    year: machineYearView.textContent,
+                    status: machineStatusView.textContent,
+                    driver: machineDriverView.textContent
+                };
+                formContainerEdit.innerHTML = generateMachineForm(initialFormData, {
+                    showDriver: true,
+                    showStatus: true,
+                    showYear: true,
+                    showInitialKm: false,
+                    formId: 'machine-form-edit'
+                });
+                getFormInputs(); // Obtener referencias iniciales
+            }
+            
             loadDocumentationFromStorage();
             loadAssignmentState();
             updateGeneralView();

@@ -65,11 +65,47 @@
                 <p class="main-content__subtitle">Gestiona todas las máquinas registradas en el sistema.</p>
             </header>
 
+            <!-- Resumen de Flota - KPIs (Job-to-be-Done: respuesta en menos de 3 segundos) -->
+            <div class="main-content__grid">
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-success); margin-bottom: var(--space-xs);" id="kpi-operativas">3</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Máquinas Operativas</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-warning); margin-bottom: var(--space-xs);" id="kpi-taller">1</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">En Taller</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-text-disabled); margin-bottom: var(--space-xs);" id="kpi-inactivas">1</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Inactivas</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-error); margin-bottom: var(--space-xs);" id="kpi-docs-vencer">1</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Documentos por Vencer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card__header">
                     <h2 class="card__header-title">Todas las Máquinas</h2>
                     <a href="admin-machine-create.html" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+                        <span class="icon-plus"></span>
                         Registrar Nueva Máquina
                     </a>
                 </div>
@@ -131,16 +167,86 @@
                         </table>
                     </div>
                 </div>
-                <div class="pagination">
-                    <span class="pagination__info">Mostrando 1-4 de 4 registros</span>
-                    <button class="pagination__button" disabled>&laquo; Anterior</button>
-                    <button class="pagination__button">1</button>
-                    <button class="pagination__button" disabled>Siguiente &raquo;</button>
+                <!-- Paginación solo se muestra si hay más de 8 registros (evitar ruido visual) -->
+                <div class="pagination" id="pagination-container" style="display: none;">
+                    <span class="pagination__info" id="pagination-info">Mostrando 1-4 de 4 registros</span>
+                    <button class="pagination__button" id="pagination-prev" disabled>&laquo; Anterior</button>
+                    <button class="pagination__button" id="pagination-page">1</button>
+                    <button class="pagination__button" id="pagination-next" disabled>Siguiente &raquo;</button>
                 </div>
             </div>
         </main>
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Calcular KPIs dinámicamente desde la tabla
+            const tableRows = document.querySelectorAll('.data-table tbody tr');
+            let operativas = 0;
+            let enTaller = 0;
+            let inactivas = 0;
+            
+            tableRows.forEach(row => {
+                const statusCell = row.querySelector('.status-cell');
+                if (statusCell) {
+                    const statusText = statusCell.textContent.trim();
+                    if (statusText === 'Operativa') operativas++;
+                    else if (statusText === 'En Taller') enTaller++;
+                    else if (statusText === 'Inactiva') inactivas++;
+                }
+            });
+            
+            // Actualizar KPIs
+            const kpiOperativas = document.getElementById('kpi-operativas');
+            const kpiTaller = document.getElementById('kpi-taller');
+            const kpiInactivas = document.getElementById('kpi-inactivas');
+            
+            if (kpiOperativas) kpiOperativas.textContent = operativas;
+            if (kpiTaller) kpiTaller.textContent = enTaller;
+            if (kpiInactivas) kpiInactivas.textContent = inactivas;
+            
+            // Estado vacío: mostrar si no hay máquinas
+            const tbody = document.querySelector('.data-table tbody');
+            const tableContainer = document.querySelector('.data-table-container');
+            const paginationContainer = document.getElementById('pagination-container');
+            
+            if (tableRows.length === 0) {
+                // Ocultar tabla y paginación
+                if (tableContainer) tableContainer.style.display = 'none';
+                if (paginationContainer) paginationContainer.style.display = 'none';
+                
+                // Mostrar estado vacío
+                const emptyState = document.createElement('div');
+                emptyState.className = 'card__body';
+                emptyState.style.cssText = 'text-align: center; padding: var(--space-xxl);';
+                emptyState.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.5;">
+                        <span class="sidebar__nav-item-icon icon-maquinas" style="width: 48px; height: 48px; display: inline-block;"></span>
+                    </div>
+                    <h3 style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-semi-bold); color: var(--color-text-primary); margin-bottom: var(--space-xs);">
+                        No hay máquinas registradas
+                    </h3>
+                    <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary); margin-bottom: var(--space-xl);">
+                        Comienza registrando tu primera máquina en el sistema.
+                    </p>
+                    <a href="admin-machine-create.html" class="btn btn-primary">
+                        <span class="icon-plus"></span>
+                        Registrar Nueva Máquina
+                    </a>
+                `;
+                const card = document.querySelector('.card');
+                if (card && tableContainer) {
+                    card.insertBefore(emptyState, tableContainer.parentNode);
+                }
+            } else {
+                // Mostrar paginación solo si hay más de 8 registros
+                const totalRecords = tableRows.length;
+                if (totalRecords > 8 && paginationContainer) {
+                    paginationContainer.style.display = 'flex';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

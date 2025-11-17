@@ -7,7 +7,7 @@
 /* ------------------------------------ */
 .dashboard-layout {
     display: grid;
-    grid-template-columns: 260px 1fr; /* Sidebar de 260px, el resto para el contenido */
+    grid-template-columns: 256px 1fr; /* Sidebar de 256px (32 * 8pt) - múltiplo de 8pt grid */
     min-height: 100vh; /* Ocupa toda la altura de la ventana */
     background-color: var(--color-surface-page); /* Gris-50 */
 }
@@ -101,6 +101,10 @@
 
 .main-content__header {
     margin-bottom: var(--space-md); /* 16px debajo del título */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-md);
 }
 
 .main-content__title {

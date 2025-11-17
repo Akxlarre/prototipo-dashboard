@@ -59,6 +59,36 @@
     position: relative; /* Para contexto de posicionamiento de tooltips */
 }
 
+/* Modo de Edición - Declarativo (CSS maneja la visualización) */
+.card .edit-mode,
+.card .card__footer {
+    display: none; /* Ocultar elementos de edición por defecto */
+}
+
+.card.is-editing .edit-mode,
+.card.is-editing .card__footer {
+    display: block; /* Mostrar edición cuando la clase está presente */
+}
+
+.card.is-editing .view-mode {
+    display: none; /* Ocultar vista cuando se edita */
+}
+
+.card__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-xl);
+    border-top: 1px solid var(--color-border-light);
+}
+
+/* Deshabilitar pestañas durante edición */
+.tabs-container.is-editing .tab-item:not(.is-active) {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 /* Modificador para listas (como el widget de alertas) */
 .card__body--no-padding {
     padding: 0;

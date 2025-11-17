@@ -1,0 +1,58 @@
+/* ==================================== */
+/* _status-pill.css - Átomo: Status Pill */
+/* Componente reutilizable para estados */
+/* ==================================== */
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xxs); /* 4px */
+    padding: 0.15rem 0.5rem; /* 2.4px vertical, 8px horizontal */
+    border-radius: 999px; /* Pill shape */
+    font-size: 0.75rem; /* 12px */
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+}
+
+/* Modificadores de estado */
+.status-pill--ok {
+    background-color: rgba(16, 185, 129, 0.15); /* Verde-500 con 15% opacidad */
+    color: #047857; /* Verde-700 */
+}
+
+.status-pill--warning {
+    background-color: rgba(234, 179, 8, 0.15); /* Ámbar-500 con 15% opacidad */
+    color: #b45309; /* Ámbar-700 */
+}
+
+.status-pill--error {
+    background-color: rgba(239, 68, 68, 0.15); /* Rojo-500 con 15% opacidad */
+    color: #b91c1c; /* Rojo-700 */
+}
+
+/* Variante para documentos (compatibilidad con doc-status-pill) */
+.doc-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xxs);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-medium);
+}
+
+.doc-status-pill--ok {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #047857;
+}
+
+.doc-status-pill--warning {
+    background-color: rgba(234, 179, 8, 0.15);
+    color: #b45309;
+}
+
+.doc-status-pill--error {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #b91c1c;
+}
+

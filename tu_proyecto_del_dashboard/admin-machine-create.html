@@ -69,46 +69,8 @@
                 <div class="card__header">
                     <h2 class="card__header-title">Datos de la Máquina</h2>
                 </div>
-                <div class="card__body">
-                    <form>
-                        <div class="form-field">
-                            <label for="machine-number" class="form-field__label">Número de Máquina</label>
-                            <input type="text" id="machine-number" class="input-text" placeholder="Ej: 05">
-                        </div>
-                        <div class="form-field">
-                            <label for="machine-brand" class="form-field__label">Marca</label>
-                            <input type="text" id="machine-brand" class="input-text" placeholder="Ej: Mercedes-Benz">
-                        </div>
-                        <div class="form-field">
-                            <label for="machine-plate" class="form-field__label">Patente</label>
-                            <input type="text" id="machine-plate" class="input-text" placeholder="Ej: ABCD-12">
-                        </div>
-                        <div class="form-field">
-                            <label for="machine-driver" class="form-field__label">Chofer Asignado (Opcional)</label>
-                            <select id="machine-driver" class="input-text">
-                                <option value="">-- Seleccionar Chofer --</option>
-                                <option value="juan-perez">Juan Pérez</option>
-                                <option value="maria-gomez">María Gómez</option>
-                                <option value="pedro-lopez">Pedro López</option>
-                            </select>
-                        </div>
-                        <div class="form-field">
-                            <label for="machine-status" class="form-field__label">Estado Operativo</label>
-                            <select id="machine-status" class="input-text">
-                                <option value="operative">Operativa</option>
-                                <option value="in-repair">En Taller</option>
-                                <option value="inactive">Inactiva</option>
-                            </select>
-                        </div>
-                        <div class="form-field">
-                            <label for="machine-year" class="form-field__label">Año de Fabricación</label>
-                            <input type="number" id="machine-year" class="input-text" placeholder="Ej: 2018">
-                        </div>
-                        <div class="form-field">
-                            <label for="machine-initial-km" class="form-field__label">Kilometraje Inicial</label>
-                            <input type="number" id="machine-initial-km" class="input-text" placeholder="Ej: 125000">
-                        </div>
-                    </form>
+                <div class="card__body" id="machine-form-container">
+                    <!-- El formulario se renderizará aquí dinámicamente usando machine-form.js -->
                 </div>
                 <div class="card__footer">
                     <a href="admin-machines-list.html" class="btn btn-secondary">Cancelar</a>
@@ -119,29 +81,27 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="js/machine-form.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const saveButton = document.getElementById('save-machine-button');
-            const formFields = document.querySelectorAll('.card__body .input-text');
-
-            function checkFormValidity() {
-                let allFilled = true;
-                formFields.forEach(field => {
-                    // Ignorar chofer asignado (es opcional)
-                    if (field.id === 'machine-driver') {
-                        return;
-                    }
-                    if (field.type !== 'select-one' && field.value.trim() === '') {
-                        allFilled = false;
-                    }
-                    if (field.type === 'select-one' && field.value === '') {
-                        if (field.id !== 'machine-driver') {
-                            allFilled = false;
-                        }
-                    }
+            // Renderizar formulario usando el componente reutilizable
+            const formContainer = document.getElementById('machine-form-container');
+            if (formContainer) {
+                formContainer.innerHTML = generateMachineForm({}, {
+                    showDriver: true,
+                    showStatus: true,
+                    showYear: true,
+                    showInitialKm: true, // Solo en creación
+                    formId: 'machine-form'
                 });
-
-                if (allFilled) {
+            }
+            
+            const saveButton = document.getElementById('save-machine-button');
+            
+            function checkFormValidity() {
+                const validation = validateMachineForm('machine-form');
+                
+                if (validation.valid) {
                     saveButton.removeAttribute('disabled');
                     saveButton.classList.remove('btn-primary--disabled');
                 } else {
@@ -149,20 +109,32 @@
                     saveButton.classList.add('btn-primary--disabled');
                 }
             }
-
-            formFields.forEach(field => {
-                field.addEventListener('input', checkFormValidity);
-                field.addEventListener('change', checkFormValidity);
-            });
-
+            
+            // Agregar listeners a los campos del formulario
+            const form = document.getElementById('machine-form');
+            if (form) {
+                const formFields = form.querySelectorAll('input, select');
+                formFields.forEach(field => {
+                    field.addEventListener('input', checkFormValidity);
+                    field.addEventListener('change', checkFormValidity);
+                });
+            }
+            
             checkFormValidity();
             
             saveButton.addEventListener('click', (e) => {
-                if (!saveButton.hasAttribute('disabled')) {
-                    e.preventDefault();
-                    alert('Máquina registrada exitosamente (simulado)!');
-                    window.location.href = 'admin-machines-list.html';
+                e.preventDefault();
+                const validation = validateMachineForm('machine-form');
+                
+                if (!validation.valid) {
+                    alert('Por favor completa todos los campos requeridos:\n' + validation.errors.join('\n'));
+                    return;
                 }
+                
+                const formData = getMachineFormData('machine-form');
+                console.log('Datos del formulario:', formData);
+                alert('Máquina registrada exitosamente (simulado)!');
+                window.location.href = 'admin-machines-list.html';
             });
         });
     </script>
