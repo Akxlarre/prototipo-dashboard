@@ -8,8 +8,8 @@
     justify-content: space-between; /* Alinea los ítems a los extremos */
     align-items: center;
     gap: var(--space-md); /* 16px - espacio mínimo entre controles para evitar compresión */
-    padding-top: var(--space-md); /* 16px de espacio superior */
-    padding-bottom: var(--space-xl); /* 24px de espacio inferior (antes del KPI) */
+    margin-top: var(--space-xl); /* 24px de espacio superior - después del KPI */
+    margin-bottom: var(--space-md); /* 16px de espacio inferior (antes del gráfico) */
     flex-wrap: wrap; /* Permitir wrap en pantallas pequeñas para evitar que empuje elementos */
 }
 

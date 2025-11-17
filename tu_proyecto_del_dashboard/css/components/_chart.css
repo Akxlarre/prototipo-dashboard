@@ -6,8 +6,8 @@
 
 .chart-kpi {
     text-align: center;
-    margin-top: var(--space-md); /* 16px - espacio superior mínimo para evitar desalineación */
-    margin-bottom: var(--space-xl); /* 24px de espacio antes del gráfico */
+    margin-top: 0; /* Sin margen superior - está justo después del título */
+    margin-bottom: 0; /* Sin margen inferior - el espaciado lo maneja .chart-controls */
 }
 
 .chart-kpi__label {
@@ -70,190 +70,9 @@
     min-width: 100%; /* Mínimo el ancho del contenedor */
 }
 
-/* ------------------------------------ */
-/* Eje Y Cuantitativo - Valores Reales  */
-/* ------------------------------------ */
-.chart-y-axis {
-    position: absolute;
-    left: 0; /* Alineado con el padding-left del .chart-container */
-    top: var(--space-md); /* 16px - alineado con padding del wrapper */
-    bottom: var(--space-md);
-    width: var(--space-xxl); /* 32px de ancho - coincide con padding-left del container */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-right: var(--space-xs); /* 8px de separación del gráfico */
-    border-right: 1px solid var(--color-border-light);
-    z-index: 0; /* Eje Y detrás de las barras - principio de Figura-Fondo (Gestalt) */
-    pointer-events: none; /* No interceptar eventos de las barras */
-}
-
-.chart-y-axis__tick {
-    font-size: var(--font-size-desktop-label); /* 14px */
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    text-align: right;
-    line-height: 1;
-    font-variant-numeric: tabular-nums; /* Números alineados */
-    pointer-events: none; /* No interceptar eventos */
-    white-space: nowrap; /* Prevenir que el texto se divida */
-}
-
-.chart-y-axis__tick--max {
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-semi-bold);
-}
-
-/* ------------------------------------ */
-/* Área de Barras - Grid y Cuadrícula   */
-/* ------------------------------------ */
-.chart-bars-container {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-md); /* 16px entre barras - aumentado de 12px para mejor separación */
-    min-width: 100%; /* Asegura que el contenedor sea al menos del ancho del wrapper */
-    position: relative;
-    height: 200px; /* Altura fija para calcular proporciones */
-    z-index: 1; /* Por encima del eje Y - asegura que las barras sean la figura principal */
-}
-
-/* Líneas de cuadrícula horizontales - Valores cuantitativos */
-.chart-grid-line {
-    position: absolute;
-    left: 0;
-    right: 0;
-    border-top: 1px solid var(--color-border-light);
-    z-index: 0;
-    pointer-events: none;
-}
-
-.chart-grid-line--major {
-    border-top-style: solid;
-    border-top-color: var(--color-border-medium);
-}
-
-.chart-grid-line--minor {
-    border-top-style: dashed;
-    border-top-color: var(--color-border-light);
-}
-
-/* ------------------------------------ */
-/* Barras del Gráfico - Con Tooltips    */
-/* ------------------------------------ */
-.chart-bar {
-    position: relative;
-    min-width: 24px; /* Ancho mínimo aumentado de 20px a 24px (3x8pt) para mejor legibilidad */
-    width: 24px; /* Ancho fijo aumentado - escalable con scroll horizontal */
-    background-color: var(--color-action-primary); /* Azul-600 */
-    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0; /* Redondeado solo arriba */
-    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-    cursor: pointer;
-    z-index: 1;
-    flex-shrink: 0; /* No se comprime */
-}
-
-.chart-bar:hover {
-    background-color: var(--color-action-primary-hover); /* Azul-700 */
-    transform: translateY(-2px); /* Elevación sutil */
-    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25);
-    z-index: 10; /* Por encima de otras barras */
-}
-
-.chart-bar:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px var(--color-action-focus-outline), 0 4px 8px rgba(37, 99, 235, 0.25);
-}
-
-/* ------------------------------------ */
-/* Tooltip de Barra - Información Detallada */
-/* ------------------------------------ */
-.chart-bar-tooltip {
-    position: absolute;
-    bottom: calc(100% + var(--space-xs)); /* 8px arriba de la barra */
-    left: 50%;
-    transform: translateX(-50%) translateY(-4px);
-    padding: var(--space-sm) var(--space-md); /* 12px vertical, 16px horizontal */
-    background-color: var(--color-surface-elevated);
-    color: var(--color-text-primary);
-    font-size: var(--font-size-desktop-label); /* 14px */
-    border-radius: var(--border-radius-sm);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 1000;
-    border: 1px solid var(--color-border-light);
-    text-align: center;
-    min-width: 160px;
-    white-space: normal;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xxs); /* 4px entre elementos */
-}
-
-.chart-bar-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--color-surface-elevated);
-}
-
-.chart-bar:hover .chart-bar-tooltip,
-.chart-bar:focus .chart-bar-tooltip {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-.chart-bar-tooltip__machine {
-    font-weight: var(--font-weight-semi-bold);
-    color: var(--color-text-primary);
-    display: block;
-    margin-bottom: var(--space-xxs); /* 4px */
-}
-
-.chart-bar-tooltip__driver {
-    font-size: 0.75rem; /* 12px */
-    color: var(--color-text-secondary);
-    display: block;
-    margin-bottom: var(--space-xxs);
-}
-
-.chart-bar-tooltip__value {
-    font-weight: var(--font-weight-bold);
-    color: var(--color-action-primary);
-    display: block;
-    font-variant-numeric: tabular-nums;
-}
-
-/* ------------------------------------ */
-/* Labels del Eje X - Máquinas          */
-/* ------------------------------------ */
-.chart-axis-labels {
-    display: flex;
-    justify-content: flex-start;
-    gap: var(--space-md); /* 16px - sincronizado con gap de barras */
-    padding-left: var(--space-xxl); /* 32px - alineado con padding-left del container y eje Y */
-    padding-right: var(--space-sm);
-    font-size: var(--font-size-desktop-label); /* 14px */
-    color: var(--color-text-secondary);
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox - ocultar scrollbar */
-    -ms-overflow-style: none; /* IE/Edge */
-}
-
-.chart-axis-labels::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-}
-
-.chart-axis-label {
-    min-width: 24px; /* Sincronizado con ancho de barras (24px) */
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-    flex-shrink: 0;
-}
+/* Nota: Chart.js maneja el renderizado de barras, ejes y tooltips.
+   Estos estilos se mantienen solo para referencia o componentes futuros.
+   El gráfico real se renderiza mediante Chart.js en el canvas. */
 
 /* ------------------------------------ */
 /* Estado Vacío - Sin Datos             */
@@ -335,26 +154,6 @@
         padding-left: 0; /* Sin padding adicional - el padding está en container */
     }
 
-    .chart-y-axis {
-        width: var(--space-xl); /* 24px en móvil - sincronizado con padding del container */
-    }
-
-    .chart-y-axis__tick {
-        font-size: 0.75rem; /* 12px - más pequeño en móvil */
-    }
-
-    .chart-bar {
-        min-width: 20px;
-        width: 20px; /* Barras más delgadas en móvil (pero aún legibles) */
-    }
-
-    .chart-axis-labels {
-        padding-left: var(--space-xl); /* 24px - sincronizado con padding del container en móvil */
-        font-size: 0.75rem; /* 12px */
-    }
-
-    .chart-axis-label {
-        min-width: 20px; /* Sincronizado con ancho de barras en móvil */
-    }
+    /* Chart.js maneja el responsive automáticamente */
 }
 
