@@ -946,13 +946,19 @@
             // Asignaciones ahora se editan con el botón principal "Editar Máquina"
             // No necesita lógica separada - se maneja en saveAllChanges()
 
-            // Inicializar: renderizar todo desde currentMachineData (fuente de verdad)
-            renderViewFromData(); // Renderizar vista inicial
-            renderFormFromData(); // Renderizar formulario inicial (oculto hasta edición)
-
+            // ============================================
+            // INICIALIZAR VISTAS (Poblar Pestañas)
+            // ============================================
+            // Cargar datos desde storage
             loadDocumentationFromStorage();
             loadAssignmentState();
+            
+            // Renderizar todo desde currentMachineData (fuente de verdad)
+            renderViewFromData(); // Renderizar Pestaña 1 (Info y Docs)
+            renderFormFromData(); // Renderizar formulario inicial (oculto hasta edición)
+            renderAssignmentView(); // Renderizar Pestaña 3 (Asignaciones)
 
+            // Poblar registros diarios (Pestaña 2)
             if (recordsBody) {
                 populateRecordFilters();
                 applyRecordFilters();

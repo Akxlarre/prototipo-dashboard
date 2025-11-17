@@ -107,75 +107,9 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card__header">
-                    <h2 class="card__header-title">Todas las Máquinas</h2>
-                </div>
-                <div class="card__body card__body--no-padding"> 
-                    <div class="data-table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Nº Máquina</th>
-                                    <th>Marca</th>
-                                    <th>Patente</th>
-                                    <th>Chofer Asignado</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>05</td>
-                                    <td>Mercedes-Benz</td>
-                                    <td>ABCD-12</td>
-                                    <td>Juan Pérez</td>
-                                    <td><span class="status-cell status-cell--approved">Operativa</span></td>
-                                    <td class="action-cell">
-                                        <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>02</td>
-                                    <td>Caio</td>
-                                    <td>EFGH-34</td>
-                                    <td>María Gómez</td>
-                                    <td><span class="status-cell status-cell--approved">Operativa</span></td>
-                                    <td class="action-cell">
-                                        <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>07</td>
-                                    <td>Mercedes-Benz</td>
-                                    <td>IJKL-56</td>
-                                    <td>Pedro López</td>
-                                    <td><span class="status-cell status-cell--pending">En Taller</span></td>
-                                    <td class="action-cell">
-                                        <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>03</td>
-                                    <td>Marcopolo</td>
-                                    <td>MNOP-78</td>
-                                    <td>(Sin Asignar)</td>
-                                    <td><span class="status-cell status-cell--rejected">Inactiva</span></td>
-                                    <td class="action-cell">
-                                        <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Paginación solo se muestra si hay más de 8 registros (evitar ruido visual) -->
-                <div class="pagination" id="pagination-container" style="display: none;">
-                    <span class="pagination__info" id="pagination-info">Mostrando 1-4 de 4 registros</span>
-                    <button class="pagination__button" id="pagination-prev" disabled>&laquo; Anterior</button>
-                    <button class="pagination__button" id="pagination-page">1</button>
-                    <button class="pagination__button" id="pagination-next" disabled>Siguiente &raquo;</button>
-                </div>
+            <!-- Lista de Máquinas como Tarjetas de Estado (Job-to-be-Done: información accionable) -->
+            <div class="main-content__grid" id="machines-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
+                <!-- Las tarjetas se generarán dinámicamente con JavaScript -->
             </div>
         </main>
     </div>
@@ -183,71 +117,210 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Calcular KPIs dinámicamente desde la tabla
-            const tableRows = document.querySelectorAll('.data-table tbody tr');
-            let operativas = 0;
-            let enTaller = 0;
-            let inactivas = 0;
-            
-            tableRows.forEach(row => {
-                const statusCell = row.querySelector('.status-cell');
-                if (statusCell) {
-                    const statusText = statusCell.textContent.trim();
-                    if (statusText === 'Operativa') operativas++;
-                    else if (statusText === 'En Taller') enTaller++;
-                    else if (statusText === 'Inactiva') inactivas++;
+            // ============================================
+            // DATOS DE MÁQUINAS (Fuente de Verdad)
+            // ============================================
+            const machinesData = [
+                {
+                    number: '05',
+                    brand: 'Mercedes-Benz',
+                    plate: 'ABCD-12',
+                    driver: 'Juan Pérez',
+                    status: 'Operativa',
+                    documents: {
+                        revision: '2023-11-20', // Vencida
+                        permit: '2024-03-31',   // Al día
+                        insurance: '2024-01-15' // Vence pronto
+                    }
+                },
+                {
+                    number: '02',
+                    brand: 'Caio',
+                    plate: 'EFGH-34',
+                    driver: 'María Gómez',
+                    status: 'Operativa',
+                    documents: {
+                        revision: '2024-12-31',
+                        permit: '2024-12-31',
+                        insurance: '2024-12-31'
+                    }
+                },
+                {
+                    number: '07',
+                    brand: 'Mercedes-Benz',
+                    plate: 'IJKL-56',
+                    driver: 'Pedro López',
+                    status: 'En Taller',
+                    documents: {
+                        revision: '2024-11-30',
+                        permit: '2024-11-30',
+                        insurance: '2024-11-30'
+                    }
+                },
+                {
+                    number: '03',
+                    brand: 'Marcopolo',
+                    plate: 'MNOP-78',
+                    driver: '(Sin Asignar)',
+                    status: 'Inactiva',
+                    documents: {
+                        revision: '2024-10-15', // Vencida
+                        permit: '2024-10-15',   // Vencida
+                        insurance: '2024-10-15' // Vencida
+                    }
                 }
-            });
+            ];
             
-            // Actualizar KPIs
-            const kpiOperativas = document.getElementById('kpi-operativas');
-            const kpiTaller = document.getElementById('kpi-taller');
-            const kpiInactivas = document.getElementById('kpi-inactivas');
-            
-            if (kpiOperativas) kpiOperativas.textContent = operativas;
-            if (kpiTaller) kpiTaller.textContent = enTaller;
-            if (kpiInactivas) kpiInactivas.textContent = inactivas;
-            
-            // Estado vacío: mostrar si no hay máquinas
-            const tbody = document.querySelector('.data-table tbody');
-            const tableContainer = document.querySelector('.data-table-container');
-            const paginationContainer = document.getElementById('pagination-container');
-            
-            if (tableRows.length === 0) {
-                // Ocultar tabla y paginación
-                if (tableContainer) tableContainer.style.display = 'none';
-                if (paginationContainer) paginationContainer.style.display = 'none';
+            // ============================================
+            // FUNCIONES AUXILIARES
+            // ============================================
+            const getDocStatus = (dateValue) => {
+                if (!dateValue) {
+                    return { text: 'Sin fecha', className: 'status-pill--warning', severity: 'warning' };
+                }
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const date = new Date(dateValue);
+                date.setHours(0, 0, 0, 0);
+                const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
                 
-                // Mostrar estado vacío
-                const emptyState = document.createElement('div');
-                emptyState.className = 'card__body';
-                emptyState.style.cssText = 'text-align: center; padding: var(--space-xxl);';
-                emptyState.innerHTML = `
-                    <div style="font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.5;">
-                        <span class="sidebar__nav-item-icon icon-maquinas" style="width: 48px; height: 48px; display: inline-block;"></span>
-                    </div>
-                    <h3 style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-semi-bold); color: var(--color-text-primary); margin-bottom: var(--space-xs);">
-                        No hay máquinas registradas
-                    </h3>
-                    <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary); margin-bottom: var(--space-xl);">
-                        Comienza registrando tu primera máquina en el sistema.
-                    </p>
-                    <a href="admin-machine-create.html" class="btn btn-primary">
-                        <span class="icon-plus"></span>
-                        Registrar Nueva Máquina
-                    </a>
-                `;
-                const card = document.querySelector('.card');
-                if (card && tableContainer) {
-                    card.insertBefore(emptyState, tableContainer.parentNode);
+                if (Number.isNaN(diffDays)) {
+                    return { text: 'Fecha inválida', className: 'status-pill--error', severity: 'error' };
                 }
-            } else {
-                // Mostrar paginación solo si hay más de 8 registros
-                const totalRecords = tableRows.length;
-                if (totalRecords > 8 && paginationContainer) {
-                    paginationContainer.style.display = 'flex';
+                if (diffDays < 0) {
+                    return { text: 'VENCIDA', className: 'status-pill--error', severity: 'error' };
                 }
-            }
+                if (diffDays <= 10) {
+                    return { text: `Vence en ${diffDays} días`, className: 'status-pill--warning', severity: 'warning' };
+                }
+                return { text: 'Al día', className: 'status-pill--ok', severity: 'ok' };
+            };
+            
+            const getStatusPillClass = (status) => {
+                switch(status) {
+                    case 'Operativa': return 'status-pill--ok';
+                    case 'En Taller': return 'status-pill--warning';
+                    case 'Inactiva': return 'status-pill--error';
+                    default: return 'status-pill--warning';
+                }
+            };
+            
+            // ============================================
+            // RENDERIZAR TARJETAS DE MÁQUINAS
+            // ============================================
+            const renderMachineCards = () => {
+                const grid = document.getElementById('machines-grid');
+                if (!grid) return;
+                
+                grid.innerHTML = '';
+                
+                if (machinesData.length === 0) {
+                    // Estado vacío
+                    const emptyCard = document.createElement('div');
+                    emptyCard.className = 'card';
+                    emptyCard.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: var(--space-xxl);';
+                    emptyCard.innerHTML = `
+                        <div class="card__body">
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.5;">
+                                <span class="sidebar__nav-item-icon icon-maquinas" style="width: 48px; height: 48px; display: inline-block;"></span>
+                            </div>
+                            <h3 style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-semi-bold); color: var(--color-text-primary); margin-bottom: var(--space-xs);">
+                                No hay máquinas registradas
+                            </h3>
+                            <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary); margin-bottom: var(--space-xl);">
+                                Comienza registrando tu primera máquina en el sistema.
+                            </p>
+                            <a href="admin-machine-create.html" class="btn btn-primary">
+                                <span class="icon-plus"></span>
+                                Registrar Nueva Máquina
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(emptyCard);
+                    return;
+                }
+                
+                machinesData.forEach(machine => {
+                    const revStatus = getDocStatus(machine.documents.revision);
+                    const permitStatus = getDocStatus(machine.documents.permit);
+                    const insuranceStatus = getDocStatus(machine.documents.insurance);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card__header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="card__header-title">Máquina ${machine.number} - ${machine.brand}</h3>
+                            <span class="status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
+                        </div>
+                        <div class="card__body">
+                            <p><strong>Patente:</strong> ${machine.plate}</p>
+                            <p><strong>Chofer Asignado:</strong> ${machine.driver}</p>
+                            
+                            <hr style="margin: var(--space-md) 0; border: none; border-top: 1px solid var(--color-border-light);">
+                            
+                            <h4 style="font-weight: var(--font-weight-medium); color: var(--color-text-secondary); font-size: 0.8rem; margin-bottom: var(--space-xs); text-transform: uppercase; letter-spacing: 0.5px;">Estado de Documentos</h4>
+                            <div style="display: flex; flex-direction: column; gap: var(--space-xs);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: var(--font-size-desktop-label);">Revisión Técnica</span>
+                                    <span class="status-pill ${revStatus.className}">${revStatus.text}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: var(--font-size-desktop-label);">Permiso de Circulación</span>
+                                    <span class="status-pill ${permitStatus.className}">${permitStatus.text}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: var(--font-size-desktop-label);">Seguro</span>
+                                    <span class="status-pill ${insuranceStatus.className}">${insuranceStatus.text}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__footer" style="background-color: transparent;">
+                            <a href="admin-machine-detail.html" class="btn btn-secondary" style="width: 100%;">Gestionar Máquina</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            };
+            
+            // ============================================
+            // CALCULAR KPIs
+            // ============================================
+            const calculateKPIs = () => {
+                let operativas = 0;
+                let enTaller = 0;
+                let inactivas = 0;
+                let docsVencer = 0;
+                
+                machinesData.forEach(machine => {
+                    if (machine.status === 'Operativa') operativas++;
+                    else if (machine.status === 'En Taller') enTaller++;
+                    else if (machine.status === 'Inactiva') inactivas++;
+                    
+                    // Contar documentos por vencer o vencidos
+                    const docs = machine.documents;
+                    if (getDocStatus(docs.revision).severity !== 'ok' ||
+                        getDocStatus(docs.permit).severity !== 'ok' ||
+                        getDocStatus(docs.insurance).severity !== 'ok') {
+                        docsVencer++;
+                    }
+                });
+                
+                const kpiOperativas = document.getElementById('kpi-operativas');
+                const kpiTaller = document.getElementById('kpi-taller');
+                const kpiInactivas = document.getElementById('kpi-inactivas');
+                const kpiDocsVencer = document.getElementById('kpi-docs-vencer');
+                
+                if (kpiOperativas) kpiOperativas.textContent = operativas;
+                if (kpiTaller) kpiTaller.textContent = enTaller;
+                if (kpiInactivas) kpiInactivas.textContent = inactivas;
+                if (kpiDocsVencer) kpiDocsVencer.textContent = docsVencer;
+            };
+            
+            // ============================================
+            // INICIALIZAR
+            // ============================================
+            calculateKPIs();
+            renderMachineCards();
         });
     </script>
 </body>
