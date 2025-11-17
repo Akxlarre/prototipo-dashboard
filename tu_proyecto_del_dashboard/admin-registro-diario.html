@@ -65,6 +65,11 @@
         .view-mode .file-upload-area p {
             display: none;
         }
+        /* Forzar visibilidad del contenedor principal aunque reutilicemos la clase edit-mode */
+        #form-container.view-mode,
+        #form-container.edit-mode {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +124,7 @@
                 <div class="card__header">
                     <h2 class="card__header-title" id="record-date-title">Registro del 2025-11-14</h2>
                     <div id="view-mode-controls">
-                        <button class="btn btn-primary" id="edit-button">Completar Registro</button>
+                        <button class="btn btn-primary" id="edit-button">Editar Registro</button>
                     </div>
                     <div id="edit-mode-controls" style="display: none;">
                         <button class="btn btn-secondary" id="cancel-button">Cancelar</button>
@@ -141,6 +146,13 @@
                                 <p id="final-km-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
                                 <input type="number" id="final-km-edit" class="input-text" placeholder="Ingrese kilometraje final" style="display: none;">
                             </div>
+                            
+                            <!-- Monto Recaudado (RF-012, RF-014) -->
+                            <div class="form-field">
+                                <label for="revenue-edit" class="form-field__label">Monto Recaudado ($)</label>
+                                <p id="revenue-view" class="view-mode-value">$ 450.000</p>
+                                <input type="number" id="revenue-edit" class="input-text" value="450000" style="display: none;">
+                            </div>
 
                             <!-- Diésel -->
                             <div class="form-field">
@@ -160,10 +172,31 @@
                             <label class="form-field__label">Comprobante de Diésel</label>
                             <div class="file-upload-area" id="file-upload-area">
                                 <input type="file" id="comprobante-file" accept="image/*" style="display: none;">
-                                <p>Haz clic para subir o arrastra una imagen</p>
-                                <p style="font-size: 0.8rem; color: var(--color-text-disabled);">Formatos: JPG, PNG. Máx. 5MB.</p>
+                                <div class="edit-mode-content" style="display: none;">
+                                    <p>Haz clic para subir o arrastra una imagen</p>
+                                    <p style="font-size: 0.8rem; color: var(--color-text-disabled);">Formatos: JPG, PNG. Máx. 5MB.</p>
+                                </div>
                                 <img id="preview-image" src="https://via.placeholder.com/300x200.png?text=COMPROBANTE+PENDIENTE" alt="Previsualización">
                             </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-xs);">
+                                <p class="form-field__helper-text" id="upload-meta">Subido por Juan Pérez - 2025-11-14 18:30</p>
+                                <a href="#" id="download-receipt-btn" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">Descargar Original</a>
+                            </div>
+                        </div>
+
+                        <!-- Cálculo de Pago (RF-014) -->
+                        <div class="form-field" style="margin-top: var(--space-lg); padding: var(--space-md); background-color: var(--color-surface-page); border-radius: var(--border-radius-md);">
+                            <label class="form-field__label">Cálculo de Pago (Previsualización)</label>
+                            <div style="display: flex; align-items: center; gap: var(--space-sm); font-size: 0.9rem;">
+                                <span id="calc-revenue">$ 450.000</span>
+                                <span>(Recaudado)</span>
+                                <span>&times;</span>
+                                <span id="calc-percentage">30%</span>
+                                <span>(Chofer)</span>
+                                <span>=</span>
+                                <strong id="calc-payment" style="font-size: 1rem; color: var(--color-action-primary);">$ 135.000</strong>
+                            </div>
+                            <p class="form-field__helper-text" style="margin-top: var(--space-xs);">Este cálculo se actualiza en tiempo real al editar el "Monto Recaudado".</p>
                         </div>
 
                         <!-- Observaciones -->
@@ -197,7 +230,29 @@
                 };
             };
 
+            const normalizeEstadoParam = (estadoRaw = '') => {
+                const normalized = estadoRaw
+                    ? estadoRaw.toString().trim().toLowerCase().replace(/\s+/g, '-').replace(/_/g, '-')
+                    : '';
+                const mapping = {
+                    'pending-diesel': 'pending-diesel',
+                    'pendiente-diesel': 'pending-diesel',
+                    'pending-trabajador': 'pending-trabajador',
+                    'pendiente-trabajador': 'pending-trabajador',
+                    'incidente': 'incidente',
+                    'incidente-reportado': 'incidente',
+                    'incidente-reportada': 'incidente',
+                    'completo': 'complete',
+                    'complete': 'complete'
+                };
+                if (mapping[normalized]) {
+                    return mapping[normalized];
+                }
+                return normalized || 'pending-diesel';
+            };
+
             const urlParams = getUrlParams();
+            const normalizedEstado = normalizeEstadoParam(urlParams.estado);
             const formContainer = document.getElementById('form-container');
             const editButton = document.getElementById('edit-button');
             const saveButton = document.getElementById('save-button');
@@ -216,6 +271,7 @@
             const getRecordData = (estado, maquina) => {
                 const baseData = {
                     'initial-km': '125000',
+                    'revenue': '450000',
                     'final-km': '',
                     'diesel-quantity': '',
                     'diesel-cost': '',
@@ -227,6 +283,7 @@
                     // Registros completos tienen todos los datos
                     return {
                         'initial-km': '125000',
+                        'revenue': '420000',
                         'final-km': '125450',
                         'diesel-quantity': '120.5',
                         'diesel-cost': '85000',
@@ -237,6 +294,7 @@
                     // Registros con incidente crítico
                     return {
                         'initial-km': '125000',
+                        'revenue': '410000',
                         'final-km': '125380',
                         'diesel-quantity': '95.0',
                         'diesel-cost': '67000',
@@ -248,12 +306,14 @@
                     if (estado === 'pending-diesel') {
                         return {
                             ...baseData,
+                            'revenue': maquina === '05' ? '450000' : baseData['revenue'],
                             'final-km': maquina === '05' ? '125450' : '',
                             'observaciones': maquina === '05' ? 'Máquina en pana, no hubo recorrido completo.' : ''
                         };
                     } else if (estado === 'pending-trabajador') {
                         return {
                             ...baseData,
+                            'revenue': maquina === '02' ? '395000' : baseData['revenue'],
                             'final-km': maquina === '02' ? '125200' : '',
                             'diesel-quantity': maquina === '02' ? '80.0' : '',
                             'diesel-cost': maquina === '02' ? '56000' : '',
@@ -264,9 +324,10 @@
                 return baseData;
             };
 
-            const recordData = getRecordData(urlParams.estado, urlParams.maquina);
+            const recordData = getRecordData(normalizedEstado, urlParams.maquina);
 
             const fields = {
+                'revenue': { view: 'revenue-view', edit: 'revenue-edit', value: recordData['revenue'] },
                 'initial-km': { view: 'initial-km-view', edit: 'initial-km-edit', value: recordData['initial-km'] },
                 'final-km': { view: 'final-km-view', edit: 'final-km-edit', value: recordData['final-km'] },
                 'diesel-quantity': { view: 'diesel-quantity-view', edit: 'diesel-quantity-edit', value: recordData['diesel-quantity'] },
@@ -280,12 +341,12 @@
 
             // Mostrar alerta de incidente si aplica
             const incidenteAlert = document.getElementById('incidente-alert');
-            if (urlParams.estado === 'incidente') {
+            if (normalizedEstado === 'incidente') {
                 incidenteAlert.style.display = 'flex';
             }
 
             // Determinar modo inicial según el estado
-            const initialMode = (urlParams.estado === 'complete') ? 'view' : 'edit';
+            const initialMode = (normalizedEstado === 'complete') ? 'view' : 'edit';
 
             function setMode(mode) {
                 formContainer.classList.remove('view-mode', 'edit-mode');
@@ -294,6 +355,8 @@
                 if (mode === 'edit') {
                     viewModeControls.style.display = 'none';
                     editModeControls.style.display = 'flex';
+                    document.querySelectorAll('.edit-mode-content').forEach(el => el.style.display = 'block');
+
                 } else {
                     viewModeControls.style.display = 'flex';
                     editModeControls.style.display = 'none';
@@ -319,7 +382,9 @@
                                 viewEl.style.color = 'var(--color-text-secondary)';
                             }
                         } else if (fields[key].value) {
-                            if (key.includes('km')) {
+                            if (key.includes('revenue') || key.includes('cost')) {
+                                viewEl.textContent = '$ ' + parseFloat(fields[key].value).toLocaleString('es-CL');
+                            } else if (key.includes('km')) {
                                 viewEl.textContent = fields[key].value + ' Km';
                             } else if (key.includes('cost')) {
                                 viewEl.textContent = '$ ' + parseFloat(fields[key].value).toLocaleString('es-CL');
@@ -345,9 +410,9 @@
             }
 
             // Cambiar texto del botón según el estado
-            if (urlParams.estado === 'complete') {
+            if (normalizedEstado === 'complete') {
                 editButton.textContent = 'Editar Registro';
-            } else if (urlParams.estado === 'incidente') {
+            } else if (normalizedEstado === 'incidente') {
                 editButton.textContent = 'Revisar Incidente';
             } else {
                 editButton.textContent = 'Completar Registro';

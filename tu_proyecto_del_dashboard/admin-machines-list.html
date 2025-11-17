@@ -22,6 +22,332 @@
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
+    <style>
+        .machines-layout-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2.5fr) minmax(260px, 1fr);
+            gap: var(--space-xl);
+            align-items: start;
+        }
+
+        .machines-sidebar-card h3 {
+            font-size: var(--font-size-desktop-label);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .machines-toolbar__meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .results-pill {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            background-color: var(--color-surface-widget);
+        }
+
+        .machines-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .machine-view-toggle {
+            display: inline-flex;
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            overflow: hidden;
+        }
+
+        .machine-view-toggle button {
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1.25rem;
+            font-size: var(--font-size-desktop-label);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .machine-view-toggle button.is-active {
+            background: var(--color-action-primary);
+            color: #fff;
+        }
+
+        .machine-view-section {
+            display: none;
+        }
+
+        .machine-view-section.is-active {
+            display: block;
+        }
+
+        .machine-view-section--cards {
+            padding: var(--space-xl);
+        }
+
+        .machine-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .machine-card {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-lg);
+            background: var(--color-surface-widget);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .machine-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .machine-card__meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .machine-card__meta small {
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .machine-card__status-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .doc-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .doc-indicator {
+            border-radius: var(--border-radius-sm);
+            padding: var(--space-xxs) var(--space-sm);
+            font-size: 0.75rem;
+            font-weight: var(--font-weight-medium);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--color-surface-page);
+            border: 1px solid var(--color-border-light);
+        }
+
+        .doc-indicator::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .doc-indicator--ok::before {
+            background: var(--color-state-success);
+        }
+
+        .doc-indicator--warning::before {
+            background: var(--color-state-warning);
+        }
+
+        .doc-indicator--error::before {
+            background: var(--color-state-error);
+        }
+
+        .machine-card__actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xl);
+            border: 1px dashed var(--color-border-light);
+            border-radius: var(--border-radius-md);
+            background: var(--color-surface-page);
+        }
+
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .chip {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            background: var(--color-surface-widget);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .chip.is-active {
+            background: var(--color-action-primary);
+            color: #fff;
+            border-color: var(--color-action-primary);
+        }
+
+        .doc-alerts-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .doc-alerts-list li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.9rem;
+        }
+
+        .doc-alert-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .doc-alert-dot--error {
+            background: var(--color-state-error);
+        }
+
+        .doc-alert-dot--warning {
+            background: var(--color-state-warning);
+        }
+
+        .doc-alert-dot--ok {
+            background: var(--color-state-success);
+        }
+
+        .sidebar-note {
+            margin-top: var(--space-lg);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Tabla refinada */
+        .data-table thead th {
+            padding: var(--space-md) var(--space-xl);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+
+        .data-table tbody td {
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--color-surface-page);
+        }
+
+        .data-table .action-cell {
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .data-table thead {
+                display: none;
+            }
+
+            .data-table tbody tr {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: var(--space-sm);
+                padding: var(--space-md);
+                border: 1px solid var(--color-border-light);
+                border-radius: var(--border-radius-md);
+                margin-bottom: var(--space-md);
+            }
+
+            .data-table tbody td {
+                border: none;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                font-size: 0.95rem;
+            }
+
+            .data-table tbody td::before {
+                content: attr(data-label);
+                font-size: 0.75rem;
+                font-weight: var(--font-weight-medium);
+                color: var(--color-text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+
+            .data-table .action-cell {
+                grid-column: 1 / -1;
+                text-align: left;
+                margin-top: var(--space-sm);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .machines-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .machine-view-toggle {
+                width: 100%;
+            }
+
+            .machine-view-toggle button {
+                flex: 1;
+                text-align: center;
+            }
+
+            .machine-view-section--cards {
+                padding: var(--space-lg);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .machines-layout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .machines-toolbar__meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -107,10 +433,70 @@
                 </div>
             </div>
 
-            <!-- Lista de Máquinas como Tarjetas de Estado (Job-to-be-Done: información accionable) -->
-            <div class="main-content__grid" id="machines-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
-                <!-- Las tarjetas se generarán dinámicamente con JavaScript -->
+            <!-- Lista de Máquinas adaptable -->
+            <div class="machines-layout-grid">
+                <div class="card">
+                    <div class="card__header machines-toolbar">
+                        <div>
+                            <h2 class="card__header-title">Máquinas Registradas</h2>
+                            <p class="dashboard-section-subtitle">Escoge cómo visualizar según la tarea: tarjetas para escanear riesgos, tabla para listados extensos.</p>
+                        </div>
+                        <div class="machines-toolbar__meta">
+                            <span class="results-pill" id="machine-results-count">0 máquinas</span>
+                            <div class="machine-view-toggle" role="group" aria-label="Cambiar vista de máquinas">
+                                <button type="button" class="is-active" data-view-mode="cards">Tarjetas</button>
+                                <button type="button" data-view-mode="table">Tabla</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card__body card__body--no-padding">
+                        <div id="machines-card-view" class="machine-view-section machine-view-section--cards">
+                            <div class="machine-card-grid" id="machines-card-grid">
+                                <!-- Tarjetas inyectadas por JS -->
+                            </div>
+                        </div>
+                        <div id="machines-table-view" class="machine-view-section machine-view-section--table">
+                            <div class="data-table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nº Máquina</th>
+                                            <th>Chofer Asignado</th>
+                                            <th>Estado Operativo</th>
+                                            <th>Estado de Documentos</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="machines-table-body">
+                                        <!-- Las filas se generarán dinámicamente con JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <aside class="card machines-sidebar-card">
+                    <div class="card__body">
+                        <section>
+                            <h3>Filtro rápido</h3>
+                            <div class="chip-group" id="status-filter-group">
+                                <button class="chip is-active" data-status-filter="all">Todas</button>
+                                <button class="chip" data-status-filter="Operativa">Operativas</button>
+                                <button class="chip" data-status-filter="En Taller">En taller</button>
+                                <button class="chip" data-status-filter="Inactiva">Inactivas</button>
+                            </div>
+                        </section>
+                        <section style="margin-top: var(--space-xl);">
+                            <h3>Alertas documentales</h3>
+                            <ul class="doc-alerts-list" id="doc-alerts-list">
+                                <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Sin datos</li>
+                            </ul>
+                        </section>
+                        <p class="sidebar-note">Los filtros afectan ambas vistas y los conteos de documentos se recalculan automáticamente.</p>
+                    </div>
+                </aside>
             </div>
+
         </main>
     </div>
 
@@ -170,6 +556,14 @@
                     }
                 }
             ];
+
+            const cardsGrid = document.getElementById('machines-card-grid');
+            const cardViewSection = document.getElementById('machines-card-view');
+            const tableViewSection = document.getElementById('machines-table-view');
+            const viewToggleButtons = document.querySelectorAll('[data-view-mode]');
+            const statusFilterButtons = document.querySelectorAll('[data-status-filter]');
+            const machineResultsCount = document.getElementById('machine-results-count');
+            const docAlertsList = document.getElementById('doc-alerts-list');
             
             // ============================================
             // FUNCIONES AUXILIARES
@@ -204,83 +598,213 @@
                     default: return 'status-pill--warning';
                 }
             };
+
+            const buildDocIndicators = (documents = {}) => {
+                const config = [
+                    { key: 'revision', label: 'Rev. Téc.' },
+                    { key: 'permit', label: 'Permiso' },
+                    { key: 'insurance', label: 'Seguro' }
+                ];
+                return `
+                    <div class="doc-indicators" role="group" aria-label="Estado de documentos">
+                        ${config.map(item => {
+                            const status = getDocStatus(documents[item.key]);
+                            const dateText = documents[item.key] ? ` (${documents[item.key]})` : '';
+                            return `<span class="doc-indicator doc-indicator--${status.severity}" title="${item.label}: ${status.text}${dateText}">${item.label}</span>`;
+                        }).join('')}
+                    </div>
+                `;
+            };
+
+            let activeStatusFilter = 'all';
+
+            const getFilteredMachines = () => {
+                if (activeStatusFilter === 'all') return [...machinesData];
+                return machinesData.filter(machine => machine.status === activeStatusFilter);
+            };
             
             // ============================================
-            // RENDERIZAR TARJETAS DE MÁQUINAS
+            // RENDERIZAR TABLA Y TARJETAS DE MÁQUINAS
             // ============================================
-            const renderMachineCards = () => {
-                const grid = document.getElementById('machines-grid');
-                if (!grid) return;
+            const renderMachineTable = (dataset = getFilteredMachines()) => {
+                const tableBody = document.getElementById('machines-table-body');
+                if (!tableBody) return;
                 
-                grid.innerHTML = '';
+                tableBody.innerHTML = '';
                 
-                if (machinesData.length === 0) {
-                    // Estado vacío
-                    const emptyCard = document.createElement('div');
-                    emptyCard.className = 'card';
-                    emptyCard.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: var(--space-xxl);';
-                    emptyCard.innerHTML = `
-                        <div class="card__body">
+                if (!dataset.length) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = `
+                        <td colspan="5" style="text-align: center; padding: var(--space-xl) 0;">
                             <div style="font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.5;">
                                 <span class="sidebar__nav-item-icon icon-maquinas" style="width: 48px; height: 48px; display: inline-block;"></span>
                             </div>
                             <h3 style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-semi-bold); color: var(--color-text-primary); margin-bottom: var(--space-xs);">
-                                No hay máquinas registradas
+                                No hay máquinas coincidentes
                             </h3>
-                            <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary); margin-bottom: var(--space-xl);">
-                                Comienza registrando tu primera máquina en el sistema.
+                            <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">
+                                Ajusta los filtros o registra una nueva máquina.
                             </p>
-                            <a href="admin-machine-create.html" class="btn btn-primary">
-                                <span class="icon-plus"></span>
-                                Registrar Nueva Máquina
-                            </a>
-                        </div>
+                        </td>
                     `;
-                    grid.appendChild(emptyCard);
+                    tableBody.appendChild(emptyRow);
                     return;
                 }
                 
-                machinesData.forEach(machine => {
-                    const revStatus = getDocStatus(machine.documents.revision);
-                    const permitStatus = getDocStatus(machine.documents.permit);
-                    const insuranceStatus = getDocStatus(machine.documents.insurance);
-                    
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card__header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="card__header-title">Máquina ${machine.number} - ${machine.brand}</h3>
+                dataset.forEach(machine => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td data-label="Máquina"><strong>${machine.number}</strong> (${machine.brand})</td>
+                        <td data-label="Chofer">${machine.driver}</td>
+                        <td data-label="Estado Operativo">
                             <span class="status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
-                        </div>
-                        <div class="card__body">
-                            <p><strong>Patente:</strong> ${machine.plate}</p>
-                            <p><strong>Chofer Asignado:</strong> ${machine.driver}</p>
-                            
-                            <hr style="margin: var(--space-md) 0; border: none; border-top: 1px solid var(--color-border-light);">
-                            
-                            <h4 style="font-weight: var(--font-weight-medium); color: var(--color-text-secondary); font-size: 0.8rem; margin-bottom: var(--space-xs); text-transform: uppercase; letter-spacing: 0.5px;">Estado de Documentos</h4>
-                            <div style="display: flex; flex-direction: column; gap: var(--space-xs);">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: var(--font-size-desktop-label);">Revisión Técnica</span>
-                                    <span class="status-pill ${revStatus.className}">${revStatus.text}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: var(--font-size-desktop-label);">Permiso de Circulación</span>
-                                    <span class="status-pill ${permitStatus.className}">${permitStatus.text}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: var(--font-size-desktop-label);">Seguro</span>
-                                    <span class="status-pill ${insuranceStatus.className}">${insuranceStatus.text}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card__footer" style="background-color: transparent;">
-                            <a href="admin-machine-detail.html" class="btn btn-secondary" style="width: 100%;">Gestionar Máquina</a>
-                        </div>
+                        </td>
+                        <td data-label="Documentos">
+                            ${buildDocIndicators(machine.documents)}
+                        </td>
+                        <td class="action-cell" data-label="Acciones">
+                            <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Gestionar</a>
+                        </td>
                     `;
-                    grid.appendChild(card);
+                    tableBody.appendChild(row);
                 });
             };
+
+            const renderMachineCards = (dataset = getFilteredMachines()) => {
+                if (!cardsGrid) return;
+                cardsGrid.innerHTML = '';
+
+                if (!dataset.length) {
+                    cardsGrid.innerHTML = `
+                        <div class="empty-state">
+                            <p style="font-weight: var(--font-weight-semi-bold);">No hay máquinas disponibles</p>
+                            <p style="color: var(--color-text-secondary);">Relaja los filtros para ver más resultados.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                dataset.forEach(machine => {
+                    const card = document.createElement('div');
+                    card.className = 'machine-card';
+                    card.innerHTML = `
+                        <div class="machine-card__header">
+                            <div class="machine-card__meta">
+                                <span style="text-transform: uppercase; font-size: 0.75rem; color: var(--color-text-secondary);">Máquina</span>
+                                <strong style="font-size: 1.25rem;">${machine.number} · ${machine.brand}</strong>
+                                <small>Patente ${machine.plate}</small>
+                            </div>
+                            <span class="status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
+                        </div>
+                        <div class="machine-card__status-group">
+                            <div>
+                                <span class="form-field__label">Chofer asignado</span>
+                                <p style="margin: 0; font-weight: var(--font-weight-medium);">${machine.driver}</p>
+                            </div>
+                            <div>
+                                <span class="form-field__label">Documentación</span>
+                                ${buildDocIndicators(machine.documents)}
+                            </div>
+                        </div>
+                        <div class="machine-card__actions">
+                            <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Gestionar</a>
+                        </div>
+                    `;
+                    cardsGrid.appendChild(card);
+                });
+            };
+
+            const updateResultsCount = (count) => {
+                if (!machineResultsCount) return;
+                const label = count === 1 ? 'máquina' : 'máquinas';
+                machineResultsCount.textContent = `${count} ${label}`;
+            };
+
+            const updateDocAlertsSummary = (dataset = getFilteredMachines()) => {
+                if (!docAlertsList) return;
+                const stats = { error: 0, warning: 0, ok: 0 };
+                dataset.forEach(machine => {
+                    const docs = machine.documents || {};
+                    ['revision', 'permit', 'insurance'].forEach(key => {
+                        const severity = getDocStatus(docs[key]).severity;
+                        stats[severity] = (stats[severity] || 0) + 1;
+                    });
+                });
+                const total = stats.error + stats.warning + stats.ok;
+                if (!total) {
+                    docAlertsList.innerHTML = '<li><span class="doc-alert-dot doc-alert-dot--ok"></span>Sin documentos registrados</li>';
+                    return;
+                }
+                docAlertsList.innerHTML = `
+                    <li><span class="doc-alert-dot doc-alert-dot--error"></span>Vencidos: <strong>${stats.error}</strong></li>
+                    <li><span class="doc-alert-dot doc-alert-dot--warning"></span>Por vencer: <strong>${stats.warning}</strong></li>
+                    <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Al día: <strong>${stats.ok}</strong></li>
+                `;
+            };
+
+            const getPreferredViewMode = (length = getFilteredMachines().length) => {
+                if (window.innerWidth < 768) return 'cards';
+                return length <= 6 ? 'cards' : 'table';
+            };
+
+            let currentViewMode = getPreferredViewMode();
+            let userSelectedView = false;
+
+            const applyViewMode = (mode) => {
+                currentViewMode = mode;
+                if (cardViewSection) cardViewSection.classList.toggle('is-active', mode === 'cards');
+                if (tableViewSection) tableViewSection.classList.toggle('is-active', mode === 'table');
+                viewToggleButtons.forEach(button => {
+                    const isActive = button.dataset.viewMode === mode;
+                    button.classList.toggle('is-active', isActive);
+                    button.setAttribute('aria-pressed', isActive.toString());
+                });
+            };
+
+            const refreshMachineViews = () => {
+                const dataset = getFilteredMachines();
+                renderMachineCards(dataset);
+                renderMachineTable(dataset);
+                updateDocAlertsSummary(dataset);
+                updateResultsCount(dataset.length);
+                if (!userSelectedView) {
+                    const preferred = getPreferredViewMode(dataset.length);
+                    if (preferred !== currentViewMode) {
+                        applyViewMode(preferred);
+                        return;
+                    }
+                }
+                applyViewMode(currentViewMode);
+            };
+
+            viewToggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const mode = button.dataset.viewMode;
+                    if (!mode) return;
+                    userSelectedView = true;
+                    applyViewMode(mode);
+                });
+            });
+
+            window.addEventListener('resize', () => {
+                if (userSelectedView) return;
+                const preferred = getPreferredViewMode();
+                if (preferred !== currentViewMode) {
+                    applyViewMode(preferred);
+                }
+            });
+
+            statusFilterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.dataset.statusFilter || 'all';
+                    if (value === activeStatusFilter) return;
+                    activeStatusFilter = value;
+                    statusFilterButtons.forEach(btn => {
+                        btn.classList.toggle('is-active', btn === button);
+                    });
+                    refreshMachineViews();
+                });
+            });
             
             // ============================================
             // CALCULAR KPIs
@@ -320,7 +844,7 @@
             // INICIALIZAR
             // ============================================
             calculateKPIs();
-            renderMachineCards();
+            refreshMachineViews();
         });
     </script>
 </body>

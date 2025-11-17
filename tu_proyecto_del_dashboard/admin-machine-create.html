@@ -1,14 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador - Registrar Máquina</title>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_icons.css">
@@ -22,6 +20,136 @@
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
+    <style>
+        .machine-create-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+            gap: var(--space-xl);
+            align-items: flex-start;
+        }
+
+        .create-helper-card {
+            position: sticky;
+            top: var(--space-xl);
+        }
+
+        .header-progress-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: var(--space-sm);
+        }
+
+        .progress-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .progress-chip {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            padding: 0.4rem 1.1rem;
+            padding-left: 2rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: var(--color-surface-widget);
+            color: var(--color-text-secondary);
+            position: relative;
+        }
+
+        .progress-chip::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--color-border-light);
+            position: absolute;
+            left: 0.6rem;
+            background: transparent;
+        }
+
+        .progress-chip.is-complete::before {
+            background: var(--color-action-primary);
+            border-color: var(--color-action-primary);
+        }
+
+        .progress-chip.is-complete::after {
+            content: '✔';
+            position: absolute;
+            left: 0.4rem;
+            top: 0.05rem;
+            font-size: 0.65rem;
+            color: #fff;
+        }
+
+        .progress-chip.is-active {
+            border-color: var(--color-action-primary);
+            color: var(--color-action-primary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .form-grid-two-cols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .section-divider {
+            margin: var(--space-lg) 0;
+            border-top: 1px dashed var(--color-border-light);
+        }
+
+        .summary-item {
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item span {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-secondary);
+        }
+
+        .summary-item strong {
+            font-size: 1rem;
+        }
+
+        .sidebar-note {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            margin-top: var(--space-md);
+        }
+
+        .doc-alerts-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 1024px) {
+            .machine-create-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .create-helper-card {
+                position: static;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -61,21 +189,88 @@
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Registrar Nueva Máquina</h1>
-                <p class="main-content__subtitle">Completa la información para añadir una nueva máquina al sistema.</p>
+                <div>
+                    <h1 class="main-content__title">Registrar Nueva Máquina</h1>
+                    <p class="main-content__subtitle">Completa la información para añadir una nueva máquina al sistema.</p>
+                </div>
+                <div class="header-progress-actions">
+                    <div class="progress-chips">
+                        <span class="progress-chip is-active" data-step="general">Datos generales</span>
+                        <span class="progress-chip" data-step="docs">Documentación</span>
+                        <span class="progress-chip" data-step="confirm">Confirmación</span>
+                    </div>
+                    <button class="btn btn-primary" id="save-machine-top-btn">Guardar y continuar</button>
+                </div>
             </header>
 
-            <div class="card" style="max-width: 800px;"> 
-                <div class="card__header">
-                    <h2 class="card__header-title">Datos de la Máquina</h2>
+            <div class="machine-create-layout">
+                <div class="card">
+                    <div class="card__header">
+                        <div>
+                            <h2 class="card__header-title">Datos de la Máquina</h2>
+                            <p class="dashboard-section-subtitle">Prioriza los campos requeridos; se reutilizan en reportes y asignaciones.</p>
+                        </div>
+                    </div>
+                    <div class="card__body" id="machine-form-container"></div>
+                    <div class="section-divider"></div>
+                    <div class="card__header" style="border-top: none;">
+                        <div>
+                            <h2 class="card__header-title">Documentación Inicial (RF-007)</h2>
+                            <p class="dashboard-section-subtitle">Debe estar vigente antes de liberar la máquina.</p>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <form id="documentation-form-create" class="form-grid-two-cols">
+                            <div class="form-field">
+                                <label for="rev-date-input" class="form-field__label">Fecha Vencimiento Revisión Técnica</label>
+                                <input type="date" id="rev-date-input" class="input-text">
+                                <span class="form-field__helper-text">Campo obligatorio para el registro inicial.</span>
+                            </div>
+                            <div class="form-field">
+                                <label for="permit-date-input" class="form-field__label">Fecha Vencimiento Permiso de Circulación</label>
+                                <input type="date" id="permit-date-input" class="input-text">
+                                <span class="form-field__helper-text">Campo obligatorio para el registro inicial.</span>
+                            </div>
+                            <div class="form-field">
+                                <label for="insurance-date-input" class="form-field__label">Fecha Vencimiento Seguro Obligatorio</label>
+                                <input type="date" id="insurance-date-input" class="input-text">
+                                <span class="form-field__helper-text">Campo obligatorio para el registro inicial.</span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card__footer">
+                        <a href="admin-machines-list.html" class="btn btn-secondary">Cancelar</a>
+                        <button type="button" class="btn btn-primary" id="save-machine-button">Guardar Máquina</button>
+                    </div>
                 </div>
-                <div class="card__body" id="machine-form-container">
-                    <!-- El formulario se renderizará aquí dinámicamente usando machine-form.js -->
-                </div>
-                <div class="card__footer">
-                    <a href="admin-machines-list.html" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary" id="save-machine-button">Guardar Máquina</button>
-                </div>
+                <aside class="card create-helper-card">
+                    <div class="card__body">
+                        <h3 class="card__header-title" style="font-size: 1rem;">Resumen en vivo</h3>
+                        <div class="summary-item">
+                            <span>Máquina</span>
+                            <strong id="summary-machine-number">--</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Marca / Modelo</span>
+                            <strong id="summary-machine-brand">--</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Chofer sugerido</span>
+                            <strong id="summary-machine-driver">— Sin asignar —</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Estado operativo</span>
+                            <strong id="summary-machine-status">--</strong>
+                        </div>
+                        <p class="sidebar-note">Se actualiza a medida que completes el formulario. Revisa antes de guardar.</p>
+                        <h3 class="card__header-title" style="font-size: 1rem; margin-top: var(--space-lg);">Checklist rápido</h3>
+                        <ul class="doc-alerts-list">
+                            <li>• Campos con * son obligatorios.</li>
+                            <li>• Documentación vigente ≥ 30 días.</li>
+                            <li>• Patente única en el sistema.</li>
+                        </ul>
+                    </div>
+                </aside>
             </div>
         </main>
     </div>
@@ -84,24 +279,62 @@
     <script src="js/machine-form.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Renderizar formulario usando el componente reutilizable
             const formContainer = document.getElementById('machine-form-container');
             if (formContainer) {
                 formContainer.innerHTML = generateMachineForm({}, {
                     showDriver: true,
                     showStatus: true,
                     showYear: true,
-                    showInitialKm: true, // Solo en creación
+                    showInitialKm: true,
                     formId: 'machine-form'
                 });
             }
-            
+
             const saveButton = document.getElementById('save-machine-button');
-            
-            // Función para actualizar estado del botón usando validateMachineForm del componente
+            const saveTopButton = document.getElementById('save-machine-top-btn');
+            const summaryMachineNumber = document.getElementById('summary-machine-number');
+            const summaryMachineBrand = document.getElementById('summary-machine-brand');
+            const summaryMachineDriver = document.getElementById('summary-machine-driver');
+            const summaryMachineStatus = document.getElementById('summary-machine-status');
+            const documentationForm = document.getElementById('documentation-form-create');
+            const docInputs = documentationForm ? documentationForm.querySelectorAll('input') : [];
+            const progressChips = document.querySelectorAll('.progress-chip');
+
+            const updateSummary = () => {
+                const form = document.getElementById('machine-form');
+                if (!form) return;
+                const number = form.querySelector('input[name="machine-number"]')?.value?.trim();
+                const brand = form.querySelector('input[name="machine-brand"]')?.value?.trim();
+                const driver = form.querySelector('select[name="machine-driver"]')?.value;
+                const status = form.querySelector('select[name="machine-status"]')?.value;
+                summaryMachineNumber.textContent = number || '--';
+                summaryMachineBrand.textContent = brand || '--';
+                summaryMachineDriver.textContent = driver || '— Sin asignar —';
+                summaryMachineStatus.textContent = status || '--';
+            };
+
+            const updateProgressState = (validationResult) => {
+                const validation = validationResult || validateMachineForm('machine-form');
+                const generalValid = validation.valid;
+                const documentationFilled = Array.from(docInputs).every(input => input.value);
+                const readyToConfirm = generalValid && documentationFilled && !saveButton.hasAttribute('disabled');
+                progressChips.forEach(chip => {
+                    const step = chip.dataset.step;
+                    if (step === 'general') {
+                        chip.classList.add('is-active');
+                        chip.classList.toggle('is-complete', generalValid);
+                    } else if (step === 'docs') {
+                        chip.classList.toggle('is-active', generalValid && !documentationFilled);
+                        chip.classList.toggle('is-complete', documentationFilled);
+                    } else {
+                        chip.classList.toggle('is-active', readyToConfirm);
+                        chip.classList.toggle('is-complete', readyToConfirm);
+                    }
+                });
+            };
+
             const updateSaveButtonState = () => {
                 const validation = validateMachineForm('machine-form');
-                
                 if (validation.valid) {
                     saveButton.removeAttribute('disabled');
                     saveButton.classList.remove('btn-primary--disabled');
@@ -109,36 +342,53 @@
                     saveButton.setAttribute('disabled', 'true');
                     saveButton.classList.add('btn-primary--disabled');
                 }
+                updateProgressState(validation);
             };
-            
-            // Agregar listeners a los campos del formulario
+
             const form = document.getElementById('machine-form');
             if (form) {
-                const formFields = form.querySelectorAll('input, select');
-                formFields.forEach(field => {
-                    field.addEventListener('input', updateSaveButtonState);
-                    field.addEventListener('change', updateSaveButtonState);
+                form.querySelectorAll('input, select').forEach(field => {
+                    field.addEventListener('input', () => {
+                        updateSaveButtonState();
+                        updateSummary();
+                    });
+                    field.addEventListener('change', () => {
+                        updateSaveButtonState();
+                        updateSummary();
+                    });
                 });
             }
-            
+
+            docInputs.forEach(input => {
+                input.addEventListener('change', () => updateProgressState());
+            });
+
             updateSaveButtonState();
-            
-            saveButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Usar validación del componente (DRY)
+            updateSummary();
+            updateProgressState();
+
+            const handleSave = (event) => {
+                if (event) event.preventDefault();
                 const validation = validateMachineForm('machine-form');
-                
                 if (!validation.valid) {
                     alert('Por favor completa todos los campos requeridos:\n' + validation.errors.join('\n'));
                     return;
                 }
-                
-                // Usar extracción de datos del componente (DRY)
+                const docsComplete = Array.from(docInputs).every(input => input.value);
+                if (!docsComplete) {
+                    alert('Completa la documentación inicial para continuar.');
+                    return;
+                }
                 const formData = getMachineFormData('machine-form');
                 console.log('Datos del formulario:', formData);
                 alert('Máquina registrada exitosamente (simulado)!');
-                window.location.href = 'admin-machines-list.html';
-            });
+                window.location.href = 'admin-machine-detail.html';
+            };
+
+            saveButton.addEventListener('click', handleSave);
+            if (saveTopButton) {
+                saveTopButton.addEventListener('click', handleSave);
+            }
         });
     </script>
 </body>

@@ -62,6 +62,18 @@
             </header>
 
             <form id="report-form">
+                <!-- Asignación Temporal (Opcional) -->
+                <div class="form-field form-field--mobile">
+                    <label for="maquina-reporte" class="form-field__label">MÁQUINA DE REPORTE</label>
+                    <select id="maquina-reporte" name="maquina-reporte" class="input-text input-mobile-height">
+                        <option value="05" selected>05 (Mi máquina asignada)</option>
+                        <option value="02">02</option>
+                        <option value="07">07</option>
+                    </select>
+                    <p class="form-field__helper-text" style="font-size: var(--font-size-mobile-step); margin-top: var(--space-xs);">Selecciona otra máquina solo si hoy no usaste la tuya.</p>
+                </div>
+
+
                 <!-- Monto Recaudado (Obligatorio) -->
                 <div class="form-field form-field--mobile">
                     <label for="monto-recaudado" class="form-field__label">MONTO RECAUDADO *</label>
@@ -99,21 +111,21 @@
                     <textarea id="observaciones" name="observaciones" class="input-text input-mobile-height" placeholder="Notas adicionales (opcional)" rows="4" style="resize: vertical;"></textarea>
                 </div>
 
-                <!-- Incidente Crítico -->
-                <div class="form-field form-field--mobile" style="margin-top: var(--space-lg); padding: var(--space-md); background-color: var(--color-surface-widget); border-radius: var(--border-radius-md); border: 1px solid var(--color-border-medium);">
+                <!-- Incidente Crítico (Alta Visibilidad) -->
+                <div class="form-field form-field--mobile" style="margin-top: var(--space-lg); padding: var(--space-md); background-color: rgba(239, 68, 68, 0.05); border-radius: var(--border-radius-md); border: 1px solid rgba(239, 68, 68, 0.2);">
                     <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
                         <input type="checkbox" id="incidente-critico" name="incidente-critico" style="width: 20px; height: 20px; cursor: pointer;">
-                        <span style="font-weight: var(--font-weight-medium); color: var(--color-state-warning);">
+                        <span style="font-weight: var(--font-weight-medium); color: var(--color-state-error);">
                             ⚠️ Reportar Incidente Crítico
                         </span>
                     </label>
                     <p style="font-size: var(--font-size-mobile-step); color: var(--color-text-secondary); margin-top: var(--space-xs); margin-left: 28px;">
-                        Marque esta opción si hubo choque, falla de motor, fiscalización, accidente de pasajero u otro incidente que requiera atención inmediata.
+                        Marcar solo si hubo choque, falla de motor, fiscalización o accidente que requiera atención inmediata.
                     </p>
                 </div>
 
                 <!-- Botón de Envío -->
-                <button type="submit" class="btn btn-primary btn-full-width btn-mobile-height" id="send-report-button" disabled>ENVIAR REPORTE</button>
+                <button type="submit" class="btn btn-primary btn-full-width btn-mobile-height" id="send-report-button" disabled style="margin-top: var(--space-lg);">ENVIAR REPORTE</button>
             </form>
         </main>
 
@@ -236,4 +248,3 @@
     </script>
 </body>
 </html>
-

@@ -648,7 +648,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=05&chofer=Juan Pérez&fecha=2025-11-14&estado=pending-diesel" class="link-inline alert-row__action-link">
+                                                <a href="admin-registro-diario.html?maquina=05&chofer=Juan Pérez&fecha=2025-11-14&estado=pending-diesel&mode=edit" class="link-inline alert-row__action-link">
                                                     Resolver
                                                 </a>
                                             </td>
@@ -669,7 +669,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=02&chofer=Ana Gómez&fecha=2025-11-14&estado=pending-trabajador" class="link-inline alert-row__action-link">
+                                                <a href="admin-registro-diario.html?maquina=02&chofer=Ana Gómez&fecha=2025-11-14&estado=pending-trabajador&mode=edit" class="link-inline alert-row__action-link">
                                                     Resolver
                                                 </a>
                                             </td>
@@ -691,7 +691,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=04&chofer=Luis Martínez&fecha=2025-11-14&estado=incidente" class="link-inline alert-row__action-link" style="color: var(--color-state-error); font-weight: var(--font-weight-medium);">
+                                                <a href="admin-registro-diario.html?maquina=04&chofer=Luis Martínez&fecha=2025-11-14&estado=incidente&mode=edit" class="link-inline alert-row__action-link" style="color: var(--color-state-error); font-weight: var(--font-weight-medium);">
                                                     Revisar
                                                 </a>
                                             </td>
@@ -712,7 +712,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=01&chofer=Carlos Rodríguez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                <a href="admin-registro-diario.html?maquina=01&chofer=Carlos Rodríguez&fecha=2025-11-14&estado=complete&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
@@ -732,7 +732,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=03&chofer=María López&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                <a href="admin-registro-diario.html?maquina=03&chofer=María López&fecha=2025-11-14&estado=complete&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
@@ -752,7 +752,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=07&chofer=Pedro Gómez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                <a href="admin-registro-diario.html?maquina=07&chofer=Pedro Gómez&fecha=2025-11-14&estado=complete&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
@@ -772,7 +772,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=08&chofer=Juan Pérez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                <a href="admin-registro-diario.html?maquina=08&chofer=Juan Pérez&fecha=2025-11-14&estado=complete&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
@@ -792,7 +792,7 @@
                                                 </span>
                                             </td>
                                             <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=09&chofer=Juan Pérez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                <a href="admin-registro-diario.html?maquina=09&chofer=Juan Pérez&fecha=2025-11-14&estado=complete&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
@@ -896,7 +896,7 @@
                             driverName: record.driver,
                             date: record.date,
                             actionLabel: 'Resolver',
-                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-diesel`
+                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-diesel&mode=edit`
                         });
                     } else if (record.status === 'PENDIENTE_TRABAJADOR') {
                         alerts.push({
@@ -909,7 +909,7 @@
                             driverName: record.driver,
                             date: record.date,
                             actionLabel: 'Resolver',
-                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-trabajador`
+                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-trabajador&mode=edit`
                         });
                     } else if (record.status === 'INCIDENTE_REPORTADO') {
                         alerts.push({
@@ -922,7 +922,7 @@
                             driverName: record.driver,
                             date: record.date,
                             actionLabel: 'Revisar',
-                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=incidente`
+                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=incidente&mode=edit`
                         });
                     }
                 });
