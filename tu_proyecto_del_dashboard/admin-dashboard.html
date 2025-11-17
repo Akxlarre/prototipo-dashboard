@@ -1013,19 +1013,10 @@
                                     <div class="chart-empty-state__title">Sin datos financieros</div>
                                     <p class="chart-empty-state__text">No hay datos disponibles para el período seleccionado.</p>
                                 </div>
-                                <div class="chart-wrapper" id="chart-wrapper">
-                                    <!-- Eje Y cuantitativo -->
-                                    <div class="chart-y-axis" id="chart-y-axis">
-                                        <!-- Se generará dinámicamente -->
-                                    </div>
-                                    <!-- Contenedor de barras con grid -->
-                                    <div class="chart-bars-container" id="chart-bars-container">
-                                        <!-- Barras y líneas de cuadrícula se generarán dinámicamente -->
-                                    </div>
+                                <!-- Canvas para Chart.js -->
+                                <div class="chart-wrapper" id="chart-wrapper" style="position: relative; height: 280px;">
+                                    <canvas id="financial-chart"></canvas>
                                 </div>
-                            </div>
-                            <div class="chart-axis-labels" id="chart-axis-labels">
-                                <!-- Labels se generarán dinámicamente -->
                             </div>
                             <p class="chart-axis-caption">
                                 Eje Y: Valores monetarios exactos. Hover sobre cada barra para ver detalles completos (RF-030).
@@ -1038,6 +1029,8 @@
     </div>
 
     <script src="js/main.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1420,20 +1413,18 @@
 
             // ============================================
             // GRÁFICO FINANCIERO - Resumen Financiero
-            // Renderizado dinámico con eje Y cuantitativo,
-            // tooltips y estados (RF-018, RF-019, RF-021, RF-030)
+            // Implementado con Chart.js para mejor gestión
+            // de layout, z-index y escalabilidad (RF-030)
             // ============================================
             
             const chartContainer = document.getElementById('chart-container');
             const chartWrapper = document.getElementById('chart-wrapper');
             const chartLoadingState = document.getElementById('chart-loading-state');
             const chartEmptyState = document.getElementById('chart-empty-state');
-            const chartYAxis = document.getElementById('chart-y-axis');
-            const chartBarsContainer = document.getElementById('chart-bars-container');
-            const chartAxisLabels = document.getElementById('chart-axis-labels');
             const chartKpiLabel = document.getElementById('chart-kpi-label');
             const chartKpiValue = document.getElementById('chart-kpi-value');
             const segmentedButtons = document.querySelectorAll('.segmented-button');
+            const chartCanvas = document.getElementById('financial-chart');
 
             // Datos de ejemplo (en producción vendría de API)
             const financialData = {
@@ -1454,6 +1445,7 @@
             };
 
             let currentMetric = 'Ganancia Neta';
+            let financialChart = null;
 
             // Formatear valores monetarios
             const formatCurrency = (value) => {
@@ -1463,118 +1455,6 @@
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
                 }).format(value).replace('CLP', '$');
-            };
-
-            // Calcular valores del eje Y (mínimo, máximo, ticks)
-            const calculateYAxis = (data) => {
-                if (!data || data.length === 0) return { min: 0, max: 0, ticks: [] };
-                
-                const values = data.map(d => d.value);
-                const max = Math.max(...values);
-                const min = Math.min(...values);
-                
-                // Calcular ticks: 5 divisiones (0, 25%, 50%, 75%, 100%)
-                const tickCount = 5;
-                const tickStep = max / (tickCount - 1);
-                const ticks = [];
-                
-                for (let i = 0; i < tickCount; i++) {
-                    const value = i * tickStep;
-                    ticks.push({
-                        value: value,
-                        position: (i / (tickCount - 1)) * 100, // Porcentaje de altura
-                        isMax: i === tickCount - 1
-                    });
-                }
-                
-                return { min, max, ticks };
-            };
-
-            // Renderizar eje Y
-            const renderYAxis = (yAxisData) => {
-                chartYAxis.innerHTML = '';
-                yAxisData.ticks.forEach(tick => {
-                    const tickEl = document.createElement('div');
-                    tickEl.className = `chart-y-axis__tick ${tick.isMax ? 'chart-y-axis__tick--max' : ''}`;
-                    tickEl.textContent = formatCurrency(tick.value);
-                    tickEl.style.position = 'absolute';
-                    tickEl.style.bottom = `${tick.position}%`;
-                    tickEl.style.transform = 'translateY(50%)'; // Centrar verticalmente
-                    chartYAxis.appendChild(tickEl);
-                });
-            };
-
-            // Renderizar líneas de cuadrícula
-            const renderGridLines = (yAxisData) => {
-                const existingGridLines = chartBarsContainer.querySelectorAll('.chart-grid-line');
-                existingGridLines.forEach(line => line.remove());
-                
-                yAxisData.ticks.forEach((tick, index) => {
-                    if (index === 0) return; // No dibujar línea en el 0
-                    
-                    const gridLine = document.createElement('div');
-                    gridLine.className = `chart-grid-line ${tick.isMax ? 'chart-grid-line--major' : 'chart-grid-line--minor'}`;
-                    gridLine.style.bottom = `${tick.position}%`;
-                    chartBarsContainer.appendChild(gridLine);
-                });
-            };
-
-            // Renderizar barras del gráfico
-            const renderBars = (data, yAxisData) => {
-                // Limpiar barras existentes (mantener grid lines)
-                const existingBars = chartBarsContainer.querySelectorAll('.chart-bar');
-                existingBars.forEach(bar => bar.remove());
-                
-                if (!data || data.length === 0) return;
-                
-                data.forEach((item, index) => {
-                    const heightPercentage = (item.value / yAxisData.max) * 100;
-                    
-                    const bar = document.createElement('div');
-                    bar.className = 'chart-bar';
-                    bar.style.height = `${heightPercentage}%`;
-                    bar.setAttribute('role', 'button');
-                    bar.setAttribute('tabindex', '0');
-                    bar.setAttribute('aria-label', `Máquina ${item.machineId}: ${formatCurrency(item.value)}`);
-                    
-                    // Tooltip
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'chart-bar-tooltip';
-                    tooltip.setAttribute('role', 'tooltip');
-                    
-                    const machineLabel = document.createElement('span');
-                    machineLabel.className = 'chart-bar-tooltip__machine';
-                    machineLabel.textContent = `Máquina ${item.machineId}`;
-                    
-                    const driverLabel = document.createElement('span');
-                    driverLabel.className = 'chart-bar-tooltip__driver';
-                    driverLabel.textContent = item.driver;
-                    
-                    const valueLabel = document.createElement('span');
-                    valueLabel.className = 'chart-bar-tooltip__value';
-                    valueLabel.textContent = formatCurrency(item.value);
-                    
-                    tooltip.appendChild(machineLabel);
-                    tooltip.appendChild(driverLabel);
-                    tooltip.appendChild(valueLabel);
-                    bar.appendChild(tooltip);
-                    
-                    chartBarsContainer.appendChild(bar);
-                });
-            };
-
-            // Renderizar labels del eje X
-            const renderAxisLabels = (data) => {
-                chartAxisLabels.innerHTML = '';
-                
-                if (!data || data.length === 0) return;
-                
-                data.forEach(item => {
-                    const label = document.createElement('span');
-                    label.className = 'chart-axis-label';
-                    label.textContent = item.machineId;
-                    chartAxisLabels.appendChild(label);
-                });
             };
 
             // Actualizar KPI total
@@ -1591,12 +1471,16 @@
                 chartKpiValue.textContent = formatCurrency(total);
             };
 
-            // Renderizar gráfico completo
+            // Renderizar gráfico con Chart.js
             const renderChart = (metric = currentMetric, showLoading = false) => {
                 const data = financialData[metric] || [];
                 
                 // Mostrar estado de carga
                 if (showLoading) {
+                    if (financialChart) {
+                        financialChart.destroy();
+                        financialChart = null;
+                    }
                     chartWrapper.style.display = 'none';
                     chartEmptyState.style.display = 'none';
                     chartLoadingState.style.display = 'flex';
@@ -1607,6 +1491,10 @@
                 
                 // Verificar si hay datos
                 if (data.length === 0) {
+                    if (financialChart) {
+                        financialChart.destroy();
+                        financialChart = null;
+                    }
                     chartWrapper.style.display = 'none';
                     chartEmptyState.style.display = 'block';
                     chartKpiValue.textContent = formatCurrency(0);
@@ -1614,14 +1502,171 @@
                 }
                 
                 chartEmptyState.style.display = 'none';
-                chartWrapper.style.display = 'flex';
+                chartWrapper.style.display = 'block';
                 
-                // Calcular y renderizar
-                const yAxisData = calculateYAxis(data);
-                renderYAxis(yAxisData);
-                renderGridLines(yAxisData);
-                renderBars(data, yAxisData);
-                renderAxisLabels(data);
+                // Preparar datos para Chart.js
+                const labels = data.map(item => item.machineId);
+                const values = data.map(item => item.value);
+                const maxValue = Math.max(...values);
+                
+                // Calcular ancho mínimo del canvas para scroll horizontal
+                // Si hay más de 8 máquinas, activar scroll (40px por máquina: 24px barra + 16px gap)
+                const minCanvasWidth = labels.length > 8 
+                    ? labels.length * 40 
+                    : null;
+                
+                // Destruir gráfico anterior si existe
+                if (financialChart) {
+                    financialChart.destroy();
+                }
+                
+                // Ajustar ancho del canvas para scroll horizontal si es necesario
+                if (minCanvasWidth) {
+                    chartCanvas.style.minWidth = `${minCanvasWidth}px`;
+                } else {
+                    chartCanvas.style.minWidth = '100%';
+                }
+                
+                // Crear nuevo gráfico con Chart.js
+                const ctx = chartCanvas.getContext('2d');
+                financialChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: metric,
+                            data: values,
+                            backgroundColor: 'rgba(37, 99, 235, 1)', // Azul-600
+                            borderColor: 'rgba(37, 99, 235, 1)',
+                            borderWidth: 0,
+                            borderRadius: 4,
+                            borderSkipped: false,
+                            // Datos adicionales para tooltips personalizados
+                            machineData: data.map(item => item.machineId),
+                            driverData: data.map(item => item.driver)
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 8,
+                                right: 8,
+                                top: 8,
+                                bottom: 8
+                            }
+                        },
+                        // Configuración para scroll horizontal con muchas máquinas
+                        indexAxis: 'x',
+                        barThickness: 24, // Ancho fijo de barras (3x8pt)
+                        maxBarThickness: 32, // Máximo ancho de barras
+                        categoryPercentage: 0.6, // Espacio entre categorías
+                        barPercentage: 0.8, // Espacio dentro de cada categoría
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                                titleColor: 'rgb(31, 41, 55)',
+                                bodyColor: 'rgb(75, 85, 99)',
+                                borderColor: 'rgb(229, 231, 235)',
+                                borderWidth: 1,
+                                padding: 12,
+                                displayColors: false,
+                                callbacks: {
+                                    title: function(context) {
+                                        const index = context[0].dataIndex;
+                                        return `Máquina ${data[index].machineId}`;
+                                    },
+                                    label: function(context) {
+                                        const index = context.dataIndex;
+                                        const value = formatCurrency(context.parsed.y);
+                                        return [
+                                            data[index].driver,
+                                            value
+                                        ];
+                                    },
+                                    labelTextColor: function(context) {
+                                        return [
+                                            'rgb(75, 85, 99)', // Color para chofer
+                                            'rgb(37, 99, 235)' // Color para valor (azul primario)
+                                        ];
+                                    }
+                                },
+                                titleFont: {
+                                    size: 14,
+                                    weight: '600'
+                                },
+                                bodyFont: {
+                                    size: 12
+                                },
+                                boxPadding: 4
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: maxValue * 1.1, // 10% de espacio adicional arriba
+                                ticks: {
+                                    callback: function(value) {
+                                        return formatCurrency(value);
+                                    },
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: 'rgb(75, 85, 99)',
+                                    padding: 8,
+                                    stepSize: maxValue / 4 // 5 divisiones (0, 25%, 50%, 75%, 100%)
+                                },
+                                grid: {
+                                    color: function(context) {
+                                        // Líneas mayores más visibles
+                                        const tickValue = context.tick.value;
+                                        const step = maxValue / 4;
+                                        return (tickValue % step === 0 && tickValue !== 0) 
+                                            ? 'rgba(209, 213, 219, 1)' // Gris-300 para líneas mayores
+                                            : 'rgba(229, 231, 235, 0.5)'; // Gris-200 para líneas menores
+                                    },
+                                    lineWidth: function(context) {
+                                        const tickValue = context.tick.value;
+                                        const step = maxValue / 4;
+                                        return (tickValue % step === 0 && tickValue !== 0) ? 1 : 0.5;
+                                    }
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: 'rgb(75, 85, 99)',
+                                    padding: 8
+                                },
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        animation: {
+                            duration: 300
+                        }
+                    }
+                });
+                
+                // Actualizar KPI
                 updateKPI(data, metric);
             };
 
