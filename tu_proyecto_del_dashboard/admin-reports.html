@@ -1,13 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador - Centro de Reportes</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_icons.css">
@@ -19,31 +20,7 @@
     <link rel="stylesheet" href="css/components/_table.css">
     <link rel="stylesheet" href="css/components/_tabs.css">
     <link rel="stylesheet" href="css/components/_chart.css">
-    <link rel="stylesheet" href="css/components/_export-button.css"> 
-
-    <style>
-        .report-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: var(--space-lg);
-            flex-wrap: wrap;
-        }
-
-        .chart-axis-caption {
-            font-size: 0.75rem;
-            color: var(--color-text-muted);
-            margin-top: 0.5rem;
-        }
-
-        .chart-axis-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.75rem;
-            color: var(--color-text-muted);
-        }
-    </style>
+    <link rel="stylesheet" href="css/components/_export-button.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -84,281 +61,587 @@
         <main class="main-content">
             <header class="main-content__header">
                 <h1 class="main-content__title">Centro de Reportes y Análisis</h1>
-                <p class="main-content__subtitle">
-                    Analiza el rendimiento financiero y de combustible de la flota. Todos los reportes pueden exportarse (RF-030, RF-032, RF-033).
-                </p>
+                <p class="main-content__subtitle">Monitorea los indicadores financieros clave de la flota y exporta cada reporte en un clic.</p>
             </header>
-            
+
             <div class="card">
                 <div class="card__header">
-                    <div style="flex-grow: 1;">
-                        <h2 class="card__header-title" style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-medium); color: var(--color-text-secondary);">
-                            Filtros Globales
-                        </h2>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-sm); margin-top: var(--space-xs);">
-                            <div class="chart-controls" style="padding: 0;">
-                                <div class="segmented-button-group">
-                                    <button class="segmented-button is-active">Año</button>
-                                    <button class="segmented-button">Mes</button>
-                                    <button class="segmented-button">Rango personalizado</button>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap;">
-                                <div class="date-range-input">
-                                    <svg class="date-range-input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M6.5 0a.5.5 0 0 0-.5.5V1H4a2 2 0 0 0-2 2v1h12V3a2 2 0 0 0-2-2h-2.5V.5a.5.5 0 0 0-1 0V1H6V.5a.5.5 0 0 0-.5-.5zM14 4H2v11a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zM2 3a1 1 0 0 1 1-1h2.5V.5a.5.5 0 0 1 1 0V1H10V.5a.5.5 0 0 1 1 0V1h2.5a1 1 0 0 1 1 1V3H2z"/>
-                                    </svg>
-                                    <input type="text" class="input-text date-range-input__field" value="2025-01-01 - 2025-12-31">
-                                </div>
-                                <p style="font-size: 0.8rem; color: var(--color-text-muted);">
-                                    Los filtros se aplican a todos los reportes activos.
-                                </p>
-                            </div>
+                    <h2 class="card__header-title">Reportes Analíticos</h2>
+                    <div class="tabs-container">
+                        <div class="tabs-list" role="tablist">
+                            <button class="tab-item is-active" type="button" id="tab-machines-profit" role="tab" aria-controls="panel-machines-profit" aria-selected="true" data-tab-target="machines-profit">Rentabilidad por Máquina</button>
+                            <button class="tab-item" type="button" id="tab-diesel-cost" role="tab" aria-controls="panel-diesel-cost" aria-selected="false" data-tab-target="diesel-cost">Análisis Costo de Diésel</button>
+                            <button class="tab-item" type="button" id="tab-revenue-ranking" role="tab" aria-controls="panel-revenue-ranking" aria-selected="false" data-tab-target="revenue-ranking">Ranking de Ingresos (Bruto)</button>
+                            <button class="tab-item" type="button" id="tab-driver-profit" role="tab" aria-controls="panel-driver-profit" aria-selected="false" data-tab-target="driver-profit">Rentabilidad por Chofer</button>
                         </div>
                     </div>
                 </div>
-
                 <div class="card__body">
-                    <div class="tabs-container" style="border-bottom: none;">
-                        <div class="tabs-list" role="tablist">
-                            <button class="tab-item is-active" id="tab-ranking" role="tab" aria-controls="content-ranking" aria-selected="true">
-                                Ranking Financiero (RF-032)
-                            </button>
-                            <button class="tab-item" id="tab-fuel" role="tab" aria-controls="content-fuel" aria-selected="false">
-                                Rendimiento de Combustible (RF-033)
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- TAB: Ranking Financiero -->
-                    <div class="tab-content is-active" id="content-ranking" role="tabpanel" aria-labelledby="tab-ranking">
-                        <div class="report-header-row" style="padding-top: var(--space-xl);">
+                    <div class="tab-content is-active" id="panel-machines-profit" role="tabpanel" aria-labelledby="tab-machines-profit" data-tab-panel="machines-profit">
+                        <div class="report-header-row">
                             <div class="chart-kpi">
-                                <span class="chart-kpi__label">Ganancia Neta Total (periodo seleccionado)</span>
+                                <span class="chart-kpi__label">Ganancia Neta Total</span>
                                 <span class="chart-kpi__value">$ 12.345.678</span>
                             </div>
                             <div class="export-group">
-                                <button class="btn btn-secondary export-button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;">
-                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793l-1.854-1.854a.5.5 0 1 0-.708.708l3 3z"/>
-                                    </svg>
-                                    Exportar Ranking
-                                </button>
-                                <button class="export-dropdown-toggle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                </button>
-                                <div class="export-menu">
-                                    <div class="export-menu__item">Exportar a PDF</div>
-                                    <div class="export-menu__item">Exportar a Excel</div>
-                                </div>
+                                <button class="btn btn-secondary export-button" type="button">Exportar</button>
+                                <button class="btn btn-secondary export-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Mostrar opciones de exportación">&#9662;</button>
+                                <ul class="export-menu">
+                                    <li class="export-menu__item" data-format="xlsx">Exportar XLSX</li>
+                                    <li class="export-menu__item" data-format="csv">Exportar CSV</li>
+                                    <li class="export-menu__item" data-format="pdf">Exportar PDF</li>
+                                </ul>
                             </div>
                         </div>
-
-                        <div class="chart-controls" style="padding-bottom: 0; margin-top: var(--space-lg);">
-                            <div class="segmented-button-group">
-                                <button class="segmented-button is-active">Ganancia Neta</button>
-                                <button class="segmented-button">Ingreso Total</button>
+                        <div class="chart-container">
+                            <div class="chart-wrapper">
+                                <canvas id="machinesProfitChart"></canvas>
                             </div>
                         </div>
-
-                        <div style="padding: var(--space-lg) 0;">
-                            <div class="chart-container">
-                                <div class="chart-bar" style="height: 80%;" title="Máquina 05"></div>
-                                <div class="chart-bar" style="height: 65%;" title="Máquina 02"></div>
-                                <div class="chart-bar" style="height: 45%;" title="Máquina 01"></div>
-                                <div class="chart-bar" style="height: 30%;" title="Máquina 07"></div>
-                            </div>
-                            <div class="chart-axis-labels">
-                                <span>05</span>
-                                <span>02</span>
-                                <span>01</span>
-                                <span>07</span>
-                            </div>
-                            <p class="chart-axis-caption">
-                                Eje Y: Ganancia neta relativa por máquina. El orden también se refleja en la tabla de ranking inferior (RF-032).
-                            </p>
-                        </div>
-
-                        <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">
-                            Detalle de Ranking por Máquina
-                        </h3>
                         <div class="data-table-container">
                             <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>Ranking</th>
                                         <th>Nº Máquina</th>
+                                        <th>Ingreso Total ($)</th>
+                                        <th>Costo Diésel ($)</th>
+                                        <th>Pago Choferes ($)</th>
                                         <th>Ganancia Neta ($)</th>
-                                        <th>KM Recorridos</th>
-                                        <th>Choferes Asignados</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td>#1</td><td>05</td><td>$ 3.500.000</td><td>45,000 Km</td><td>2</td></tr>
-                                    <tr><td>#2</td><td>02</td><td>$ 2.900.000</td><td>40,000 Km</td><td>1</td></tr>
-                                    <tr><td>#3</td><td>01</td><td>$ 2.400.000</td><td>38,500 Km</td><td>1</td></tr>
-                                    <tr><td>#4</td><td>07</td><td>$ 1.800.000</td><td>33,200 Km</td><td>2</td></tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Máquina 05</td>
+                                        <td>$ 5.200.000</td>
+                                        <td>$ 1.350.000</td>
+                                        <td>$ 350.000</td>
+                                        <td>$ 3.500.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Máquina 02</td>
+                                        <td>$ 4.700.000</td>
+                                        <td>$ 1.100.000</td>
+                                        <td>$ 320.000</td>
+                                        <td>$ 2.980.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Máquina 07</td>
+                                        <td>$ 4.250.000</td>
+                                        <td>$ 1.050.000</td>
+                                        <td>$ 300.000</td>
+                                        <td>$ 2.900.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Máquina 01</td>
+                                        <td>$ 3.950.000</td>
+                                        <td>$ 980.000</td>
+                                        <td>$ 290.000</td>
+                                        <td>$ 2.680.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Máquina 03</td>
+                                        <td>$ 3.500.000</td>
+                                        <td>$ 990.000</td>
+                                        <td>$ 310.000</td>
+                                        <td>$ 2.200.000</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    
-                    <!-- TAB: Rendimiento de combustible -->
-                    <div class="tab-content" id="content-fuel" role="tabpanel" aria-labelledby="tab-fuel">
-                        <div class="report-header-row" style="padding-top: var(--space-xl);">
+                    <div class="tab-content" id="panel-diesel-cost" role="tabpanel" aria-labelledby="tab-diesel-cost" data-tab-panel="diesel-cost">
+                        <div class="report-header-row">
                             <div class="chart-kpi">
-                                <span class="chart-kpi__label">Rendimiento Promedio de Flota (periodo seleccionado)</span>
-                                <span class="chart-kpi__value">5.8 Km/L</span>
+                                <span class="chart-kpi__label">Ratio Costo Diésel Promedio</span>
+                                <span class="chart-kpi__value">28,5%</span>
                             </div>
                             <div class="export-group">
-                                <button class="btn btn-secondary export-button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;">
-                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793l-1.854-1.854a.5.5 0 1 0-.708.708l3 3z"/>
-                                    </svg>
-                                    Exportar Rendimiento
-                                </button>
-                                <button class="export-dropdown-toggle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                </button>
-                                <div class="export-menu">
-                                    <div class="export-menu__item">Exportar a PDF</div>
-                                    <div class="export-menu__item">Exportar a Excel</div>
-                                </div>
+                                <button class="btn btn-secondary export-button" type="button">Exportar</button>
+                                <button class="btn btn-secondary export-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Mostrar opciones de exportación">&#9662;</button>
+                                <ul class="export-menu">
+                                    <li class="export-menu__item" data-format="xlsx">Exportar XLSX</li>
+                                    <li class="export-menu__item" data-format="csv">Exportar CSV</li>
+                                    <li class="export-menu__item" data-format="pdf">Exportar PDF</li>
+                                </ul>
                             </div>
                         </div>
-
-                        <div style="padding: var(--space-lg) 0;">
-                            <div class="chart-container">
-                                <div class="chart-bar" style="height: 75%;" title="Máquina 05 · 6.2 Km/L"></div>
-                                <div class="chart-bar" style="height: 60%;" title="Máquina 07 · 5.9 Km/L"></div>
-                                <div class="chart-bar" style="height: 80%;" title="Máquina 01 · 6.5 Km/L"></div>
-                                <div class="chart-bar" style="height: 55%;" title="Máquina 03 · 5.5 Km/L"></div>
+                        <div class="chart-container">
+                            <div class="chart-wrapper">
+                                <canvas id="dieselCostChart"></canvas>
                             </div>
-                            <div class="chart-axis-labels">
-                                <span>05</span>
-                                <span>07</span>
-                                <span>01</span>
-                                <span>03</span>
-                            </div>
-                            <p class="chart-axis-caption">
-                                Eje Y: Rendimiento relativo Km/L por máquina. Úsalo para detectar máquinas con consumo anómalo (RF-033).
-                            </p>
-
-                            <h3 class="card__header-title" style="font-size: var(--font-size-desktop-base); margin-top: var(--space-xxl); margin-bottom: var(--space-md);">
-                                Tabla de Rendimiento Detallado (Km/L)
-                            </h3>
-                            <div class="data-table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Ranking</th>
-                                            <th>Nº Máquina</th>
-                                            <th>Rendimiento (Km/L)</th>
-                                            <th>Litros Totales</th>
-                                            <th>KM Recorridos</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td>#1</td><td>05</td><td>6.2 Km/L</td><td>7,500 Lts</td><td>46,500 Km</td></tr>
-                                        <tr><td>#2</td><td>01</td><td>6.0 Km/L</td><td>7,200 Lts</td><td>43,200 Km</td></tr>
-                                        <tr><td>#3</td><td>07</td><td>5.9 Km/L</td><td>8,000 Lts</td><td>47,200 Km</td></tr>
-                                        <tr><td>#4</td><td>03</td><td>5.5 Km/L</td><td>7,800 Lts</td><td>42,900 Km</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        </div>
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Máquina</th>
+                                        <th>Ingreso Total ($)</th>
+                                        <th>Costo Diésel ($)</th>
+                                        <th>% Costo Diésel</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Máquina 05</td>
+                                        <td>$ 5.200.000</td>
+                                        <td>$ 1.350.000</td>
+                                        <td>26%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Máquina 03</td>
+                                        <td>$ 3.500.000</td>
+                                        <td>$ 1.430.000</td>
+                                        <td>41%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Máquina 01</td>
+                                        <td>$ 3.950.000</td>
+                                        <td>$ 1.210.000</td>
+                                        <td>31%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Máquina 07</td>
+                                        <td>$ 4.250.000</td>
+                                        <td>$ 1.070.000</td>
+                                        <td>25%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Máquina 02</td>
+                                        <td>$ 4.700.000</td>
+                                        <td>$ 1.090.000</td>
+                                        <td>23%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
+                    <div class="tab-content" id="panel-revenue-ranking" role="tabpanel" aria-labelledby="tab-revenue-ranking" data-tab-panel="revenue-ranking">
+                        <div class="report-header-row">
+                            <div class="chart-kpi">
+                                <span class="chart-kpi__label">Ingreso Bruto Total</span>
+                                <span class="chart-kpi__value">$ 45.123.456</span>
+                            </div>
+                            <div class="export-group">
+                                <button class="btn btn-secondary export-button" type="button">Exportar</button>
+                                <button class="btn btn-secondary export-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Mostrar opciones de exportación">&#9662;</button>
+                                <ul class="export-menu">
+                                    <li class="export-menu__item" data-format="xlsx">Exportar XLSX</li>
+                                    <li class="export-menu__item" data-format="csv">Exportar CSV</li>
+                                    <li class="export-menu__item" data-format="pdf">Exportar PDF</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-wrapper">
+                                <canvas id="revenueRankingChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ranking</th>
+                                        <th>Nº Máquina</th>
+                                        <th>Ingreso Total ($)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Máquina 05</td>
+                                        <td>$ 7.500.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Máquina 02</td>
+                                        <td>$ 6.900.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Máquina 07</td>
+                                        <td>$ 6.350.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Máquina 01</td>
+                                        <td>$ 5.980.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Máquina 03</td>
+                                        <td>$ 5.100.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>Máquina 09</td>
+                                        <td>$ 4.750.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="panel-driver-profit" role="tabpanel" aria-labelledby="tab-driver-profit" data-tab-panel="driver-profit">
+                        <div class="report-header-row">
+                            <div class="chart-kpi">
+                                <span class="chart-kpi__label">Ganancia Neta Prom. por Chofer</span>
+                                <span class="chart-kpi__value">$ 2.800.000</span>
+                            </div>
+                            <div class="export-group">
+                                <button class="btn btn-secondary export-button" type="button">Exportar</button>
+                                <button class="btn btn-secondary export-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Mostrar opciones de exportación">&#9662;</button>
+                                <ul class="export-menu">
+                                    <li class="export-menu__item" data-format="xlsx">Exportar XLSX</li>
+                                    <li class="export-menu__item" data-format="csv">Exportar CSV</li>
+                                    <li class="export-menu__item" data-format="pdf">Exportar PDF</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Chofer</th>
+                                        <th>Ingreso Total ($)</th>
+                                        <th>Costo Diésel ($)</th>
+                                        <th>Pago Chofer ($)</th>
+                                        <th>Ganancia Neta ($)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Diego Ríos</td>
+                                        <td>$ 6.150.000</td>
+                                        <td>$ 1.580.000</td>
+                                        <td>$ 1.200.000</td>
+                                        <td>$ 3.370.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Camila Fuentes</td>
+                                        <td>$ 5.870.000</td>
+                                        <td>$ 1.420.000</td>
+                                        <td>$ 1.180.000</td>
+                                        <td>$ 3.270.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Enzo Gutiérrez</td>
+                                        <td>$ 5.230.000</td>
+                                        <td>$ 1.380.000</td>
+                                        <td>$ 1.075.000</td>
+                                        <td>$ 2.775.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Josefa Molina</td>
+                                        <td>$ 4.960.000</td>
+                                        <td>$ 1.190.000</td>
+                                        <td>$ 1.020.000</td>
+                                        <td>$ 2.750.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Matías Leal</td>
+                                        <td>$ 4.480.000</td>
+                                        <td>$ 1.080.000</td>
+                                        <td>$ 950.000</td>
+                                        <td>$ 2.450.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
-
-    <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Lógica de Pestañas
-            const tabButtons = document.querySelectorAll('.tabs-list .tab-item');
-            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = Array.from(document.querySelectorAll('.tab-item'));
+            const tabContents = Array.from(document.querySelectorAll('.tab-content'));
+            const exportGroups = Array.from(document.querySelectorAll('.export-group'));
+
+            const cssVar = (name, fallback = '#0f172a') => {
+                const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+                return value || fallback;
+            };
+
+            const chartColors = {
+                actionPrimary: cssVar('--color-action-primary', '#2563eb'),
+                warning: cssVar('--color-state-warning', '#f97316'),
+                success: cssVar('--color-state-success', '#16a34a'),
+                textPrimary: cssVar('--color-text-primary', '#0f172a'),
+                textSecondary: cssVar('--color-text-secondary', '#475569'),
+                grid: cssVar('--color-border-light', '#e2e8f0')
+            };
+
+            const currencyFormatter = new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                maximumFractionDigits: 0
+            });
+
+            const formatCurrency = (value) => currencyFormatter.format(value);
+            const formatPercentage = (value) => `${value.toFixed(0)}%`;
+
+            const machinesProfitData = [
+                { machine: 'Máquina 05', net: 3500000 },
+                { machine: 'Máquina 02', net: 2980000 },
+                { machine: 'Máquina 07', net: 2900000 },
+                { machine: 'Máquina 01', net: 2680000 },
+                { machine: 'Máquina 03', net: 2200000 }
+            ];
+
+            const dieselCostData = [
+                { machine: 'Máquina 05', ratio: 26 },
+                { machine: 'Máquina 03', ratio: 41 },
+                { machine: 'Máquina 01', ratio: 31 },
+                { machine: 'Máquina 07', ratio: 25 },
+                { machine: 'Máquina 02', ratio: 23 }
+            ];
+
+            const revenueRankingData = [
+                { machine: 'Máquina 05', revenue: 7500000 },
+                { machine: 'Máquina 02', revenue: 6900000 },
+                { machine: 'Máquina 07', revenue: 6350000 },
+                { machine: 'Máquina 01', revenue: 5980000 },
+                { machine: 'Máquina 03', revenue: 5100000 },
+                { machine: 'Máquina 09', revenue: 4750000 }
+            ];
+
+            const chartFactories = {
+                'machines-profit': () => {
+                    const canvas = document.getElementById('machinesProfitChart');
+                    if (!canvas) return null;
+
+                    return new Chart(canvas, {
+                        type: 'bar',
+                        data: {
+                            labels: machinesProfitData.map(item => item.machine),
+                            datasets: [
+                                {
+                                    data: machinesProfitData.map(item => item.net),
+                                    backgroundColor: chartColors.actionPrimary,
+                                    borderRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: (value) => formatCurrency(value),
+                                        color: chartColors.textSecondary
+                                    },
+                                    grid: {
+                                        color: chartColors.grid
+                                    }
+                                },
+                                y: {
+                                    ticks: {
+                                        color: chartColors.textPrimary
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                'diesel-cost': () => {
+                    const canvas = document.getElementById('dieselCostChart');
+                    if (!canvas) return null;
+
+                    return new Chart(canvas, {
+                        type: 'bar',
+                        data: {
+                            labels: dieselCostData.map(item => item.machine),
+                            datasets: [
+                                {
+                                    data: dieselCostData.map(item => item.ratio),
+                                    backgroundColor: chartColors.warning,
+                                    borderRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => `${context.label}: ${formatPercentage(context.raw)}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: 50,
+                                    ticks: {
+                                        callback: (value) => formatPercentage(value),
+                                        color: chartColors.textSecondary
+                                    },
+                                    grid: {
+                                        color: chartColors.grid
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: chartColors.textPrimary
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                'revenue-ranking': () => {
+                    const canvas = document.getElementById('revenueRankingChart');
+                    if (!canvas) return null;
+
+                    return new Chart(canvas, {
+                        type: 'bar',
+                        data: {
+                            labels: revenueRankingData.map(item => item.machine),
+                            datasets: [
+                                {
+                                    data: revenueRankingData.map(item => item.revenue),
+                                    backgroundColor: chartColors.success,
+                                    borderRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: (value) => formatCurrency(value),
+                                        color: chartColors.textSecondary
+                                    },
+                                    grid: {
+                                        color: chartColors.grid
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: chartColors.textPrimary
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+
+            const instantiatedCharts = {};
+
+            const closeAllExportMenus = () => {
+                document.querySelectorAll('.export-menu.is-visible').forEach(menu => menu.classList.remove('is-visible'));
+                document.querySelectorAll('.export-dropdown-toggle[aria-expanded="true"]').forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
+            };
+
+            const activateTab = (targetId) => {
+                if (!targetId) return;
+
+                tabButtons.forEach(button => {
+                    const isActive = button.dataset.tabTarget === targetId;
+                    button.classList.toggle('is-active', isActive);
+                    button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+
+                tabContents.forEach(content => {
+                    const match = content.dataset.tabPanel === targetId;
+                    content.classList.toggle('is-active', match);
+                });
+
+                closeAllExportMenus();
+
+                if (chartFactories[targetId]) {
+                    if (!instantiatedCharts[targetId]) {
+                        instantiatedCharts[targetId] = chartFactories[targetId]();
+                    } else {
+                        instantiatedCharts[targetId].resize();
+                    }
+                }
+            };
 
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    tabButtons.forEach(btn => {
-                        btn.classList.remove('is-active');
-                        btn.setAttribute('aria-selected', 'false');
-                    });
-                    tabContents.forEach(content => {
-                        content.classList.remove('is-active');
-                    });
-
-                    button.classList.add('is-active');
-                    button.setAttribute('aria-selected', 'true');
-                    const contentId = button.getAttribute('aria-controls');
-                    document.getElementById(contentId).classList.add('is-active');
+                    const target = button.dataset.tabTarget;
+                    if (!target || button.classList.contains('is-active')) return;
+                    activateTab(target);
                 });
             });
-
-            // Lógica Export por grupo (por tab)
-            const exportGroups = document.querySelectorAll('.export-group');
-
-            function closeAllExportMenus() {
-                document.querySelectorAll('.export-menu.is-visible').forEach(menu => {
-                    menu.classList.remove('is-visible');
-                });
-            }
 
             exportGroups.forEach(group => {
                 const toggle = group.querySelector('.export-dropdown-toggle');
                 const menu = group.querySelector('.export-menu');
-                const items = group.querySelectorAll('.export-menu__item');
-                const mainButton = group.querySelector('.export-button');
 
-                if (toggle && menu) {
-                    toggle.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const isVisible = menu.classList.contains('is-visible');
-                        closeAllExportMenus();
-                        if (!isVisible) {
-                            menu.classList.add('is-visible');
-                        }
-                    });
+                if (!toggle || !menu) {
+                    return;
                 }
 
-                if (mainButton) {
-                    mainButton.addEventListener('click', () => {
-                        const activeTab = document.querySelector('.tab-item.is-active');
-                        const tabName = activeTab ? activeTab.textContent.trim() : 'Reporte';
-                        alert(`Simulando exportación rápida del ${tabName} en formato predeterminado (ej. Excel).`);
-                    });
-                }
+                toggle.addEventListener('click', (event) => {
+                    const parentTab = group.closest('.tab-content');
+                    if (parentTab && !parentTab.classList.contains('is-active')) {
+                        return;
+                    }
 
-                items.forEach(item => {
+                    event.stopPropagation();
+                    const isVisible = menu.classList.contains('is-visible');
+                    closeAllExportMenus();
+                    if (!isVisible) {
+                        menu.classList.add('is-visible');
+                        toggle.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                menu.querySelectorAll('.export-menu__item').forEach(item => {
                     item.addEventListener('click', () => {
-                        const format = item.textContent.replace('Exportar a ', '').trim();
-                        const activeTab = document.querySelector('.tab-item.is-active');
-                        const tabName = activeTab ? activeTab.textContent.trim() : 'Reporte';
-                        alert(`Simulando la exportación del reporte "${tabName}" a formato ${format}.`);
-                        menu.classList.remove('is-visible');
+                        closeAllExportMenus();
                     });
                 });
             });
 
-            // Cerrar menús de export al hacer clic fuera
             document.addEventListener('click', () => {
                 closeAllExportMenus();
             });
 
-            // Inicialización: asegurar que el contenido activo se muestre
-            const activeTab = document.querySelector('.tab-item.is-active');
-            if (activeTab) {
-                const contentId = activeTab.getAttribute('aria-controls');
-                document.getElementById(contentId).classList.add('is-active');
+            const defaultTab = tabButtons.find(button => button.classList.contains('is-active'));
+            if (defaultTab) {
+                activateTab(defaultTab.dataset.tabTarget);
             }
         });
     </script>

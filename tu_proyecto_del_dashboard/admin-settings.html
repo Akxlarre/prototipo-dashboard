@@ -36,6 +36,14 @@
             color: var(--text-muted, #6b7280);
         }
 
+        .settings-card__header-tools {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm, 1rem);
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
         .settings-section-title {
             font-size: 0.95rem;
             font-weight: 600;
@@ -210,11 +218,34 @@
                                 Solo visible para Administradores. Los cambios impactan RF-023, RF-031, RF-034 y cálculos contables.
                             </p>
                         </div>
-                        <div>
+                        <div class="settings-card__header-tools">
                             <span class="settings-mode-tag" id="settings-mode-tag">
                                 <span class="settings-mode-tag-dot"></span>
                                 <span id="settings-mode-label">Modo lectura</span>
                             </span>
+                            <button 
+                                type="button" 
+                                class="btn btn-secondary btn-sm" 
+                                id="btn-cancelar" 
+                                style="display: none;"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                type="button" 
+                                class="btn btn-primary btn-sm" 
+                                id="btn-guardar" 
+                                style="display: none;"
+                            >
+                                Guardar cambios
+                            </button>
+                            <button 
+                                type="button" 
+                                class="btn btn-primary btn-sm" 
+                                id="btn-editar"
+                            >
+                                Editar configuración
+                            </button>
                         </div>
                     </div>
 
@@ -376,31 +407,7 @@
                     </div>
 
                     <!-- Footer con acciones según modo -->
-                    <div class="card__footer settings-card__footer settings-card__footer--spaced">
-                        <button 
-                            type="button" 
-                            class="btn btn-secondary" 
-                            id="btn-cancelar" 
-                            style="display: none;"
-                        >
-                            Cancelar
-                        </button>
-                        <button 
-                            type="button" 
-                            class="btn btn-primary" 
-                            id="btn-guardar" 
-                            style="display: none;"
-                        >
-                            Guardar cambios
-                        </button>
-                        <button 
-                            type="button" 
-                            class="btn btn-primary" 
-                            id="btn-editar"
-                        >
-                            Editar configuración
-                        </button>
-                    </div>
+                    <div class="card__footer settings-card__footer settings-card__footer--spaced"></div>
                 </article>
             </section>
         </main>
