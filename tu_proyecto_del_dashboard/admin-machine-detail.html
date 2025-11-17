@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -115,6 +115,36 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .section-switcher {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-switcher__button {
+            border: 1px solid var(--color-border-light);
+            background-color: var(--color-surface-widget);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-sm) var(--space-lg);
+            font-size: var(--font-size-desktop-label);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .section-switcher__button.is-active,
+        .section-switcher__button:hover {
+            background-color: var(--color-action-primary);
+            border-color: var(--color-action-primary);
+            color: var(--color-action-text-light);
+        }
+
+        .detail-section {
+            margin-bottom: var(--space-xxl);
+        }
     </style>
 </head>
 <body>
@@ -166,22 +196,20 @@
                 <!-- Card Principal con Pestañas -->
                 <div class="card" id="machine-detail-card">
                     <div class="card__body">
-                        <div class="tabs-container" style="border-bottom: none;">
-                            <div class="tabs-list" role="tablist">
-                                <button class="tab-item is-active" id="tab-info" role="tab" aria-controls="content-info" aria-selected="true">
-                                    Información General
-                                </button>
-                                <button class="tab-item" id="tab-records" role="tab" aria-controls="content-records" aria-selected="false">
-                                    Registros Diarios
-                                </button>
-                                <button class="tab-item" id="tab-assignments" role="tab" aria-controls="content-assignments" aria-selected="false">
-                                    Historial de Asignaciones
-                                </button>
-                            </div>
+                        <div class="section-switcher" role="navigation" aria-label="Secciones del detalle">
+                            <button class="section-switcher__button is-active" type="button" data-target="section-info">
+                                Información General
+                            </button>
+                            <button class="section-switcher__button" type="button" data-target="section-records">
+                                Registros Diarios
+                            </button>
+                            <button class="section-switcher__button" type="button" data-target="section-assignments">
+                                Historial de Asignaciones
+                            </button>
                         </div>
                         
-                        <!-- PESTAÑA 1: Información General (combina Info General + Documentación) -->
-                        <div class="tab-content is-active" id="content-info" role="tabpanel" aria-labelledby="tab-info">
+                        <!-- SECCIÓN 1: Información General (combina Info General + Documentación) -->
+                        <section class="detail-section" id="section-info" aria-label="Información General">
                 <!-- Información General -->
                             <div class="card" id="general-info-card" style="border: none; box-shadow: none; margin-bottom: var(--space-xl);">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light); display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); flex-wrap: wrap;">
@@ -190,6 +218,8 @@
                                         <button class="btn btn-secondary btn-sm" id="cancel-general-btn" style="display: none;">Cancelar</button>
                                         <button class="btn btn-primary btn-sm" id="save-general-btn" style="display: none;">Guardar</button>
                                         <button class="btn btn-primary btn-sm" id="edit-general-btn">Editar</button>
+                                        <button class="btn btn-secondary btn-sm" id="delete-machine-btn" style="background-color: var(--color-state-error); border-color: var(--color-state-error);">
+                                            Eliminar Máquina
                                     </div>
                     </div>
                     <div class="card__body">
@@ -264,9 +294,10 @@
                     </div>
                     </div>
                 </div>
+                        </section>
 
-                        <!-- PESTAÑA 2: Registros Diarios -->
-                        <div class="tab-content" id="content-records" role="tabpanel" aria-labelledby="tab-records">
+                        <!-- SECCIÓN 2: Registros Diarios -->
+                        <section class="detail-section" id="section-records" aria-label="Registros Diarios">
                             <div class="card" id="daily-records-section" style="border: none; box-shadow: none;">
                     <div class="card__header">
                         <div>
@@ -342,9 +373,10 @@
                         </div>
                             </div>
                         </div>
+                        </section>
                         
-                        <!-- PESTAÑA 3: Historial de Asignaciones -->
-                        <div class="tab-content" id="content-assignments" role="tabpanel" aria-labelledby="tab-assignments">
+                        <!-- SECCIÓN 3: Historial de Asignaciones -->
+                        <section class="detail-section" id="section-assignments" aria-label="Historial de Asignaciones">
                             <div class="card" id="assignment-card" style="border: none; box-shadow: none;">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
                                     <div>
@@ -356,41 +388,7 @@
                                 </div>
                                 <div class="card__body">
                                     <div class="assignment-grid">
-                                        <section class="assignment-panel assignment-panel--current">
-                                            <div class="form-field" style="margin-bottom: var(--space-md);">
-                                                <label class="form-field__label">Asignación activa</label>
-                                            <div style="padding: var(--space-md); background-color: var(--color-surface-page); border-radius: var(--border-radius-md); border: 1px solid var(--color-border-light);">
-                                                    <p style="margin: 0; font-size: 1.1rem; font-weight: var(--font-weight-semi-bold);" id="assignment-current-driver">Sin asignación</p>
-                                                    <p style="margin: var(--space-xs) 0 0 0; font-size: 0.9rem; color: var(--color-text-secondary);">
-                                                        Desde <span id="assignment-current-start">--</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                            <div class="assignment-meta">
-                                                <div class="assignment-meta__item">
-                                                    <span class="assignment-meta__label">Turno</span>
-                                                    <span class="assignment-meta__value" id="assignment-current-shift">--</span>
-                                                </div>
-                                                <div class="assignment-meta__item">
-                                                    <span class="assignment-meta__label">Ruta / Ramal</span>
-                                                    <span class="assignment-meta__value" id="assignment-current-route">--</span>
-                                                </div>
-                                                <div class="assignment-meta__item" style="grid-column: 1 / -1;">
-                                                    <span class="assignment-meta__label">Notas</span>
-                                                    <span class="assignment-meta__value" id="assignment-current-notes">Sin observaciones registradas</span>
-                                                </div>
-                                            </div>
-                                            <div style="margin-top: var(--space-lg); display: flex; gap: var(--space-sm); flex-wrap: wrap;">
-                                                <button class="btn btn-secondary btn-sm" type="button" id="assignment-release-btn">
-                                                    Liberar máquina
-                                                </button>
-                                                <button class="btn btn-link btn-sm" type="button" id="assignment-scroll-form">
-                                                    Registrar nueva asignación
-                                                </button>
-                                            </div>
-                                        </section>
-
-                                        <section class="assignment-panel assignment-panel--history">
+                                        <section class="assignment-panel assignment-panel--history" style="grid-column: 1 / -1;">
                                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-md); flex-wrap: wrap;">
                                                 <div>
                                                     <h3 style="margin: 0;">Historial completo</h3>
@@ -410,56 +408,11 @@
                                             <div id="assignment-history-list" class="assignment-history-list"></div>
                                         </section>
 
-                                        <section class="assignment-panel assignment-panel--form" id="assignment-form-panel">
-                                            <div style="margin-bottom: var(--space-md);">
-                                                <h3 style="margin: 0;">Crear / Reasignar</h3>
-                                                <p class="dashboard-section-subtitle" style="margin-top: var(--space-xxs);">
-                                                    Al guardar se cierra automáticamente la asignación vigente.
-                                                </p>
-                                            </div>
-                                        <form id="assignment-form">
-                                            <div class="form-field">
-                                                    <label for="assignment-form-driver" class="form-field__label">Chofer</label>
-                                                    <select id="assignment-form-driver" class="input-text" required>
-                                                    <option value="">Selecciona un chofer</option>
-                                                </select>
-                                            </div>
-                                                <div class="assignment-form__grid">
-                                                    <div class="form-field">
-                                                        <label for="assignment-form-start" class="form-field__label">Fecha de inicio</label>
-                                                        <input type="date" id="assignment-form-start" class="input-text" required>
-                                                </div>
-                                                    <div class="form-field">
-                                                        <label for="assignment-form-end" class="form-field__label">Fecha fin (opcional)</label>
-                                                        <input type="date" id="assignment-form-end" class="input-text">
-                                                </div>
-                                                    <div class="form-field">
-                                                        <label for="assignment-form-shift" class="form-field__label">Turno / Jornada</label>
-                                                        <input type="text" id="assignment-form-shift" class="input-text" placeholder="Ej: Mañana">
-                                            </div>
-                                                    <div class="form-field">
-                                                        <label for="assignment-form-route" class="form-field__label">Ruta / Ramal</label>
-                                                        <input type="text" id="assignment-form-route" class="input-text" placeholder="Ej: Ramal Centro">
-                                                    </div>
-                                                </div>
-                                                <div class="form-field">
-                                                    <label for="assignment-form-notes" class="form-field__label">Notas</label>
-                                                    <textarea id="assignment-form-notes" class="input-text" rows="3" placeholder="Comentarios internos"></textarea>
-                                                </div>
-                                                <div style="display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center;">
-                                                    <button class="btn btn-primary" type="submit" id="assignment-submit-btn">
-                                                        Guardar nueva asignación
-                                                    </button>
-                                                    <span class="assignment-feedback" id="assignment-form-feedback">
-                                                        Los cambios se guardan automáticamente al crear una asignación.
-                                                    </span>
-                                                </div>
-                                        </form>
-                                        </section>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -467,284 +420,8 @@
     </div>
 <script src="js/main.js"></script>
     <script src="js/machine-form.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          // ===========================
-          // Estado base (mock)
-          // ===========================
-          const state = {
-            general: {
-              number: '05',
-              brand: 'Mercedes-Benz',
-              plate: 'ABCD-12',
-              year: '2018',
-              status: 'Operativa',
-              driver: 'Juan Pérez'
-            },
-            documentation: {
-              revision: '2023-11-20',
-              permit: '2024-03-31',
-              insurance: '2024-01-15'
-            },
-            assignments: {
-              current: { driver: 'Juan Pérez', start: '2025-10-01', end: null },
-              history: [
-                { driver: 'Laura Díaz', start: '2025-08-01', end: '2025-09-30' },
-                { driver: 'Pedro López', start: '2025-05-01', end: '2025-07-31' }
-              ]
-            }
-          };
-        
-          // ===========================
-          // Referencias DOM
-          // ===========================
-          const tabButtons = document.querySelectorAll('.tabs-list .tab-item');
-          const tabContents = document.querySelectorAll('.tab-content');
-        
-          const machineNumberHeader = document.getElementById('machine-number-header');
-        
-          // Info general (view)
-          const machineNumberView = document.getElementById('machine-number-view');
-          const machineBrandView  = document.getElementById('machine-brand-view');
-          const machinePlateView  = document.getElementById('machine-plate-view');
-          const machineYearView   = document.getElementById('machine-year-view');
-          const machineStatusView = document.getElementById('machine-status-view');
-          const machineDriverView = document.getElementById('machine-driver-view');
-        
-          // Info general (edit)
-          const generalInfoCard   = document.getElementById('general-info-card');
-          const editGeneralBtn    = document.getElementById('edit-general-btn');
-          const saveGeneralBtn    = document.getElementById('save-general-btn');
-          const cancelGeneralBtn  = document.getElementById('cancel-general-btn');
-          const formContainerEdit = document.getElementById('machine-form-container-edit');
-        
-          // Documentación
-          const revDateView   = document.getElementById('rev-date-view');
-          const permitDateView= document.getElementById('permit-date-view');
-          const insDateView   = document.getElementById('insurance-date-view');
-        
-          const revDateInput   = document.getElementById('rev-date-input');
-          const permitDateInput= document.getElementById('permit-date-input');
-          const insDateInput   = document.getElementById('insurance-date-input');
-        
-          // Asignaciones
-          const assignmentCurrentDriver = document.getElementById('assignment-current-driver');
-          const assignmentCurrentStart  = document.getElementById('assignment-current-start');
-          const assignmentHistoryList   = document.getElementById('assignment-history-list');
-        
-          // ===========================
-          // Helpers
-          // ===========================
-          const formatHeader = () =>
-            `Maquina ${state.general.number} - ${state.general.brand}`;
-        
-          const renderInfoView = () => {
-            machineNumberView.textContent = state.general.number;
-            machineBrandView.textContent  = state.general.brand;
-            machinePlateView.textContent  = state.general.plate;
-            machineYearView.textContent   = state.general.year;
-            machineStatusView.textContent = state.general.status;
-            machineDriverView.textContent = state.general.driver || '(Sin Asignar)';
-            machineNumberHeader.textContent = formatHeader();
-          };
-        
-          const renderDocumentation = () => {
-            revDateView.textContent    = state.documentation.revision;
-            permitDateView.textContent = state.documentation.permit;
-            insDateView.textContent    = state.documentation.insurance;
-        
-            revDateInput.value    = state.documentation.revision;
-            permitDateInput.value = state.documentation.permit;
-            insDateInput.value    = state.documentation.insurance;
-          };
-        
-          const renderAssignments = () => {
-            const { current, history } = state.assignments;
-            const assignmentHistoryList   = document.getElementById('assignment-history-list');
-            const assignmentHistoryEmpty = document.getElementById('assignment-history-empty');
-        
-            // Paso 1: Actualizar la tarjeta de Asignación Activa
-            assignmentCurrentDriver.textContent = current?.driver || 'Sin asignación';
-            assignmentCurrentStart.textContent  = current?.start  || '--';
-        
-            // Paso 2: Preparar la data del Historial
-            assignmentHistoryList.innerHTML = ''; // Limpiar el contenedor
-            const rows = [];
-        
-            if (current && current.driver) {
-              rows.push({ ...current, isCurrent: true, startSort: current.start });
-            }
-            history.forEach(h => rows.push({ ...h, isCurrent: false, startSort: h.start }));
-            
-            // Ordenar de la más reciente a la más antigua (descendente)
-            rows.sort((a, b) => new Date(b.startSort) - new Date(a.startSort));
+    <script src="js/machine-detail.js"></script>
 
-            
-            // Paso 3: Manejar el estado de "Vacío"
-            if (!rows.length) {
-                assignmentHistoryEmpty.classList.add('is-visible'); 
-                return;
-            } else {
-                assignmentHistoryEmpty.classList.remove('is-visible'); 
-            }
-        
-            // Paso 4: Crear y añadir la tabla al DOM
-            const table = document.createElement('table');
-            table.className = 'data-table data-table--compact';
-        
-            table.innerHTML = `
-              <thead>
-                <tr>
-                  <th>Chofer</th>
-                  <th>Fecha Inicio</th>
-                  <th>Fecha Fin</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            `;
-        
-            const tbody = table.querySelector('tbody');
-        
-            rows.forEach(r => {
-              const tr = document.createElement('tr');
-              const estado = r.isCurrent && !r.end ? 'Activa' : (r.end ? 'Cerrada' : 'En curso'); 
-              tr.innerHTML = `
-                <td>${r.driver}</td>
-                <td>${r.start || '--'}</td>
-                <td>${r.end || 'En curso'}</td>
-                <td><span class="status-pill status-pill--${r.isCurrent && !r.end ? 'ok' : 'default'}">${estado}</span></td>
-              `;
-              tbody.appendChild(tr);
-            });
-        
-            assignmentHistoryList.appendChild(table);
-          };
-        
-          const buildEditFormHTML = () => `
-            <form id="machine-form-edit">
-              <div class="form-field">
-                <label class="form-field__label" for="machine-number">Número</label>
-                <input id="machine-number" class="input-text" value="${state.general.number}">
-              </div>
-              <div class="form-field">
-                <label class="form-field__label" for="machine-brand">Marca</label>
-                <input id="machine-brand" class="input-text" value="${state.general.brand}">
-              </div>
-              <div class="form-field">
-                <label class="form-field__label" for="machine-plate">Patente</label>
-                <input id="machine-plate" class="input-text" value="${state.general.plate}">
-              </div>
-              <div class="form-field">
-                <label class="form-field__label" for="machine-year">Año</label>
-                <input id="machine-year" class="input-text" value="${state.general.year}">
-              </div>
-              <div class="form-field">
-                <label class="form-field__label" for="machine-status">Estado Operativo</label>
-                <input id="machine-status" class="input-text" value="${state.general.status}">
-              </div>
-              <div class="form-field">
-                <label class="form-field__label" for="machine-driver">Chofer Asignado</label>
-                <input id="machine-driver" class="input-text" value="${state.general.driver}">
-              </div>
-            </form>
-          `;
-        
-          const enterEditMode = () => {
-            generalInfoCard.classList.add('is-editing');
-            if (formContainerEdit) {
-              formContainerEdit.innerHTML = buildEditFormHTML();
-            }
-            editGeneralBtn.style.display   = 'none';
-            saveGeneralBtn.style.display   = 'inline-flex';
-            cancelGeneralBtn.style.display = 'inline-flex';
-          };
-        
-          const exitEditMode = () => {
-            generalInfoCard.classList.remove('is-editing');
-            editGeneralBtn.style.display   = 'inline-flex';
-            saveGeneralBtn.style.display   = 'none';
-            cancelGeneralBtn.style.display = 'none';
-          };
-        
-          const saveGeneral = () => {
-            const form = document.getElementById('machine-form-edit');
-            if (!form) return;
-            state.general.number = form.querySelector('#machine-number').value.trim();
-            state.general.brand  = form.querySelector('#machine-brand').value.trim();
-            state.general.plate  = form.querySelector('#machine-plate').value.trim();
-            state.general.year   = form.querySelector('#machine-year').value.trim();
-            state.general.status = form.querySelector('#machine-status').value.trim();
-            state.general.driver = form.querySelector('#machine-driver').value.trim();
-        
-            // Documentación desde inputs
-            state.documentation.revision  = revDateInput.value;
-            state.documentation.permit    = permitDateInput.value;
-            state.documentation.insurance = insDateInput.value;
-        
-            renderInfoView();
-            renderDocumentation();
-            exitEditMode();
-          };
-        
-          // ===========================
-          // Tabs
-          // ===========================
-          tabButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetId = btn.getAttribute('aria-controls');
-
-                // 1. No hacer nada si ya está activo
-                if (btn.classList.contains('is-active')) return;
-
-                // 2. Desactivar todos los botones y contenidos
-                tabButtons.forEach(b => {
-                b.classList.remove('is-active');
-                b.setAttribute('aria-selected', 'false');
-                });
-                tabContents.forEach(c => c.classList.remove('is-active'));
-
-                // 3. Activar el botón y contenido clicado
-                btn.classList.add('is-active');
-                btn.setAttribute('aria-selected', 'true');
-                const content = document.getElementById(targetId);
-                if (content) content.classList.add('is-active');
-
-                // 4. Renderizar el contenido DINÁMICAMENTE al hacer clic
-                if (targetId === 'content-assignments') {
-                    renderAssignments();
-                }
-                // (Aquí deberías añadir la llamada a la función que renderiza los registros diarios)
-                // if (targetId === 'content-records') {
-                //     renderDailyRecords(); 
-                // }
-            });
-            });
-        
-          // ===========================
-          // Eventos edición
-          // ===========================
-          if (editGeneralBtn) {
-            editGeneralBtn.addEventListener('click', enterEditMode);
-          }
-          if (saveGeneralBtn) {
-            saveGeneralBtn.addEventListener('click', saveGeneral);
-          }
-          if (cancelGeneralBtn) {
-            cancelGeneralBtn.addEventListener('click', () => {
-              exitEditMode();
-              renderInfoView();
-              renderDocumentation();
-            });
-          }
-        
-          // ===========================
-          // Inicialización
-          // ===========================
-          renderInfoView();
-          renderDocumentation();
-        });
-        </script>
 
 </body>
 </html>

@@ -157,3 +157,114 @@
     /* Chart.js maneja el responsive automáticamente */
 }
 
+
+/* --- Nuevos estilos para Dashboard de Contabilidad --- */
+
+.card-controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.period-selector-group {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-end;
+}
+
+.form-field--inline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.form-field--inline .form-field__label {
+    margin-bottom: 0;
+    font-size: var(--font-size-desktop-small); /* 12px */
+}
+
+.input-text--small {
+    padding: var(--space-xs) var(--space-sm); /* 8px 12px */
+    font-size: var(--font-size-desktop-label); /* 14px */
+    min-height: 40px; /* Altura consistente */
+}
+
+.kpi-card-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.kpi-card {
+    background-color: var(--color-surface-page);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxs);
+}
+
+.kpi-card__label {
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+.kpi-card__value {
+    font-size: 28px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1.2;
+}
+
+.kpi-card__context {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xxs);
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--space-xs);
+}
+
+.kpi-card__context svg {
+    flex-shrink: 0;
+}
+
+.kpi-card__context--positive {
+    color: var(--color-state-success);
+}
+
+.kpi-card__context--negative {
+    color: var(--color-state-error);
+}
+
+.kpi-card__context--negative svg {
+    transform: rotate(0deg);
+}
+
+.chart-container-wrapper {
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    width: 100%;
+}
+
+.chart-container-wrapper--spaced {
+    margin-top: var(--space-xl);
+}
+
+.chart-title {
+    font-size: var(--font-size-desktop-base); /* 16px */
+    font-weight: var(--font-weight-semi-bold);
+    margin-bottom: var(--space-md);
+}
+
+.chart-helper-text {
+    margin-top: -12px;
+    margin-bottom: var(--space-md);
+}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/components/_table.css">
     <link rel="stylesheet" href="css/components/_tabs.css">
     <link rel="stylesheet" href="css/components/_chart.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -41,7 +42,7 @@
                     <span class="sidebar__nav-item-icon icon-choferes"></span>
                     Choferes
                 </a>
-                <a href="admin-accounting.html" class="sidebar__nav-item">
+                <a href="admin-accounting.html" class="sidebar__nav-item is-active">
                     <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                     Contabilidad
                 </a>
@@ -73,72 +74,86 @@
                             <button class="tab-item" id="tab-payroll" role="tab" aria-controls="content-payroll" aria-selected="false">
                                 Liquidación de Choferes (RF-022)
                             </button>
+                            <button class="tab-item" id="tab-history" role="tab" aria-controls="content-history" aria-selected="false">
+                                Historial de Liquidaciones
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="tab-content is-active" id="content-summary" role="tabpanel" aria-labelledby="tab-summary">
                     <div class="card__body">
-                        <h2 class="card__header-title" style="margin-bottom: var(--space-md);">Resumen del Mes: Noviembre 2025</h2>
-                        
-                        <div style="display: flex; gap: var(--space-xl); margin-bottom: var(--space-xl); flex-wrap: wrap;">
-                            <div class="chart-kpi" style="text-align: left;">
-                                <span class="chart-kpi__label">Ganancia Líquida (Total Neto)</span>
-                                <span class="chart-kpi__value">$ 8.765.432</span>
-                            </div>
-                            <div class="chart-kpi" style="text-align: left;">
-                                <span class="chart-kpi__label">Total Recaudado (Bruto)</span>
-                                <span class="chart-kpi__value">$ 15.123.456</span>
-                            </div>
-                            <div class="chart-kpi" style="text-align: left;">
-                                <span class="chart-kpi__label">Total Pagos (Diésel, Choferes)</span>
-                                <span class="chart-kpi__value">$ 6.358.024</span>
+                        <div class="card-controls-row">
+                            <h2 class="card__header-title" id="summary-title">Resumen de Rentabilidad (Mes en curso - MTD)</h2>
+                            <div class="period-selector-group" id="summary-period-selector">
+                                <div class="form-field form-field--inline">
+                                    <label for="select-month-summary" class="form-field__label">Mes</label>
+                                    <select id="select-month-summary" class="input-text input-text--small">
+                                        <option value="10">Octubre</option>
+                                        <option value="11" selected>Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                </div>
+                                <div class="form-field form-field--inline">
+                                    <label for="select-year-summary" class="form-field__label">Año</label>
+                                    <select id="select-year-summary" class="input-text input-text--small">
+                                        <option value="2024">2024</option>
+                                        <option value="2025" selected>2025</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-apply-filter-summary">Aplicar</button>
                             </div>
                         </div>
 
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Semana</th>
-                                        <th>Recaudado</th>
-                                        <th>Gastos (Diésel, Pagos)</th>
-                                        <th>Total Neto</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Semana 1 (Nov 1-7)</td>
-                                        <td>$ 3.800.000</td>
-                                        <td>$ 1.600.000</td>
-                                        <td>$ 2.200.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Semana 2 (Nov 8-14)</td>
-                                        <td>$ 3.750.000</td>
-                                        <td>$ 1.550.000</td>
-                                        <td>$ 2.200.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Semana 3 (Nov 15-21)</td>
-                                        <td>$ 3.900.000</td>
-                                        <td>$ 1.700.000</td>
-                                        <td>$ 2.200.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Semana 4 (Nov 22-30)</td>
-                                        <td>$ 3.673.456</td>
-                                        <td>$ 1.508.024</td>
-                                        <td>$ 2.165.432</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="kpi-card-row">
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Total Recaudado (Bruto)</span>
+                                <span class="kpi-card__value">$ 15.123.456</span>
+                                <span class="kpi-card__context kpi-card__context--positive" id="context-recaudado">Acumulado hasta hoy</span>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Costo Diésel (Total)</span>
+                                <span class="kpi-card__value">$ 4.158.024</span>
+                                <span class="kpi-card__context kpi-card__context--negative" id="context-diesel">Acumulado hasta hoy</span>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Pago Choferes (Total)</span>
+                                <span class="kpi-card__value">$ 2.200.000</span>
+                                <span class="kpi-card__context kpi-card__context--negative" id="context-choferes">Acumulado hasta hoy</span>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Ganancia Líquida (Neta)</span>
+                                <span class="kpi-card__value">$ 8.765.432</span>
+                                <span class="kpi-card__context kpi-card__context--positive" id="context-ganancia">Acumulado hasta hoy</span>
+                            </div>
+                        </div>
+
+                        <div class="chart-container-wrapper chart-container-wrapper--spaced">
+                            <h3 class="chart-title">Evolución de Rentabilidad (Diaria)</h3>
+                            <p class="form-field__helper-text chart-helper-text">Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).</p>
+                            <div class="chart-container">
+                                <canvas id="rentabilidad-line-chart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="tab-content" id="content-payroll" role="tabpanel" aria-labelledby="tab-payroll">
-                    <div class="card__body card__body--no-padding">
+                    <div class="card__body">
+                        <div class="card-controls-row">
+                            <h2 class="card__header-title">Procesar Liquidación</h2>
+                            <div class="period-selector-group" id="payroll-period-selector">
+                                <div class="form-field form-field--inline">
+                                    <label for="select-month-payroll" class="form-field__label">Mes</label>
+                                    <select id="select-month-payroll" class="input-text input-text--small">
+                                        <option value="10">Octubre 2025 (Cerrado)</option>
+                                        <option value="11" selected>Noviembre 2025 (Abierto)</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-apply-filter-payroll">Cargar Mes</button>
+                            </div>
+                        </div>
+
                         <div class="data-table-container">
                             <table class="data-table" id="payroll-table">
                                 <thead>
@@ -161,6 +176,7 @@
                                         </td>
                                         <td class="payroll-final-payment">$ 450.000</td>
                                         <td class="action-cell">
+                                            <button class="btn btn-primary btn-sm payroll-confirm-btn">Confirmar Pago</button>
                                             <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
                                         </td>
                                     </tr>
@@ -173,6 +189,7 @@
                                         </td>
                                         <td class="payroll-final-payment">$ 400.000</td>
                                         <td class="action-cell">
+                                            <button class="btn btn-primary btn-sm payroll-confirm-btn">Confirmar Pago</button>
                                             <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
                                         </td>
                                     </tr>
@@ -185,6 +202,7 @@
                                         </td>
                                         <td class="payroll-final-payment">$ 400.000</td>
                                         <td class="action-cell">
+                                            <button class="btn btn-primary btn-sm payroll-confirm-btn">Confirmar Pago</button>
                                             <a href="#" class="btn btn-secondary btn-sm">Descargar PDF</a>
                                         </td>
                                     </tr>
@@ -192,15 +210,183 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card__footer">
-                        <button class="btn btn-primary" id="save-payroll-button">Guardar Liquidaciones</button>
+                    <div class="card__footer" id="payroll-footer">
+                        <span class="form-field__helper-text" id="payroll-closed-notice" hidden>Este período fue cerrado y no puede ser modificado.</span>
+                        <button class="btn btn-secondary" id="save-payroll-draft">Guardar Borrador</button>
+                        <button class="btn btn-primary" id="close-payroll-period">Cerrar y Finalizar Mes</button>
                     </div>
                 </div>
+
+                <div class="tab-content" id="content-history" role="tabpanel" aria-labelledby="tab-history">
+                    <div class="card__body">
+                        <h2 class="card__header-title">Historial de Liquidaciones Cerradas</h2>
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Período</th>
+                                        <th>Fecha de Cierre</th>
+                                        <th>Total Pagado</th>
+                                        <th>Cerrado por</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Octubre 2025</td>
+                                        <td>2025-11-01</td>
+                                        <td>$ 1.250.000</td>
+                                        <td>admin@demo.com</td>
+                                        <td class="action-cell">
+                                            <button type="button" class="btn btn-secondary btn-sm history-detail-btn" data-period="Octubre 2025">Ver Detalle</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Septiembre 2025</td>
+                                        <td>2025-10-01</td>
+                                        <td>$ 1.230.000</td>
+                                        <td>admin@demo.com</td>
+                                        <td class="action-cell">
+                                            <button type="button" class="btn btn-secondary btn-sm history-detail-btn" data-period="Septiembre 2025">Ver Detalle</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="history-detail-panel" id="history-detail-panel" hidden>
+                            <div class="history-detail-panel__header">
+                                <h3 class="card__header-title" id="history-detail-title">Detalle de Liquidación</h3>
+                                <p class="form-field__helper-text" id="history-detail-description">
+                                    Selecciona un período para revisar su desglose de pagos.
+                                </p>
+                            </div>
+                            <div id="history-detail-body"></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
 
-    <script src="js/main.js"></script>
+    <script>
+        // Script para inicializar los nuevos gráficos de contabilidad (v2)
+        const formatCurrencyCLP = (value) => {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value).replace('CLP', '$');
+        };
+
+        const getCSSColor = (variableName) => getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+        const colorSuccess = getCSSColor('--color-state-success') || '#27ae60';
+        const colorError = getCSSColor('--color-state-error') || '#c0392b';
+        const colorPrimary = getCSSColor('--color-action-primary') || '#1d4ed8';
+
+        const ctxLine = document.getElementById('rentabilidad-line-chart');
+        if (ctxLine && window.Chart) {
+            new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['1', '2', '3', '4', '5'],
+                    datasets: [
+                        {
+                            label: 'Ingresos (Bruto)',
+                            data: [510000, 520000, 500000, 530000, 540000],
+                            borderColor: colorSuccess,
+                            backgroundColor: colorSuccess,
+                            tension: 0.3,
+                            pointRadius: 2
+                        },
+                        {
+                            label: 'Egresos (Total)',
+                            data: [210000, 215000, 205000, 220000, 225000],
+                            borderColor: colorError,
+                            backgroundColor: colorError,
+                            tension: 0.3,
+                            pointRadius: 2
+                        },
+                        {
+                            label: 'Ganancia (Neta)',
+                            data: [300000, 305000, 295000, 310000, 315000],
+                            borderColor: colorPrimary,
+                            backgroundColor: colorPrimary,
+                            tension: 0.3,
+                            pointRadius: 2,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (value) => formatCurrencyCLP(value)
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxTicksLimit: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => ` ${context.dataset.label}: ${formatCurrencyCLP(context.raw)}`
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        const applyFilterBtnSummary = document.getElementById('btn-apply-filter-summary');
+        const selectMonthSummary = document.getElementById('select-month-summary');
+        const summaryTitle = document.getElementById('summary-title');
+        const contextRecaudado = document.getElementById('context-recaudado');
+        const contextDiesel = document.getElementById('context-diesel');
+        const contextChoferes = document.getElementById('context-choferes');
+        const contextGanancia = document.getElementById('context-ganancia');
+        const arrowIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/></svg>';
+
+        const updateSummaryContext = () => {
+            if (!summaryTitle || !selectMonthSummary) return;
+            const isCurrentMonth = selectMonthSummary.value === '11';
+
+            if (isCurrentMonth) {
+                summaryTitle.textContent = 'Resumen de Rentabilidad (Mes en curso - MTD)';
+                [contextRecaudado, contextDiesel, contextChoferes, contextGanancia].forEach(ctx => {
+                    if (ctx) ctx.textContent = 'Acumulado hasta hoy';
+                });
+            } else {
+                summaryTitle.textContent = 'Resumen de Rentabilidad (Octubre 2025)';
+                if (contextRecaudado) contextRecaudado.innerHTML = `${arrowIcon} 3.1% vs Septiembre`;
+                if (contextDiesel) contextDiesel.innerHTML = `${arrowIcon} 1.5% vs Septiembre`;
+                if (contextChoferes) contextChoferes.textContent = 'N/A';
+                if (contextGanancia) contextGanancia.innerHTML = `${arrowIcon} 5.2% vs Septiembre`;
+            }
+        };
+
+        if (applyFilterBtnSummary) {
+            applyFilterBtnSummary.addEventListener('click', (event) => {
+                event.preventDefault();
+                updateSummaryContext();
+            });
+        }
+
+        updateSummaryContext();
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const safeJSONParse = (value, fallback = {}) => {
@@ -229,14 +415,15 @@
                         btn.classList.remove('is-active');
                         btn.setAttribute('aria-selected', 'false');
                     });
-                    tabContents.forEach(content => {
-                        content.classList.remove('is-active');
-                    });
+                    tabContents.forEach(content => content.classList.remove('is-active'));
 
                     button.classList.add('is-active');
                     button.setAttribute('aria-selected', 'true');
                     const contentId = button.getAttribute('aria-controls');
-                    document.getElementById(contentId).classList.add('is-active');
+                    const activeContent = document.getElementById(contentId);
+                    if (activeContent) {
+                        activeContent.classList.add('is-active');
+                    }
                 });
             });
 
@@ -245,6 +432,14 @@
             if (payrollTable) {
                 const driverSplitMap = safeJSONParse(localStorage.getItem(DRIVER_SPLIT_STORAGE_KEY), {});
                 const defaultDriverPercentage = getDefaultPercentage();
+                const saveDraftBtn = document.getElementById('save-payroll-draft');
+                const closePeriodBtn = document.getElementById('close-payroll-period');
+                const closedNotice = document.getElementById('payroll-closed-notice');
+                const filterPayrollBtn = document.getElementById('btn-apply-filter-payroll');
+                const selectMonthPayroll = document.getElementById('select-month-payroll');
+                const BASE_CLOSED_MESSAGE = 'Este período fue cerrado y no puede ser modificado.';
+                const AUTO_CLOSED_MESSAGE = 'Todos los pagos fueron confirmados. Este período se cerró automáticamente.';
+                const CURRENT_MONTH_VALUE = '11';
 
                 const formatCurrency = (value) => {
                     const numeric = Number(value) || 0;
@@ -263,56 +458,310 @@
                     return Number.isFinite(numeric) ? numeric : defaultDriverPercentage;
                 };
 
-                const computeBasePayment = (totalEarned, percentage) => Math.round((totalEarned * percentage) / 100);
-
                 const renderFinalPayment = (row) => {
                     const finalPaymentCell = row.querySelector('.payroll-final-payment');
-                    const basePayment = Number(row.dataset.basePayment) || 0;
-                    const missingAmountInput = row.querySelector('.payroll-missing-amount');
-                    const missingAmount = parseFloat(missingAmountInput.value) || 0;
+                    if (!finalPaymentCell) return;
+
                     const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
-                    const appliedPercentage = row.dataset.splitPercentage || defaultDriverPercentage;
-                    const totalPayment = basePayment + missingAmount;
+                    const percentage = Number(row.dataset.splitPercentage) || defaultDriverPercentage;
+                    const totalEarned = Number(row.dataset.totalEarned) || 0;
+                    const paymentMode = row.dataset.paymentMode;
+                    let totalPayment = Number(row.dataset.calculatedPayment) || 0;
+
+                    if (paymentMode !== 'bonus') {
+                        const basePayment = Number(row.dataset.basePayment) || 0;
+                        const missingAmountInput = row.querySelector('.payroll-missing-amount');
+                        const missingAmount = Math.max(0, Number(missingAmountInput.value) || 0);
+                        totalPayment = basePayment + missingAmount;
+                    }
+
+                    const extra = Math.max(totalEarned - minGuaranteed, 0);
+                    const metaText = paymentMode === 'bonus'
+                        ? `${percentage}% sobre excedente (${formatCurrency(extra)}) + mínimo garantizado`
+                        : `${percentage}% aplicado · Mínimo: ${formatCurrency(minGuaranteed)}`;
 
                     finalPaymentCell.innerHTML = `
                         <div>${formatCurrency(totalPayment)}</div>
-                        <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
-                            ${appliedPercentage}% aplicado · Mínimo: ${formatCurrency(minGuaranteed)}
+                        <div class="form-field__helper-text payroll-final-payment__meta">
+                            ${metaText}
                         </div>
                     `;
                 };
 
-                payrollTable.querySelectorAll('tbody tr').forEach(row => {
+                const recalculateRow = (row) => {
                     const totalEarned = parseFloat(row.querySelector('[data-total-earned]').dataset.totalEarned) || 0;
                     const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
                     const missingAmountInput = row.querySelector('.payroll-missing-amount');
                     const percentage = resolveDriverPercentage(row);
+
                     row.dataset.splitPercentage = percentage;
+                    row.dataset.totalEarned = totalEarned;
 
-                    const basePayment = computeBasePayment(totalEarned, percentage);
-                    row.dataset.basePayment = basePayment;
+                    const percentagePayment = Math.round((totalEarned * percentage) / 100);
+                    const extra = totalEarned - minGuaranteed;
+                    let calculatedPayment = percentagePayment;
+                    let basePayment = percentagePayment;
+                    let missingAmount = 0;
+                    let paymentMode = 'topup';
 
-                    const requiredTopUp = Math.max(minGuaranteed - basePayment, 0);
-                    missingAmountInput.value = requiredTopUp;
-                    if (requiredTopUp === 0) {
-                        missingAmountInput.setAttribute('disabled', 'true');
+                    if (extra > 0) {
+                        const bonus = Math.round((extra * percentage) / 100);
+                        calculatedPayment = minGuaranteed + bonus;
+                        paymentMode = 'bonus';
+                        missingAmount = 0;
                     } else {
-                        missingAmountInput.removeAttribute('disabled');
+                        missingAmount = Math.max(minGuaranteed - totalEarned, 0);
+                        calculatedPayment = totalEarned + missingAmount;
+                        basePayment = totalEarned;
+                    }
+
+                    row.dataset.basePayment = basePayment;
+                    row.dataset.calculatedPayment = calculatedPayment;
+                    row.dataset.paymentMode = paymentMode;
+
+                    if (missingAmountInput) {
+                        missingAmountInput.value = missingAmount;
+                        missingAmountInput.dataset.autoDisabled = missingAmount === 0 ? 'true' : 'false';
+                        if (missingAmount === 0) {
+                            missingAmountInput.setAttribute('disabled', 'true');
+                        } else {
+                            missingAmountInput.removeAttribute('disabled');
+                        }
                     }
 
                     renderFinalPayment(row);
+                };
 
-                    missingAmountInput.addEventListener('input', () => {
-                        const value = Math.max(0, Number(missingAmountInput.value) || 0);
-                        missingAmountInput.value = value;
-                        renderFinalPayment(row);
+                const updateConfirmButtonState = (row, isClosed) => {
+                    const confirmBtn = row.querySelector('.payroll-confirm-btn');
+                    if (!confirmBtn) return;
+                    const isConfirmed = row.dataset.confirmed === 'true';
+                    if (isConfirmed) {
+                        confirmBtn.textContent = 'Confirmado';
+                        confirmBtn.disabled = true;
+                    } else {
+                        confirmBtn.textContent = 'Confirmar Pago';
+                        confirmBtn.disabled = !!isClosed;
+                    }
+                };
+
+                const markCurrentMonthAsClosed = (message = BASE_CLOSED_MESSAGE) => {
+                    if (selectMonthPayroll) {
+                        const currentOption = Array.from(selectMonthPayroll.options).find(opt => opt.text.includes('Noviembre 2025'));
+                        if (currentOption) {
+                            currentOption.textContent = 'Noviembre 2025 (Cerrado)';
+                            currentOption.value = '11-closed';
+                            currentOption.dataset.closedMessage = message;
+                            selectMonthPayroll.value = currentOption.value;
+                        }
+                    }
+                    setPayrollState(true, { message });
+                };
+
+                const checkAllPaymentsConfirmed = () => {
+                    const rows = Array.from(payrollTable.querySelectorAll('tbody tr'));
+                    const allConfirmed = rows.every(row => row.dataset.confirmed === 'true');
+                    if (allConfirmed) {
+                        markCurrentMonthAsClosed(AUTO_CLOSED_MESSAGE);
+                    }
+                };
+
+                const initializeRow = (row) => {
+                    row.dataset.confirmed = row.dataset.confirmed || 'false';
+                    const missingAmountInput = row.querySelector('.payroll-missing-amount');
+                    if (missingAmountInput) {
+                        missingAmountInput.addEventListener('input', () => {
+                            const value = Math.max(0, Number(missingAmountInput.value) || 0);
+                            missingAmountInput.value = value;
+                            renderFinalPayment(row);
+                        });
+                    }
+
+                    const confirmBtn = row.querySelector('.payroll-confirm-btn');
+                    if (confirmBtn) {
+                        confirmBtn.addEventListener('click', () => {
+                            row.dataset.confirmed = 'true';
+                            updateConfirmButtonState(row, false);
+                            checkAllPaymentsConfirmed();
+                        });
+                    }
+
+                    recalculateRow(row);
+                    updateConfirmButtonState(row, false);
+                };
+
+                payrollTable.querySelectorAll('tbody tr').forEach(initializeRow);
+
+                const setPayrollState = (isClosed, { message } = {}) => {
+                    const rows = payrollTable.querySelectorAll('tbody tr');
+                    rows.forEach(row => {
+                        const input = row.querySelector('.payroll-missing-amount');
+                        if (input) {
+                            if (isClosed || input.dataset.autoDisabled === 'true') {
+                                input.setAttribute('disabled', 'true');
+                            } else {
+                                input.removeAttribute('disabled');
+                            }
+                        }
+                        updateConfirmButtonState(row, isClosed);
                     });
-                });
 
-                document.getElementById('save-payroll-button').addEventListener('click', () => {
-                    alert('Liquidaciones guardadas exitosamente (simulado)!');
-                });
+                    if (closedNotice) {
+                        if (isClosed) {
+                            closedNotice.textContent = message || BASE_CLOSED_MESSAGE;
+                        }
+                        closedNotice.hidden = !isClosed;
+                    }
+                    if (saveDraftBtn) {
+                        saveDraftBtn.style.display = isClosed ? 'none' : 'inline-flex';
+                    }
+                    if (closePeriodBtn) {
+                        closePeriodBtn.style.display = isClosed ? 'none' : 'inline-flex';
+                    }
+                };
+
+                if (filterPayrollBtn) {
+                    filterPayrollBtn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        const isClosed = selectMonthPayroll.value !== CURRENT_MONTH_VALUE;
+                        const selectedOption = selectMonthPayroll.options[selectMonthPayroll.selectedIndex];
+                        const noticeMessage = (selectedOption && selectedOption.dataset.closedMessage) ? selectedOption.dataset.closedMessage : BASE_CLOSED_MESSAGE;
+                        setPayrollState(isClosed, { message: noticeMessage });
+                        alert(`Cargando datos para el mes ${selectMonthPayroll.options[selectMonthPayroll.selectedIndex].text}... (simulado)`);
+                    });
+                }
+
+                if (closePeriodBtn) {
+                    closePeriodBtn.addEventListener('click', () => {
+                        if (confirm('¿Está seguro de que desea cerrar y finalizar este período de liquidación? Esta acción es irreversible.')) {
+                            alert('Período cerrado y finalizado exitosamente. (simulado)');
+                            markCurrentMonthAsClosed(BASE_CLOSED_MESSAGE);
+                        }
+                    });
+                }
+
+                if (saveDraftBtn) {
+                    saveDraftBtn.addEventListener('click', () => {
+                        alert('Borrador de liquidaciones guardado. (simulado)');
+                    });
+                }
+
+                const initialOption = selectMonthPayroll.options[selectMonthPayroll.selectedIndex];
+                const initialMessage = (initialOption && initialOption.dataset.closedMessage) ? initialOption.dataset.closedMessage : BASE_CLOSED_MESSAGE;
+                setPayrollState(selectMonthPayroll.value !== CURRENT_MONTH_VALUE, { message: initialMessage });
             }
+
+            // --- Historial de Liquidaciones (Detalle) ---
+            const historyDetailButtons = document.querySelectorAll('.history-detail-btn');
+            const historyDetailPanel = document.getElementById('history-detail-panel');
+            const historyDetailTitle = document.getElementById('history-detail-title');
+            const historyDetailDescription = document.getElementById('history-detail-description');
+            const historyDetailBody = document.getElementById('history-detail-body');
+
+            const HISTORY_DETAILS = {
+                'Octubre 2025': {
+                    closedDate: '2025-11-01',
+                    closedBy: 'admin@demo.com',
+                    totalPaid: 1250000,
+                    totalDrivers: 3,
+                    averagePayment: 416667,
+                    status: 'Cerrado',
+                    drivers: [
+                        { name: 'Juan Pérez', totalEarned: 450000, minGuaranteed: 400000, finalPayment: 420000, status: 'Pagado' },
+                        { name: 'Pedro López', totalEarned: 380000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
+                        { name: 'María Gómez', totalEarned: 350000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' }
+                    ]
+                },
+                'Septiembre 2025': {
+                    closedDate: '2025-10-01',
+                    closedBy: 'admin@demo.com',
+                    totalPaid: 1230000,
+                    totalDrivers: 3,
+                    averagePayment: 410000,
+                    status: 'Cerrado',
+                    drivers: [
+                        { name: 'Juan Pérez', totalEarned: 430000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' },
+                        { name: 'Pedro López', totalEarned: 390000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
+                        { name: 'María Gómez', totalEarned: 360000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' }
+                    ]
+                }
+            };
+
+            const renderHistoryDetail = (period) => {
+                if (!historyDetailPanel || !historyDetailTitle || !historyDetailDescription || !historyDetailBody) {
+                    return;
+                }
+
+                historyDetailPanel.hidden = false;
+                const detail = HISTORY_DETAILS[period];
+                if (!detail) {
+                    historyDetailTitle.textContent = `Detalle de ${period}`;
+                    historyDetailDescription.textContent = 'No hay registros disponibles para este período.';
+                    historyDetailBody.innerHTML = '<p class="form-field__helper-text">Sin datos para mostrar.</p>';
+                    return;
+                }
+
+                historyDetailTitle.textContent = `Detalle de ${period}`;
+                historyDetailDescription.textContent = `Cerrado el ${detail.closedDate} por ${detail.closedBy}.`;
+
+                const summaryHtml = `
+                    <div class="history-detail-summary-grid">
+                        <div>
+                            <span class="history-detail-summary-item__label">Total Pagado</span>
+                            <span class="history-detail-summary-item__value">${formatCurrencyCLP(detail.totalPaid)}</span>
+                        </div>
+                        <div>
+                            <span class="history-detail-summary-item__label">Choferes Liquidados</span>
+                            <span class="history-detail-summary-item__value">${detail.totalDrivers}</span>
+                        </div>
+                        <div>
+                            <span class="history-detail-summary-item__label">Promedio por Chofer</span>
+                            <span class="history-detail-summary-item__value">${formatCurrencyCLP(detail.averagePayment)}</span>
+                        </div>
+                        <div>
+                            <span class="history-detail-summary-item__label">Estado</span>
+                            <span class="history-detail-summary-item__value">${detail.status}</span>
+                        </div>
+                    </div>
+                `;
+
+                const driverRows = detail.drivers.map(driver => `
+                    <tr>
+                        <td>${driver.name}</td>
+                        <td>${formatCurrencyCLP(driver.totalEarned)}</td>
+                        <td>${formatCurrencyCLP(driver.minGuaranteed)}</td>
+                        <td>${formatCurrencyCLP(driver.finalPayment)}</td>
+                        <td>${driver.status}</td>
+                    </tr>
+                `).join('');
+
+                historyDetailBody.innerHTML = `
+                    ${summaryHtml}
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Chofer</th>
+                                    <th>Total Ganado</th>
+                                    <th>Mínimo Garantizado</th>
+                                    <th>Pago Final</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${driverRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            };
+
+            historyDetailButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const period = btn.dataset.period;
+                    renderHistoryDetail(period);
+                });
+            });
         });
     </script>
 </body>
