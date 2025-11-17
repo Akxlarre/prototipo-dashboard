@@ -559,60 +559,67 @@
           };
         
           const renderAssignments = () => {
-            const { current, history } = state.assignments;
-        
-            // Actual
-            assignmentCurrentDriver.textContent = current?.driver || 'Sin asignación';
-            assignmentCurrentStart.textContent  = current?.start  || '--';
-        
-            // Historial tabla simple (incluye actual al inicio)
-            assignmentHistoryList.innerHTML = '';
-            const rows = [];
-        
-            if (current && current.driver) {
-              rows.push({ ...current, isCurrent: true });
+            const { current, history } = state.assignments;
+            const assignmentHistoryList   = document.getElementById('assignment-history-list');
+            const assignmentHistoryEmpty = document.getElementById('assignment-history-empty');
+        
+            // Paso 1: Actualizar la tarjeta de Asignación Activa
+            assignmentCurrentDriver.textContent = current?.driver || 'Sin asignación';
+            assignmentCurrentStart.textContent  = current?.start  || '--';
+        
+            // Paso 2: Preparar la data del Historial
+            assignmentHistoryList.innerHTML = ''; // Limpiar el contenedor
+            const rows = [];
+        
+            if (current && current.driver) {
+              rows.push({ ...current, isCurrent: true, startSort: current.start });
+            }
+            history.forEach(h => rows.push({ ...h, isCurrent: false, startSort: h.start }));
+            
+            // Ordenar de la más reciente a la más antigua (descendente)
+            rows.sort((a, b) => new Date(b.startSort) - new Date(a.startSort));
+
+            
+            // Paso 3: Manejar el estado de "Vacío"
+            if (!rows.length) {
+                assignmentHistoryEmpty.classList.add('is-visible'); 
+                return;
+            } else {
+                assignmentHistoryEmpty.classList.remove('is-visible'); 
             }
-            history.forEach(h => rows.push({ ...h, isCurrent: false }));
-        
-            if (!rows.length) {
-              const empty = document.createElement('p');
-              empty.textContent = 'Aún no hay asignaciones registradas.';
-              empty.style.color = 'var(--color-text-secondary)';
-              assignmentHistoryList.appendChild(empty);
-              return;
-            }
-        
-            const table = document.createElement('table');
-            table.className = 'data-table data-table--compact';
-        
-            table.innerHTML = `
-              <thead>
-                <tr>
-                  <th>Chofer</th>
-                  <th>Fecha Inicio</th>
-                  <th>Fecha Fin</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            `;
-        
-            const tbody = table.querySelector('tbody');
-        
-            rows.forEach(r => {
-              const tr = document.createElement('tr');
-              const estado = r.isCurrent && !r.end ? 'Activa' : (r.end ? 'Cerrada' : 'En curso');
-              tr.innerHTML = `
-                <td>${r.driver}</td>
-                <td>${r.start || '--'}</td>
-                <td>${r.end || 'En curso'}</td>
-                <td>${estado}</td>
-              `;
-              tbody.appendChild(tr);
-            });
-        
-            assignmentHistoryList.appendChild(table);
-          };
+        
+            // Paso 4: Crear y añadir la tabla al DOM
+            const table = document.createElement('table');
+            table.className = 'data-table data-table--compact';
+        
+            table.innerHTML = `
+              <thead>
+                <tr>
+                  <th>Chofer</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Fin</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            `;
+        
+            const tbody = table.querySelector('tbody');
+        
+            rows.forEach(r => {
+              const tr = document.createElement('tr');
+              const estado = r.isCurrent && !r.end ? 'Activa' : (r.end ? 'Cerrada' : 'En curso'); 
+              tr.innerHTML = `
+                <td>${r.driver}</td>
+                <td>${r.start || '--'}</td>
+                <td>${r.end || 'En curso'}</td>
+                <td><span class="status-pill status-pill--${r.isCurrent && !r.end ? 'ok' : 'default'}">${estado}</span></td>
+              `;
+              tbody.appendChild(tr);
+            });
+        
+            assignmentHistoryList.appendChild(table);
+          };
         
           const buildEditFormHTML = () => `
             <form id="machine-form-edit">
@@ -685,20 +692,34 @@
           // ===========================
           tabButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-              const targetId = btn.getAttribute('aria-controls');
-        
-              tabButtons.forEach(b => {
+                const targetId = btn.getAttribute('aria-controls');
+
+                // 1. No hacer nada si ya está activo
+                if (btn.classList.contains('is-active')) return;
+
+                // 2. Desactivar todos los botones y contenidos
+                tabButtons.forEach(b => {
                 b.classList.remove('is-active');
                 b.setAttribute('aria-selected', 'false');
-              });
-              tabContents.forEach(c => c.classList.remove('is-active'));
-        
-              btn.classList.add('is-active');
-              btn.setAttribute('aria-selected', 'true');
-              const content = document.getElementById(targetId);
-              if (content) content.classList.add('is-active');
+                });
+                tabContents.forEach(c => c.classList.remove('is-active'));
+
+                // 3. Activar el botón y contenido clicado
+                btn.classList.add('is-active');
+                btn.setAttribute('aria-selected', 'true');
+                const content = document.getElementById(targetId);
+                if (content) content.classList.add('is-active');
+
+                // 4. Renderizar el contenido DINÁMICAMENTE al hacer clic
+                if (targetId === 'content-assignments') {
+                    renderAssignments();
+                }
+                // (Aquí deberías añadir la llamada a la función que renderiza los registros diarios)
+                // if (targetId === 'content-records') {
+                //     renderDailyRecords(); 
+                // }
             });
-          });
+            });
         
           // ===========================
           // Eventos edición
@@ -722,7 +743,6 @@
           // ===========================
           renderInfoView();
           renderDocumentation();
-          renderAssignments();
         });
         </script>
 
