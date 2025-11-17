@@ -7,8 +7,10 @@
     display: flex;
     justify-content: space-between; /* Alinea los ítems a los extremos */
     align-items: center;
+    gap: var(--space-md); /* 16px - espacio mínimo entre controles para evitar compresión */
     padding-top: var(--space-md); /* 16px de espacio superior */
     padding-bottom: var(--space-xl); /* 24px de espacio inferior (antes del KPI) */
+    flex-wrap: wrap; /* Permitir wrap en pantallas pequeñas para evitar que empuje elementos */
 }
 
 /* ------------------------------------ */
@@ -61,7 +63,9 @@
     display: flex;
     align-items: center;
     position: relative;
-    width: 200px; /* Ancho fijo para el ejemplo */
+    min-width: 180px; /* Cambiar de width fijo a min-width para flexibilidad */
+    max-width: 220px; /* Límite máximo para evitar que crezca demasiado */
+    flex-shrink: 1; /* Permitir compresión si es necesario en pantallas pequeñas */
 }
 
 .date-range-input__icon {

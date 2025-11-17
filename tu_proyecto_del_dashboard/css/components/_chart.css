@@ -1,9 +1,12 @@
 /* ==================================== */
 /* _chart.css - Organismo: Gráfico      */
+/* Rediseñado con eje Y cuantitativo,  */
+/* escalabilidad y tooltips (RF-030)    */
 /* ==================================== */
 
 .chart-kpi {
     text-align: center;
+    margin-top: var(--space-md); /* 16px - espacio superior mínimo para evitar desalineación */
     margin-bottom: var(--space-xl); /* 24px de espacio antes del gráfico */
 }
 
@@ -23,43 +26,324 @@
 }
 
 /* ------------------------------------ */
-/* Contenedor del Gráfico de Barras (Visual solamente) */
+/* Contenedor del Gráfico - Escalable  */
 /* ------------------------------------ */
 .chart-container {
-    height: 200px; /* Altura fija para el área del gráfico */
+    position: relative;
+    margin-bottom: var(--space-md); /* 16px antes de los labels del eje X */
+    height: 320px; /* Altura fija - múltiplo de 8pt (40x8) para evitar gráfico aplastado */
+    min-height: 320px; /* Mantener como fallback */
+}
+
+/* Wrapper interno con scroll horizontal */
+.chart-wrapper {
     display: flex;
-    align-items: flex-end; /* Las barras crecen desde abajo */
-    gap: var(--space-sm); /* Espacio entre barras */
-    padding: var(--space-sm); /* Un pequeño padding interno */
-    border-top: 1px dashed var(--color-border-light); /* Una línea de cuadrícula superior */
-    position: relative; /* Para las líneas de cuadrícula */
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden; /* Prevenir scroll vertical innecesario */
+    padding: var(--space-md) var(--space-sm); /* 16px vertical, 12px horizontal */
+    padding-left: var(--space-xxl); /* 32px para el eje Y */
+    height: 280px; /* Altura fija - 320px del container - 40px de margen */
+    max-height: 280px; /* Prevenir desbordamiento */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--color-border-medium) var(--color-surface-page);
 }
 
-/* Líneas de cuadrícula horizontales sutiles */
-.chart-container::before,
-.chart-container::after {
-    content: '';
+.chart-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.chart-wrapper::-webkit-scrollbar-track {
+    background: var(--color-surface-page);
+    border-radius: var(--border-radius-sm);
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-border-medium);
+    border-radius: var(--border-radius-sm);
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-disabled);
+}
+
+/* ------------------------------------ */
+/* Eje Y Cuantitativo - Valores Reales  */
+/* ------------------------------------ */
+.chart-y-axis {
     position: absolute;
-    width: 100%;
-    border-top: 1px dashed var(--color-border-light);
     left: 0;
-    z-index: 0; /* Asegura que las barras estén encima */
+    top: var(--space-md); /* 16px - alineado con padding del wrapper */
+    bottom: var(--space-md);
+    width: var(--space-xxl); /* 32px de ancho */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-right: var(--space-xs); /* 8px de separación del gráfico */
+    border-right: 1px solid var(--color-border-light);
+    z-index: 2;
 }
-.chart-container::before { top: 25%; } /* Línea en el 25% de altura */
-.chart-container::after { top: 75%; } /* Línea en el 75% de altura */
 
+.chart-y-axis__tick {
+    font-size: var(--font-size-desktop-label); /* 14px */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-align: right;
+    line-height: 1;
+    font-variant-numeric: tabular-nums; /* Números alineados */
+}
 
-/* Estilo de Barra (para ejemplo visual) */
+.chart-y-axis__tick--max {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semi-bold);
+}
+
+/* ------------------------------------ */
+/* Área de Barras - Grid y Cuadrícula   */
+/* ------------------------------------ */
+.chart-bars-container {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-md); /* 16px entre barras - aumentado de 12px para mejor separación */
+    min-width: 100%; /* Asegura que el contenedor sea al menos del ancho del wrapper */
+    position: relative;
+    height: 200px; /* Altura fija para calcular proporciones */
+}
+
+/* Líneas de cuadrícula horizontales - Valores cuantitativos */
+.chart-grid-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--color-border-light);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.chart-grid-line--major {
+    border-top-style: solid;
+    border-top-color: var(--color-border-medium);
+}
+
+.chart-grid-line--minor {
+    border-top-style: dashed;
+    border-top-color: var(--color-border-light);
+}
+
+/* ------------------------------------ */
+/* Barras del Gráfico - Con Tooltips    */
+/* ------------------------------------ */
 .chart-bar {
-    width: 20px; /* Ancho fijo para cada barra */
+    position: relative;
+    min-width: 24px; /* Ancho mínimo aumentado de 20px a 24px (3x8pt) para mejor legibilidad */
+    width: 24px; /* Ancho fijo aumentado - escalable con scroll horizontal */
     background-color: var(--color-action-primary); /* Azul-600 */
-    border-radius: var(--border-radius-sm); /* 4px */
-    transition: background-color 0.2s ease;
-    cursor: help; /* Para indicar que podría haber un tooltip */
-    z-index: 1; /* Para que esté por encima de las líneas de cuadrícula */
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0; /* Redondeado solo arriba */
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    z-index: 1;
+    flex-shrink: 0; /* No se comprime */
 }
 
 .chart-bar:hover {
-    background-color: var(--color-action-primary-hover); /* Azul-700 en hover */
+    background-color: var(--color-action-primary-hover); /* Azul-700 */
+    transform: translateY(-2px); /* Elevación sutil */
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25);
+    z-index: 10; /* Por encima de otras barras */
+}
+
+.chart-bar:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-action-focus-outline), 0 4px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* ------------------------------------ */
+/* Tooltip de Barra - Información Detallada */
+/* ------------------------------------ */
+.chart-bar-tooltip {
+    position: absolute;
+    bottom: calc(100% + var(--space-xs)); /* 8px arriba de la barra */
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    padding: var(--space-sm) var(--space-md); /* 12px vertical, 16px horizontal */
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-desktop-label); /* 14px */
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    border: 1px solid var(--color-border-light);
+    text-align: center;
+    min-width: 160px;
+    white-space: normal;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxs); /* 4px entre elementos */
+}
+
+.chart-bar-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--color-surface-elevated);
+}
+
+.chart-bar:hover .chart-bar-tooltip,
+.chart-bar:focus .chart-bar-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.chart-bar-tooltip__machine {
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: var(--space-xxs); /* 4px */
+}
+
+.chart-bar-tooltip__driver {
+    font-size: 0.75rem; /* 12px */
+    color: var(--color-text-secondary);
+    display: block;
+    margin-bottom: var(--space-xxs);
+}
+
+.chart-bar-tooltip__value {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-action-primary);
+    display: block;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------ */
+/* Labels del Eje X - Máquinas          */
+/* ------------------------------------ */
+.chart-axis-labels {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--space-sm); /* 12px - mismo gap que las barras */
+    padding-left: var(--space-xxl); /* 32px - alineado con eje Y */
+    padding-right: var(--space-sm);
+    font-size: var(--font-size-desktop-label); /* 14px */
+    color: var(--color-text-secondary);
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox - ocultar scrollbar */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.chart-axis-labels::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.chart-axis-label {
+    min-width: 24px; /* Sincronizado con ancho de barras (24px) */
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+/* ------------------------------------ */
+/* Estado Vacío - Sin Datos             */
+/* ------------------------------------ */
+.chart-empty-state {
+    padding: var(--space-xxl); /* 32px */
+    text-align: center;
+    background-color: var(--color-surface-page);
+    border-radius: var(--border-radius-md);
+    border: 1px dashed var(--color-border-medium);
+    margin: var(--space-md) 0;
+}
+
+.chart-empty-state__icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: var(--color-text-disabled);
+}
+
+.chart-empty-state__title {
+    font-size: var(--font-size-desktop-base);
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.chart-empty-state__text {
+    font-size: var(--font-size-desktop-label);
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* ------------------------------------ */
+/* Estado de Carga - Loading            */
+/* ------------------------------------ */
+.chart-loading-state {
+    padding: var(--space-xxl);
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-border-light);
+    border-top-color: var(--color-action-primary);
+    border-radius: 50%;
+    animation: chart-spin 0.8s linear infinite;
+    margin-bottom: var(--space-md);
+}
+
+@keyframes chart-spin {
+    to { transform: rotate(360deg); }
+}
+
+.chart-loading-text {
+    font-size: var(--font-size-desktop-label);
+    color: var(--color-text-secondary);
+}
+
+/* ------------------------------------ */
+/* Responsive - Mobile                  */
+/* ------------------------------------ */
+@media (max-width: 900px) {
+    .chart-wrapper {
+        padding-left: var(--space-xl); /* 24px en móvil - menos espacio para eje Y */
+    }
+
+    .chart-y-axis {
+        width: var(--space-xl); /* 24px en móvil */
+    }
+
+    .chart-y-axis__tick {
+        font-size: 0.75rem; /* 12px - más pequeño en móvil */
+    }
+
+    .chart-bar {
+        min-width: 20px;
+        width: 20px; /* Barras más delgadas en móvil (pero aún legibles) */
+    }
+
+    .chart-axis-labels {
+        padding-left: var(--space-xl);
+        font-size: 0.75rem; /* 12px */
+    }
+
+    .chart-axis-label {
+        min-width: 20px; /* Sincronizado con ancho de barras en móvil */
+    }
 }
 

@@ -107,6 +107,220 @@
             margin-top: 0.5rem;
         }
 
+        /* ==================================== */
+        /* MEJORAS AL COMPONENTE DE GRÁFICO    */
+        /* Resumen Financiero - RF-018 a RF-032 */
+        /* ==================================== */
+
+        /* Contenedor del gráfico con escalabilidad */
+        .chart-container {
+            position: relative;
+            height: 240px; /* Aumentado para acomodar eje Y */
+            overflow-x: auto; /* Scroll horizontal para escalabilidad */
+            overflow-y: visible;
+            padding: var(--space-md) var(--space-sm); /* 16px vertical, 12px horizontal */
+            margin-bottom: var(--space-md);
+            /* Scrollbar personalizado para mejor UX */
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-border-medium) var(--color-surface-page);
+        }
+
+        .chart-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .chart-container::-webkit-scrollbar-track {
+            background: var(--color-surface-page);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .chart-container::-webkit-scrollbar-thumb {
+            background: var(--color-border-medium);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .chart-container::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-disabled);
+        }
+
+        /* Wrapper interno para el gráfico */
+        .chart-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: var(--space-md); /* 16px entre barras - múltiplo de 8pt */
+            height: 100%;
+            min-width: fit-content;
+            position: relative;
+            padding-left: var(--space-xxl); /* 32px para el eje Y */
+        }
+
+        /* Eje Y cuantitativo con valores monetarios */
+        .chart-y-axis {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--space-xxl); /* 32px */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-right: var(--space-xs); /* 8px de separación */
+            border-right: 1px solid var(--color-border-light);
+        }
+
+        .chart-y-axis__tick {
+            font-size: 0.75rem;
+            color: var(--color-text-disabled);
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            line-height: 1;
+        }
+
+        .chart-y-axis__tick--max {
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* Líneas de cuadrícula horizontales */
+        .chart-grid-line {
+            position: absolute;
+            left: var(--space-xxl); /* 32px - después del eje Y */
+            right: 0;
+            height: 1px;
+            border-top: 1px dashed var(--color-border-light);
+            z-index: 0;
+        }
+
+        /* Barra del gráfico mejorada */
+        .chart-bar {
+            width: 32px; /* Aumentado de 20px a 32px (4x8pt) para mejor legibilidad */
+            min-width: 32px; /* Mantiene ancho mínimo para escalabilidad */
+            background-color: var(--color-action-primary);
+            border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0; /* Redondeado solo arriba */
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            z-index: 1;
+            position: relative;
+            flex-shrink: 0; /* Evita que se compriman */
+        }
+
+        .chart-bar:hover {
+            background-color: var(--color-action-primary-hover);
+            transform: translateY(-2px); /* Elevación sutil en hover */
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+        }
+
+        .chart-bar:active {
+            transform: translateY(0);
+        }
+
+        /* Tooltip para barras - Información detallada */
+        .chart-bar__tooltip {
+            position: absolute;
+            bottom: calc(100% + 0.75rem);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: var(--space-sm) var(--space-md);
+            background-color: var(--color-surface-elevated);
+            color: var(--color-text-primary);
+            font-size: 0.75rem;
+            border-radius: var(--border-radius-sm);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+            border: 1px solid var(--color-border-light);
+            min-width: 160px;
+            text-align: center;
+        }
+
+        .chart-bar__tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--color-surface-elevated);
+        }
+
+        .chart-bar__tooltip-title {
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-xxs);
+            color: var(--color-text-primary);
+        }
+
+        .chart-bar__tooltip-value {
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--color-action-primary);
+            margin-top: var(--space-xxs);
+        }
+
+        .chart-bar:hover .chart-bar__tooltip,
+        .chart-bar:focus .chart-bar__tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        /* Empty State para gráfico */
+        .chart-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 240px;
+            padding: var(--space-xl);
+            text-align: center;
+            color: var(--color-text-secondary);
+        }
+
+        .chart-empty-state__icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .chart-empty-state__title {
+            font-size: var(--font-size-desktop-label);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .chart-empty-state__text {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            max-width: 280px;
+        }
+
+        /* Eje X - Labels de máquinas mejorados */
+        .chart-axis-labels {
+            display: flex;
+            justify-content: flex-start;
+            gap: var(--space-md); /* 16px - consistente con gap de barras */
+            padding-left: var(--space-xxl); /* 32px - alineado con eje Y */
+            margin-top: var(--space-sm);
+            overflow-x: auto;
+            scrollbar-width: none; /* Ocultar scrollbar en labels */
+        }
+
+        .chart-axis-labels::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chart-axis-labels__label {
+            width: 32px; /* Mismo ancho que las barras */
+            min-width: 32px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+        }
+
         .data-table--compact td,
         .data-table--compact th {
             padding-block: 0.5rem;
@@ -175,6 +389,264 @@
         .record-date {
             font-variant-numeric: tabular-nums;
             color: var(--color-text-secondary);
+        }
+
+        /* Tooltip para badges de estado crítico */
+        .record-status-badge[aria-describedby] {
+            position: relative;
+            cursor: help;
+        }
+
+        .record-status-badge .tooltip {
+            position: absolute;
+            bottom: calc(100% + 0.5rem);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 0.75rem;
+            background-color: var(--color-surface-elevated);
+            color: var(--color-text-primary);
+            font-size: 0.75rem;
+            border-radius: var(--border-radius-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            border: 1px solid var(--color-border-light);
+            max-width: 250px;
+            white-space: normal;
+            text-align: center;
+        }
+
+        .record-status-badge .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: var(--color-surface-elevated);
+        }
+
+        .record-status-badge:hover .tooltip,
+        .record-status-badge:focus .tooltip {
+            opacity: 1;
+        }
+
+        /* ==================================== */
+        /* Filtro Rápido - Toggle Button Pattern */
+        /* Basado en sistema de botones existente */
+        /* ==================================== */
+        .records-filter {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md); /* 16px - múltiplo de 8pt */
+            margin-top: var(--space-md); /* 16px - consistente con espaciado del card */
+        }
+
+        /* Toggle Button: Variante del sistema .btn */
+        .records-filter__toggle {
+            /* Base del sistema de botones */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs); /* 8px entre icono y texto */
+            padding: var(--space-xs) var(--space-md); /* 8px vertical, 16px horizontal - grid de 8pt */
+            border: 1px solid var(--color-border-medium); /* Gris-300 - consistente con btn-secondary */
+            border-radius: var(--border-radius-md); /* 8px - consistente con sistema */
+            background-color: var(--color-surface-widget); /* Blanco - consistente con btn-secondary */
+            color: var(--color-text-secondary); /* Gris-600 */
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-desktop-label); /* 14px - tamaño estándar para controles */
+            font-weight: var(--font-weight-medium); /* 500 - peso medio para jerarquía */
+            line-height: var(--line-height-desktop-label);
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+            position: relative;
+            min-height: 32px; /* 32px = 4x8pt - altura mínima táctil accesible */
+        }
+
+        /* Icono del filtro - SVG inline para control total */
+        .records-filter__icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+            opacity: 0.8;
+        }
+
+        .records-filter__toggle:hover {
+            background-color: var(--color-surface-page); /* Gris-50 - feedback hover sutil */
+            border-color: var(--color-text-disabled); /* Gris-400 - borde más visible */
+            color: var(--color-text-primary); /* Gris-800 - texto más oscuro */
+        }
+
+        .records-filter__toggle:hover .records-filter__icon {
+            opacity: 1;
+        }
+
+        /* Estado Focus - Accesibilidad WCAG */
+        .records-filter__toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--color-action-focus-outline); /* Azul-300 - outline de 3px */
+            border-color: var(--color-action-primary); /* Azul-600 - borde primario en focus */
+        }
+
+        /* Estado Active - Feedback táctil */
+        .records-filter__toggle:active {
+            background-color: var(--color-border-light); /* Gris-200 */
+            transform: scale(0.98); /* Microinteracción: ligera compresión */
+        }
+
+        /* Estado Activo - Visual claro y distintivo */
+        .records-filter__toggle.is-active {
+            background-color: var(--color-action-primary); /* Azul-600 */
+            color: var(--color-action-text-light); /* Blanco */
+            border-color: var(--color-action-primary);
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2); /* Sombra sutil para elevación */
+        }
+
+        .records-filter__toggle.is-active .records-filter__icon {
+            opacity: 1;
+            transform: rotate(180deg); /* Rotación del icono como feedback visual */
+        }
+
+        .records-filter__toggle.is-active:hover {
+            background-color: var(--color-action-primary-hover); /* Azul-700 */
+            border-color: var(--color-action-primary-hover);
+        }
+
+        .records-filter__toggle.is-active:focus {
+            box-shadow: 0 0 0 3px var(--color-action-focus-outline), 0 1px 3px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Texto del botón */
+        .records-filter__text {
+            white-space: nowrap;
+        }
+
+        /* Indicador de estado activo - Checkmark sutil */
+        .records-filter__check {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce sutil */
+            margin-left: var(--space-xs); /* 8px de separación del texto */
+        }
+
+        .records-filter__toggle.is-active .records-filter__check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Ocultar checkmark cuando no está activo para evitar ocupar espacio */
+        .records-filter__toggle:not(.is-active) .records-filter__check {
+            display: none;
+        }
+
+        /* Vista responsive mobile: transformar tabla en tarjetas */
+        @media (max-width: 900px) {
+            /* Ajuste del botón de filtro para móvil */
+            .records-filter {
+                margin-top: var(--space-sm); /* 12px en móvil - más compacto */
+            }
+
+            .records-filter__toggle {
+                padding: var(--space-sm) var(--space-md); /* 12px vertical para mejor área táctil */
+                min-height: 40px; /* 40px = 5x8pt - área táctil mínima WCAG móvil */
+                font-size: var(--font-size-mobile-label); /* Ajustar si existe, sino mantener desktop-label */
+            }
+
+            .records-filter__text {
+                font-size: 0.875rem; /* 14px - ligeramente más pequeño en móvil si el texto es largo */
+            }
+
+            .data-table-container {
+                overflow: visible;
+                max-height: none;
+            }
+
+            .data-table,
+            .data-table thead,
+            .data-table tbody,
+            .data-table tr,
+            .data-table td,
+            .data-table th {
+                display: block;
+            }
+
+            .data-table thead {
+                display: none;
+            }
+
+            .data-table tbody tr {
+                display: block;
+                margin-bottom: var(--space-md);
+                padding: var(--space-md);
+                background-color: var(--color-surface-page);
+                border: 1px solid var(--color-border-light);
+                border-radius: var(--border-radius-md);
+                border-left-width: 3px;
+            }
+
+            .data-table tbody tr.record-row--pending {
+                border-left-color: var(--color-state-error);
+            }
+
+            .data-table tbody tr.record-row--pending-warning {
+                border-left-color: var(--color-state-warning);
+            }
+
+            .data-table td {
+                padding: 0.5rem 0;
+                border: none;
+                text-align: left;
+            }
+
+            .data-table td:before {
+                content: attr(data-label);
+                display: block;
+                font-weight: var(--font-weight-medium);
+                font-size: 0.75rem;
+                color: var(--color-text-secondary);
+                margin-bottom: 0.25rem;
+            }
+
+            .data-table td:first-child {
+                font-size: 1.125rem;
+                font-weight: var(--font-weight-semibold);
+                margin-bottom: var(--space-xs);
+            }
+
+            .data-table td:first-child:before {
+                display: none;
+            }
+
+            .data-table td:last-child {
+                margin-top: var(--space-sm);
+            }
+
+            .data-table td:last-child a {
+                display: block;
+                width: 100%;
+                padding: var(--space-xs) var(--space-sm);
+                text-align: center;
+                background-color: var(--color-primary);
+                color: white;
+                border-radius: var(--border-radius-sm);
+                text-decoration: none;
+            }
+
+            .data-table td:last-child a:hover {
+                background-color: var(--color-primary-hover);
+            }
+
+            .record-status-badge {
+                display: inline-block;
+                margin-top: 0.25rem;
+            }
         }
     </style>
 </head>
@@ -288,6 +760,22 @@
                                     5 completos
                                 </span>
                             </div>
+                            <div class="records-filter">
+                                <button 
+                                    class="records-filter__toggle" 
+                                    id="filter-pending-btn" 
+                                    aria-pressed="false"
+                                    aria-label="Filtrar registros: mostrar solo pendientes e incidentes"
+                                    type="button">
+                                    <svg class="records-filter__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                        <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                                    </svg>
+                                    <span class="records-filter__text">Solo Pendientes/Incidentes</span>
+                                    <svg class="records-filter__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="card__body">
                             <div class="data-table-container">
@@ -298,169 +786,172 @@
                                             <th>Chofer</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
-                                            <th>Recaudación</th>
+                                            <th>Recaudación(Hoy)</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody class="space-between-rows">
                                         <!-- Registros pendientes primero (prioridad visual) -->
-                                        <tr class="record-row--pending">
-                                            <td><strong>05</strong></td>
-                                            <td>Juan Pérez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
-                                                <span class="record-status-badge record-status-badge--pending-diesel">
+                                        <tr class="record-row--pending" data-status="pending">
+                                            <td data-label=""><strong>05</strong></td>
+                                            <td data-label="Chofer">Juan Pérez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
+                                                <span class="record-status-badge record-status-badge--pending-diesel" aria-describedby="tooltip-diesel-05" tabindex="0">
                                                     Pendiente Diesel
+                                                    <span class="tooltip" id="tooltip-diesel-05" role="tooltip">Campo 'Costo Total Diésel' faltante en el registro del día</span>
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=05&chofer=Juan Pérez&fecha=2025-11-14&estado=pending-diesel" class="link-inline alert-row__action-link">
                                                     Resolver
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr class="record-row--pending-warning">
-                                            <td><strong>02</strong></td>
-                                            <td>Ana Gómez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
-                                                <span class="record-status-badge record-status-badge--pending-trabajador">
+                                        <tr class="record-row--pending-warning" data-status="pending">
+                                            <td data-label=""><strong>02</strong></td>
+                                            <td data-label="Chofer">Ana Gómez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
+                                                <span class="record-status-badge record-status-badge--pending-trabajador" aria-describedby="tooltip-trabajador-02" tabindex="0">
                                                     Pendiente Trabajador
+                                                    <span class="tooltip" id="tooltip-trabajador-02" role="tooltip">Falta completar información del trabajador asignado</span>
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=02&chofer=Ana Gómez&fecha=2025-11-14&estado=pending-trabajador" class="link-inline alert-row__action-link">
                                                     Resolver
                                                 </a>
                                             </td>
                                         </tr>
                                         <!-- Registro con incidente crítico (alta prioridad visual) -->
-                                        <tr class="record-row--pending">
-                                            <td><strong>04</strong></td>
-                                            <td>Luis Martínez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
-                                                <span class="record-status-badge record-status-badge--incidente">
+                                        <tr class="record-row--pending" data-status="incident">
+                                            <td data-label=""><strong>04</strong></td>
+                                            <td data-label="Chofer">Luis Martínez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
+                                                <span class="record-status-badge record-status-badge--incidente" aria-describedby="tooltip-incidente-04" tabindex="0">
                                                     ⚠️ Incidente Reportado
+                                                    <span class="tooltip" id="tooltip-incidente-04" role="tooltip">El chofer reportó un incidente crítico durante la operación. Revisar detalles urgentemente.</span>
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 85.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=04&chofer=Luis Martínez&fecha=2025-11-14&estado=incidente" class="link-inline alert-row__action-link" style="color: var(--color-state-error); font-weight: var(--font-weight-medium);">
                                                     Revisar
                                                 </a>
                                             </td>
                                         </tr>
                                         <!-- Registros completos después -->
-                                        <tr>
-                                            <td>01</td>
-                                            <td>Carlos Rodríguez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
+                                        <tr data-status="complete">
+                                            <td data-label="">01</td>
+                                            <td data-label="Chofer">Carlos Rodríguez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
                                                 <span class="record-status-badge record-status-badge--complete">
                                                     Completo
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=01&chofer=Carlos Rodríguez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>03</td>
-                                            <td>María López</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
+                                        <tr data-status="complete">
+                                            <td data-label="">03</td>
+                                            <td data-label="Chofer">María López</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
                                                 <span class="record-status-badge record-status-badge--complete">
                                                     Completo
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=03&chofer=María López&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>07</td>
-                                            <td>Pedro Gómez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
+                                        <tr data-status="complete">
+                                            <td data-label="">07</td>
+                                            <td data-label="Chofer">Pedro Gómez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
                                                 <span class="record-status-badge record-status-badge--complete">
                                                     Completo
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=07&chofer=Pedro Gómez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>08</td>
-                                            <td>Juan Pérez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
+                                        <tr data-status="complete">
+                                            <td data-label="">08</td>
+                                            <td data-label="Chofer">Juan Pérez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
                                                 <span class="record-status-badge record-status-badge--complete">
                                                     Completo
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=08&chofer=Juan Pérez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>09</td>
-                                            <td>Juan Pérez</td>
-                                            <td class="record-date">2025-11-14</td>
-                                            <td>
+                                        <tr data-status="complete">
+                                            <td data-label="">09</td>
+                                            <td data-label="Chofer">Juan Pérez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
+                                            <td data-label="Estado">
                                                 <span class="record-status-badge record-status-badge--complete">
                                                     Completo
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
                                                 <span class="record-recaudacion">
                                                     $ 100.000
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=09&chofer=Juan Pérez&fecha=2025-11-14&estado=complete" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
@@ -479,7 +970,7 @@
                 <!-- Columna derecha: KPIs -->
                 <div class="dashboard-column">
                     <!-- Resumen financiero -->
-                    <div class="card">
+                    <div class="card card--chart">
                         <div class="card__header">
                             <div>
                                 <h2 class="card__header-title">Resumen Financiero</h2>
@@ -494,7 +985,7 @@
                                 </svg>
                             </a>
                         </div>
-                        <div class="card__body">
+                        <div class="card__body card__body--chart">
                             <div class="chart-controls">
                                 <div class="segmented-button-group">
                                     <button class="segmented-button is-active">Ganancia Neta</button>
@@ -508,25 +999,36 @@
                                 </div>
                             </div>
                             <div class="chart-kpi">
-                                <span class="chart-kpi__label">Ganancia Neta Total</span>
-                                <span class="chart-kpi__value">$ 12.345.678</span>
+                                <span class="chart-kpi__label" id="chart-kpi-label">Ganancia Neta Total</span>
+                                <span class="chart-kpi__value" id="chart-kpi-value">$ 12.345.678</span>
                             </div>
-                            <div class="chart-container">
-                                <div class="chart-bar" style="height: 40%;" title="Máquina 01"></div>
-                                <div class="chart-bar" style="height: 60%;" title="Máquina 02"></div>
-                                <div class="chart-bar" style="height: 20%;" title="Máquina 03"></div>
-                                <div class="chart-bar" style="height: 80%;" title="Máquina 05"></div>
-                                <div class="chart-bar" style="height: 50%;" title="Máquina 07"></div>
+                            <div class="chart-container" id="chart-container">
+                                <!-- Estados: loading, empty, chart -->
+                                <div class="chart-loading-state" id="chart-loading-state" style="display: none;">
+                                    <div class="chart-loading-spinner"></div>
+                                    <p class="chart-loading-text">Cargando datos financieros...</p>
+                                </div>
+                                <div class="chart-empty-state" id="chart-empty-state" style="display: none;">
+                                    <div class="chart-empty-state__icon">📊</div>
+                                    <div class="chart-empty-state__title">Sin datos financieros</div>
+                                    <p class="chart-empty-state__text">No hay datos disponibles para el período seleccionado.</p>
+                                </div>
+                                <div class="chart-wrapper" id="chart-wrapper">
+                                    <!-- Eje Y cuantitativo -->
+                                    <div class="chart-y-axis" id="chart-y-axis">
+                                        <!-- Se generará dinámicamente -->
+                                    </div>
+                                    <!-- Contenedor de barras con grid -->
+                                    <div class="chart-bars-container" id="chart-bars-container">
+                                        <!-- Barras y líneas de cuadrícula se generarán dinámicamente -->
+                                    </div>
+                                </div>
                             </div>
-                            <div class="chart-axis-labels">
-                                <span>01</span>
-                                <span>02</span>
-                                <span>03</span>
-                                <span>05</span>
-                                <span>07</span>
+                            <div class="chart-axis-labels" id="chart-axis-labels">
+                                <!-- Labels se generarán dinámicamente -->
                             </div>
                             <p class="chart-axis-caption">
-                                Eje Y: Ganancia neta por máquina (en proporción). Para detalle exacto, usar el Centro de Reportes (RF-030, RF-032).
+                                Eje Y: Valores monetarios exactos. Hover sobre cada barra para ver detalles completos (RF-030).
                             </p>
                         </div>
                     </div>
@@ -853,6 +1355,297 @@
             window.addEventListener('storage', () => {
                 renderAlerts();
             });
+
+            // ============================================
+            // FILTRO RÁPIDO DE REGISTROS DIARIOS
+            // Con microinteracciones y feedback visual mejorado
+            // ============================================
+            
+            const filterPendingBtn = document.getElementById('filter-pending-btn');
+            const recordRows = document.querySelectorAll('.data-table tbody tr[data-status]');
+            
+            if (filterPendingBtn && recordRows.length > 0) {
+                filterPendingBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isActive = filterPendingBtn.classList.contains('is-active');
+                    const isPressed = filterPendingBtn.getAttribute('aria-pressed') === 'true';
+                    
+                    // Animación suave de transición
+                    if (isActive || isPressed) {
+                        // Desactivar filtro: mostrar todos los registros
+                        filterPendingBtn.classList.remove('is-active');
+                        filterPendingBtn.setAttribute('aria-pressed', 'false');
+                        
+                        // Animación de fade-in para las filas
+                        recordRows.forEach((row, index) => {
+                            setTimeout(() => {
+                                row.style.display = '';
+                                row.style.opacity = '0';
+                                row.style.transition = 'opacity 0.2s ease';
+                                requestAnimationFrame(() => {
+                                    row.style.opacity = '1';
+                                });
+                            }, index * 20); // Stagger effect sutil
+                        });
+                    } else {
+                        // Activar filtro: mostrar solo pendientes e incidentes
+                        filterPendingBtn.classList.add('is-active');
+                        filterPendingBtn.setAttribute('aria-pressed', 'true');
+                        
+                        // Ocultar filas completas con fade-out
+                        recordRows.forEach(row => {
+                            const status = row.getAttribute('data-status');
+                            if (status === 'pending' || status === 'incident') {
+                                row.style.display = '';
+                                row.style.opacity = '1';
+                            } else {
+                                row.style.transition = 'opacity 0.15s ease';
+                                row.style.opacity = '0';
+                                setTimeout(() => {
+                                    row.style.display = 'none';
+                                }, 150);
+                            }
+                        });
+                    }
+                });
+
+                // Mejora de accesibilidad: soporte para teclado (Enter y Espacio)
+                filterPendingBtn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        filterPendingBtn.click();
+                    }
+                });
+            }
+
+            // ============================================
+            // GRÁFICO FINANCIERO - Resumen Financiero
+            // Renderizado dinámico con eje Y cuantitativo,
+            // tooltips y estados (RF-018, RF-019, RF-021, RF-030)
+            // ============================================
+            
+            const chartContainer = document.getElementById('chart-container');
+            const chartWrapper = document.getElementById('chart-wrapper');
+            const chartLoadingState = document.getElementById('chart-loading-state');
+            const chartEmptyState = document.getElementById('chart-empty-state');
+            const chartYAxis = document.getElementById('chart-y-axis');
+            const chartBarsContainer = document.getElementById('chart-bars-container');
+            const chartAxisLabels = document.getElementById('chart-axis-labels');
+            const chartKpiLabel = document.getElementById('chart-kpi-label');
+            const chartKpiValue = document.getElementById('chart-kpi-value');
+            const segmentedButtons = document.querySelectorAll('.segmented-button');
+
+            // Datos de ejemplo (en producción vendría de API)
+            const financialData = {
+                'Ganancia Neta': [
+                    { machineId: '01', driver: 'Carlos Rodríguez', value: 2450000 },
+                    { machineId: '02', driver: 'Ana Gómez', value: 3200000 },
+                    { machineId: '03', driver: 'María López', value: 1800000 },
+                    { machineId: '05', driver: 'Juan Pérez', value: 4100000 },
+                    { machineId: '07', driver: 'Pedro Gómez', value: 2800000 }
+                ],
+                'Ingreso Total': [
+                    { machineId: '01', driver: 'Carlos Rodríguez', value: 8500000 },
+                    { machineId: '02', driver: 'Ana Gómez', value: 9200000 },
+                    { machineId: '03', driver: 'María López', value: 7200000 },
+                    { machineId: '05', driver: 'Juan Pérez', value: 10500000 },
+                    { machineId: '07', driver: 'Pedro Gómez', value: 8800000 }
+                ]
+            };
+
+            let currentMetric = 'Ganancia Neta';
+
+            // Formatear valores monetarios
+            const formatCurrency = (value) => {
+                return new Intl.NumberFormat('es-CL', {
+                    style: 'currency',
+                    currency: 'CLP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value).replace('CLP', '$');
+            };
+
+            // Calcular valores del eje Y (mínimo, máximo, ticks)
+            const calculateYAxis = (data) => {
+                if (!data || data.length === 0) return { min: 0, max: 0, ticks: [] };
+                
+                const values = data.map(d => d.value);
+                const max = Math.max(...values);
+                const min = Math.min(...values);
+                
+                // Calcular ticks: 5 divisiones (0, 25%, 50%, 75%, 100%)
+                const tickCount = 5;
+                const tickStep = max / (tickCount - 1);
+                const ticks = [];
+                
+                for (let i = 0; i < tickCount; i++) {
+                    const value = i * tickStep;
+                    ticks.push({
+                        value: value,
+                        position: (i / (tickCount - 1)) * 100, // Porcentaje de altura
+                        isMax: i === tickCount - 1
+                    });
+                }
+                
+                return { min, max, ticks };
+            };
+
+            // Renderizar eje Y
+            const renderYAxis = (yAxisData) => {
+                chartYAxis.innerHTML = '';
+                yAxisData.ticks.forEach(tick => {
+                    const tickEl = document.createElement('div');
+                    tickEl.className = `chart-y-axis__tick ${tick.isMax ? 'chart-y-axis__tick--max' : ''}`;
+                    tickEl.textContent = formatCurrency(tick.value);
+                    tickEl.style.position = 'absolute';
+                    tickEl.style.bottom = `${tick.position}%`;
+                    tickEl.style.transform = 'translateY(50%)'; // Centrar verticalmente
+                    chartYAxis.appendChild(tickEl);
+                });
+            };
+
+            // Renderizar líneas de cuadrícula
+            const renderGridLines = (yAxisData) => {
+                const existingGridLines = chartBarsContainer.querySelectorAll('.chart-grid-line');
+                existingGridLines.forEach(line => line.remove());
+                
+                yAxisData.ticks.forEach((tick, index) => {
+                    if (index === 0) return; // No dibujar línea en el 0
+                    
+                    const gridLine = document.createElement('div');
+                    gridLine.className = `chart-grid-line ${tick.isMax ? 'chart-grid-line--major' : 'chart-grid-line--minor'}`;
+                    gridLine.style.bottom = `${tick.position}%`;
+                    chartBarsContainer.appendChild(gridLine);
+                });
+            };
+
+            // Renderizar barras del gráfico
+            const renderBars = (data, yAxisData) => {
+                // Limpiar barras existentes (mantener grid lines)
+                const existingBars = chartBarsContainer.querySelectorAll('.chart-bar');
+                existingBars.forEach(bar => bar.remove());
+                
+                if (!data || data.length === 0) return;
+                
+                data.forEach((item, index) => {
+                    const heightPercentage = (item.value / yAxisData.max) * 100;
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'chart-bar';
+                    bar.style.height = `${heightPercentage}%`;
+                    bar.setAttribute('role', 'button');
+                    bar.setAttribute('tabindex', '0');
+                    bar.setAttribute('aria-label', `Máquina ${item.machineId}: ${formatCurrency(item.value)}`);
+                    
+                    // Tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'chart-bar-tooltip';
+                    tooltip.setAttribute('role', 'tooltip');
+                    
+                    const machineLabel = document.createElement('span');
+                    machineLabel.className = 'chart-bar-tooltip__machine';
+                    machineLabel.textContent = `Máquina ${item.machineId}`;
+                    
+                    const driverLabel = document.createElement('span');
+                    driverLabel.className = 'chart-bar-tooltip__driver';
+                    driverLabel.textContent = item.driver;
+                    
+                    const valueLabel = document.createElement('span');
+                    valueLabel.className = 'chart-bar-tooltip__value';
+                    valueLabel.textContent = formatCurrency(item.value);
+                    
+                    tooltip.appendChild(machineLabel);
+                    tooltip.appendChild(driverLabel);
+                    tooltip.appendChild(valueLabel);
+                    bar.appendChild(tooltip);
+                    
+                    chartBarsContainer.appendChild(bar);
+                });
+            };
+
+            // Renderizar labels del eje X
+            const renderAxisLabels = (data) => {
+                chartAxisLabels.innerHTML = '';
+                
+                if (!data || data.length === 0) return;
+                
+                data.forEach(item => {
+                    const label = document.createElement('span');
+                    label.className = 'chart-axis-label';
+                    label.textContent = item.machineId;
+                    chartAxisLabels.appendChild(label);
+                });
+            };
+
+            // Actualizar KPI total
+            const updateKPI = (data, metric) => {
+                if (!data || data.length === 0) {
+                    chartKpiValue.textContent = formatCurrency(0);
+                    return;
+                }
+                
+                const total = data.reduce((sum, item) => sum + item.value, 0);
+                // Evitar duplicación de "Total" si la métrica ya lo incluye
+                const labelText = metric.includes('Total') ? metric : `${metric} Total`;
+                chartKpiLabel.textContent = labelText;
+                chartKpiValue.textContent = formatCurrency(total);
+            };
+
+            // Renderizar gráfico completo
+            const renderChart = (metric = currentMetric, showLoading = false) => {
+                const data = financialData[metric] || [];
+                
+                // Mostrar estado de carga
+                if (showLoading) {
+                    chartWrapper.style.display = 'none';
+                    chartEmptyState.style.display = 'none';
+                    chartLoadingState.style.display = 'flex';
+                    return;
+                }
+                
+                chartLoadingState.style.display = 'none';
+                
+                // Verificar si hay datos
+                if (data.length === 0) {
+                    chartWrapper.style.display = 'none';
+                    chartEmptyState.style.display = 'block';
+                    chartKpiValue.textContent = formatCurrency(0);
+                    return;
+                }
+                
+                chartEmptyState.style.display = 'none';
+                chartWrapper.style.display = 'flex';
+                
+                // Calcular y renderizar
+                const yAxisData = calculateYAxis(data);
+                renderYAxis(yAxisData);
+                renderGridLines(yAxisData);
+                renderBars(data, yAxisData);
+                renderAxisLabels(data);
+                updateKPI(data, metric);
+            };
+
+            // Manejar cambio de métrica (toggle buttons)
+            segmentedButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remover estado activo de todos
+                    segmentedButtons.forEach(btn => btn.classList.remove('is-active'));
+                    // Añadir estado activo al clickeado
+                    button.classList.add('is-active');
+                    
+                    // Actualizar métrica actual
+                    currentMetric = button.textContent.trim();
+                    
+                    // Mostrar loading y luego renderizar
+                    renderChart(currentMetric, true);
+                    setTimeout(() => {
+                        renderChart(currentMetric, false);
+                    }, 300); // Simular carga
+                });
+            });
+
+            // Inicializar gráfico
+            renderChart(currentMetric, false);
         });
     </script>
 </body>

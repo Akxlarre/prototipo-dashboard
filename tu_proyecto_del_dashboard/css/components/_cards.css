@@ -12,6 +12,11 @@
     overflow: hidden; /* Para contener los bordes de los elementos hijos */
 }
 
+/* Modificador para cards con gráficos - permite tooltips visibles */
+.card--chart {
+    overflow: visible; /* Permitir que tooltips se muestren fuera del card */
+}
+
 .card__header {
     /* El contenedor del título del widget */
     padding: var(--space-xl) var(--space-xl) var(--space-md) var(--space-xl); /* 24px, 24px, 16px, 24px */
@@ -46,6 +51,12 @@
 .card__body {
     /* El contenedor principal para el contenido del widget */
     padding: var(--space-xl); /* 24px */
+}
+
+/* Modificador para cards con gráficos - permite tooltips visibles */
+.card__body--chart {
+    overflow: visible; /* Permitir que tooltips se muestren fuera del contenedor */
+    position: relative; /* Para contexto de posicionamiento de tooltips */
 }
 
 /* Modificador para listas (como el widget de alertas) */
