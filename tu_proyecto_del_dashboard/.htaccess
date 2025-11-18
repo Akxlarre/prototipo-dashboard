@@ -1,0 +1,32 @@
+# Configuración de codificación UTF-8 para el servidor
+# Asegura que todos los archivos HTML/PHP se sirvan con charset UTF-8
+
+# Forzar UTF-8 para archivos HTML
+<FilesMatch "\.(html|htm)$">
+    Header set Content-Type "text/html; charset=UTF-8"
+</FilesMatch>
+
+# Forzar UTF-8 para archivos PHP (si se usan en el futuro)
+<FilesMatch "\.php$">
+    Header set Content-Type "text/html; charset=UTF-8"
+</FilesMatch>
+
+# Forzar UTF-8 para archivos JavaScript
+<FilesMatch "\.js$">
+    Header set Content-Type "application/javascript; charset=UTF-8"
+</FilesMatch>
+
+# Forzar UTF-8 para archivos CSS
+<FilesMatch "\.css$">
+    Header set Content-Type "text/css; charset=UTF-8"
+</FilesMatch>
+
+# Configuración general de codificación
+AddDefaultCharset UTF-8
+
+# Habilitar módulo de headers (requiere mod_headers en Apache)
+<IfModule mod_headers.c>
+    # Asegurar que el charset se establezca correctamente
+    Header always set Content-Type "text/html; charset=UTF-8" "expr=%{CONTENT_TYPE} =~ m|^text/html|"
+</IfModule>
+
