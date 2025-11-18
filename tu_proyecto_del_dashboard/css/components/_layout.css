@@ -10,6 +10,8 @@
     grid-template-columns: 256px 1fr; /* Sidebar de 256px (32 * 8pt) - mÃºltiplo de 8pt grid */
     min-height: 100vh; /* Ocupa toda la altura de la ventana */
     background-color: var(--color-surface-page); /* Gris-50 */
+    margin: 0;
+    padding: 0;
 }
 
 /* ------------------------------------ */

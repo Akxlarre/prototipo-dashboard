@@ -23,6 +23,14 @@
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_badge.css">
+    
+    <style>
+        /* FIX: Eliminar espacio en blanco superior */
+        body { line-height: 0 !important; }
+        .dashboard-layout { line-height: 1.5; }
+        .sidebar, .main-content { line-height: var(--line-height-desktop-base); }
+    </style>
+    
     <style>
         .machines-layout-grid {
             display: grid;
@@ -352,7 +360,7 @@
 </head>
 <body>
     <div class="dashboard-layout">
-                        <aside class="sidebar">
+        <aside class="sidebar">
             <div class="sidebar__header">
                 <div class="sidebar__header-group">
                     <div class="sidebar__logo"></div>
