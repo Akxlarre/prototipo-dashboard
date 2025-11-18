@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Ayuda - Manual de Uso</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_badge.css">
+
+    <style>
+        .help-center-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-xl);
+            max-width: 1400px;
+        }
+
+        @media (max-width: 900px) {
+            .help-center-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Menú lateral del manual */
+        .help-menu {
+            position: sticky;
+            top: var(--space-xl);
+            align-self: start;
+            background: var(--color-surface-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .help-menu__title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-md);
+        }
+
+        .help-menu__list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .help-menu__item {
+            margin-bottom: var(--space-xs);
+        }
+
+        .help-menu__link {
+            display: block;
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+
+        .help-menu__link:hover {
+            background-color: var(--color-surface-hover);
+            color: var(--color-text-primary);
+        }
+
+        .help-menu__link.is-active {
+            background-color: var(--color-action-primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Contenido del manual */
+        .help-content {
+            background: var(--color-surface-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+        }
+
+        .help-section {
+            margin-bottom: var(--space-2xl);
+            padding-bottom: var(--space-2xl);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .help-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .help-section__title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-md);
+            scroll-margin-top: var(--space-2xl);
+        }
+
+        .help-section__subtitle {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-top: var(--space-xl);
+            margin-bottom: var(--space-md);
+        }
+
+        .help-section__text {
+            font-size: 0.938rem;
+            line-height: 1.7;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .help-section__list {
+            margin: var(--space-md) 0;
+            padding-left: var(--space-xl);
+        }
+
+        .help-section__list li {
+            font-size: 0.938rem;
+            line-height: 1.7;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .help-section__list li strong {
+            color: var(--color-text-primary);
+            font-weight: 600;
+        }
+
+        .help-step {
+            background: var(--color-surface-page);
+            border-left: 3px solid var(--color-action-primary);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .help-step__number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--color-action-primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.813rem;
+            font-weight: 600;
+            margin-right: var(--space-sm);
+        }
+
+        .help-step__title {
+            font-size: 0.938rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .help-step__text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+        }
+
+        .help-tip {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            border: 1px solid #93C5FD;
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .help-tip__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: #3B82F6;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: var(--space-sm);
+        }
+
+        .help-tip__title {
+            display: inline;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1E40AF;
+        }
+
+        .help-tip__text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #1E3A8A;
+            margin-top: var(--space-xs);
+        }
+
+        .help-warning {
+            background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+            border: 1px solid #FDBA74;
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .help-warning__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: #F97316;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: var(--space-sm);
+        }
+
+        .help-warning__title {
+            display: inline;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #9A3412;
+        }
+
+        .help-warning__text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #7C2D12;
+            margin-top: var(--space-xs);
+        }
+
+        .help-search {
+            margin-bottom: var(--space-xl);
+        }
+
+        .help-search__input {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            border: 1px solid var(--color-border-base);
+            border-radius: var(--radius-md);
+            font-size: 0.938rem;
+            transition: all 0.2s ease;
+        }
+
+        .help-search__input:focus {
+            outline: none;
+            border-color: var(--color-action-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .keyboard-shortcut {
+            display: inline-block;
+            padding: 0.125rem 0.375rem;
+            background: var(--color-surface-page);
+            border: 1px solid var(--color-border-base);
+            border-radius: var(--radius-sm);
+            font-size: 0.813rem;
+            font-family: 'Courier New', monospace;
+            color: var(--color-text-primary);
+            margin: 0 0.125rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                        Dashboard
+                    </span>
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                        Máquinas
+                    </span>
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-choferes"></span>
+                        Choferes
+                    </span>
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                        Contabilidad
+                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-reportes"></span>
+                        Reportes
+                    </span>
+                    <span class="badge badge--text">3</span>
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                        Configuración
+                    </span>
+                </a>
+                <a href="admin-help-center.html" class="sidebar__nav-item is-active">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
+                    </span>
+                </a>
+                <a href="login.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-logout"></span>
+                        Cerrar Sesión
+                    </span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-content__header">
+                <h1 class="main-content__title">Centro de Ayuda</h1>
+                <p class="main-content__subtitle">Manual completo de uso de la plataforma de gestión de flotas</p>
+            </header>
+
+            <div class="help-center-layout">
+                <nav class="help-menu">
+                    <h2 class="help-menu__title">Índice</h2>
+                    <ul class="help-menu__list">
+                        <li class="help-menu__item">
+                            <a href="#introduccion" class="help-menu__link is-active">Introducción</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#dashboard" class="help-menu__link">Dashboard</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#maquinas" class="help-menu__link">Gestión de Máquinas</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#choferes" class="help-menu__link">Gestión de Choferes</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#registro-diario" class="help-menu__link">Registro Diario</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#contabilidad" class="help-menu__link">Contabilidad</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#reportes" class="help-menu__link">Centro de Reportes</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#configuracion" class="help-menu__link">Configuración</a>
+                        </li>
+                        <li class="help-menu__item">
+                            <a href="#faq" class="help-menu__link">Preguntas Frecuentes</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="help-content">
+                    <!-- Introducción -->
+                    <section id="introduccion" class="help-section">
+                        <h2 class="help-section__title">Introducción</h2>
+                        <p class="help-section__text">
+                            Bienvenido al sistema de gestión de flotas. Esta plataforma ha sido diseñada para facilitar el control integral de tu flota de maquinaria pesada, desde el registro diario de operaciones hasta el análisis financiero detallado.
+                        </p>
+                        <p class="help-section__text">
+                            El sistema cuenta con dos roles principales:
+                        </p>
+                        <ul class="help-section__list">
+                            <li><strong>Administrador:</strong> Acceso completo a todas las funcionalidades, incluyendo gestión de máquinas, choferes, contabilidad y reportes.</li>
+                            <li><strong>Trabajador:</strong> Acceso limitado para registrar reportes diarios de trabajo y consultar su historial.</li>
+                        </ul>
+
+                        <div class="help-tip">
+                            <span class="help-tip__icon">💡</span>
+                            <span class="help-tip__title">Consejo</span>
+                            <p class="help-tip__text">
+                                Familiarízate con el menú lateral de navegación. Puedes acceder rápidamente a cualquier módulo desde cualquier pantalla.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Dashboard -->
+                    <section id="dashboard" class="help-section">
+                        <h2 class="help-section__title">Dashboard</h2>
+                        <p class="help-section__text">
+                            El Dashboard es tu centro de control principal. Aquí encontrarás un resumen en tiempo real del estado de tu flota.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Elementos del Dashboard</h3>
+                        <ul class="help-section__list">
+                            <li><strong>KPIs Principales:</strong> Ingresos mensuales, ganancias netas, alertas activas y horas trabajadas.</li>
+                            <li><strong>Gráfico de Ingresos:</strong> Visualización mensual con filtros por período y tipo de visualización.</li>
+                            <li><strong>Estado de Máquinas:</strong> Resumen rápido del estado operativo de cada máquina.</li>
+                            <li><strong>Alertas y Notificaciones:</strong> Avisos importantes sobre mantenimientos, documentos vencidos o problemas operativos.</li>
+                        </ul>
+
+                        <div class="help-tip">
+                            <span class="help-tip__icon">💡</span>
+                            <span class="help-tip__title">Tip de Productividad</span>
+                            <p class="help-tip__text">
+                                Revisa el Dashboard cada mañana para detectar rápidamente cualquier anomalía o tarea pendiente urgente.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Máquinas -->
+                    <section id="maquinas" class="help-section">
+                        <h2 class="help-section__title">Gestión de Máquinas</h2>
+                        <p class="help-section__text">
+                            El módulo de máquinas te permite administrar toda la información de tu flota de maquinaria pesada.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Registrar una Nueva Máquina</h3>
+                        <div class="help-step">
+                            <span class="help-step__number">1</span>
+                            <div class="help-step__title">Accede al Listado de Máquinas</div>
+                            <p class="help-step__text">Haz clic en "Máquinas" en el menú lateral y luego en el botón "Agregar Máquina".</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">2</span>
+                            <div class="help-step__title">Completa la Información Básica</div>
+                            <p class="help-step__text">Ingresa el número de máquina, tipo (camión, grúa, excavadora, etc.), marca, modelo y año de fabricación.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">3</span>
+                            <div class="help-step__title">Configura la Información Técnica</div>
+                            <p class="help-step__text">Define la capacidad de carga, consumo promedio de combustible y otras especificaciones técnicas relevantes.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">4</span>
+                            <div class="help-step__title">Registra Documentación</div>
+                            <p class="help-step__text">Ingresa fechas de vencimiento para revisión técnica, seguro, permisos de circulación y otros documentos requeridos.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">5</span>
+                            <div class="help-step__title">Guarda y Confirma</div>
+                            <p class="help-step__text">Revisa toda la información y haz clic en "Guardar Máquina" para completar el registro.</p>
+                        </div>
+
+                        <h3 class="help-section__subtitle">Ver Detalles de una Máquina</h3>
+                        <p class="help-section__text">
+                            Desde el listado de máquinas, haz clic en cualquier máquina para ver:
+                        </p>
+                        <ul class="help-section__list">
+                            <li><strong>Información General:</strong> Datos técnicos y documentación.</li>
+                            <li><strong>Historial de Trabajo:</strong> Registro completo de operaciones realizadas.</li>
+                            <li><strong>Choferes Asignados:</strong> Listado de operadores habilitados.</li>
+                            <li><strong>Estadísticas:</strong> Rendimiento, consumo de combustible y rentabilidad.</li>
+                        </ul>
+
+                        <div class="help-warning">
+                            <span class="help-warning__icon">⚠</span>
+                            <span class="help-warning__title">Importante</span>
+                            <p class="help-warning__text">
+                                El sistema generará alertas automáticas cuando los documentos estén próximos a vencer. Mantén siempre actualizada la información de vencimientos.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Choferes -->
+                    <section id="choferes" class="help-section">
+                        <h2 class="help-section__title">Gestión de Choferes</h2>
+                        <p class="help-section__text">
+                            Administra la información de todos los operadores de tu flota, incluyendo sus credenciales, asignaciones y desempeño.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Registrar un Nuevo Chofer</h3>
+                        <div class="help-step">
+                            <span class="help-step__number">1</span>
+                            <div class="help-step__title">Ir al Módulo de Choferes</div>
+                            <p class="help-step__text">Accede desde el menú lateral y selecciona "Agregar Chofer".</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">2</span>
+                            <div class="help-step__title">Datos Personales</div>
+                            <p class="help-step__text">Completa nombre completo, RUT, fecha de nacimiento y datos de contacto (teléfono, email, dirección).</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">3</span>
+                            <div class="help-step__title">Información Profesional</div>
+                            <p class="help-step__text">Registra tipo de licencia de conducir, número de licencia y fecha de vencimiento. Indica las especialidades o certificaciones adicionales.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">4</span>
+                            <div class="help-step__title">Asignación de Máquinas</div>
+                            <p class="help-step__text">Selecciona las máquinas que el chofer está autorizado a operar.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">5</span>
+                            <div class="help-step__title">Configuración de Acceso</div>
+                            <p class="help-step__text">Crea credenciales de acceso al sistema para que el chofer pueda registrar sus reportes diarios.</p>
+                        </div>
+
+                        <h3 class="help-section__subtitle">Gestionar Desempeño</h3>
+                        <p class="help-section__text">
+                            En la ficha de cada chofer podrás consultar:
+                        </p>
+                        <ul class="help-section__list">
+                            <li>Historial completo de trabajos realizados</li>
+                            <li>Estadísticas de horas trabajadas y rentabilidad generada</li>
+                            <li>Evaluaciones y observaciones de desempeño</li>
+                            <li>Estado de documentación (licencias, certificados)</li>
+                        </ul>
+
+                        <div class="help-warning">
+                            <span class="help-warning__icon">⚠</span>
+                            <span class="help-warning__title">Importante</span>
+                            <p class="help-warning__text">
+                                Verifica regularmente el vencimiento de licencias de conducir. El sistema bloqueará la asignación de trabajos a choferes con documentación vencida.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Registro Diario -->
+                    <section id="registro-diario" class="help-section">
+                        <h2 class="help-section__title">Registro Diario de Operaciones</h2>
+                        <p class="help-section__text">
+                            El registro diario es fundamental para el control operativo y contable. Permite documentar cada jornada de trabajo de manera detallada.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Cómo Registrar un Día de Trabajo</h3>
+                        <div class="help-step">
+                            <span class="help-step__number">1</span>
+                            <div class="help-step__title">Seleccionar Fecha y Máquina</div>
+                            <p class="help-step__text">Elige la fecha del trabajo (por defecto aparece el día actual) y selecciona la máquina utilizada.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">2</span>
+                            <div class="help-step__title">Datos del Trabajo</div>
+                            <p class="help-step__text">Ingresa el lugar de trabajo, cliente, tipo de labor realizada y descripción detallada de las actividades.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">3</span>
+                            <div class="help-step__title">Horarios</div>
+                            <p class="help-step__text">Registra hora de inicio y hora de término. El sistema calculará automáticamente las horas trabajadas.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">4</span>
+                            <div class="help-step__title">Combustible</div>
+                            <p class="help-step__text">Anota la cantidad de litros de combustible consumidos y el costo total. Opcionalmente adjunta el comprobante de carga.</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">5</span>
+                            <div class="help-step__title">Información Financiera</div>
+                            <p class="help-step__text">Indica el monto cobrado al cliente y el pago correspondiente al chofer (si aplica).</p>
+                        </div>
+
+                        <div class="help-step">
+                            <span class="help-step__number">6</span>
+                            <div class="help-step__title">Observaciones y Guardar</div>
+                            <p class="help-step__text">Añade cualquier comentario relevante (incidentes, mantenimientos necesarios, etc.) y guarda el registro.</p>
+                        </div>
+
+                        <div class="help-tip">
+                            <span class="help-tip__icon">💡</span>
+                            <span class="help-tip__title">Buena Práctica</span>
+                            <p class="help-tip__text">
+                                Registra cada jornada el mismo día del trabajo. Esto garantiza la precisión de los datos y facilita la gestión contable posterior.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Contabilidad -->
+                    <section id="contabilidad" class="help-section">
+                        <h2 class="help-section__title">Contabilidad</h2>
+                        <p class="help-section__text">
+                            El módulo de contabilidad centraliza toda la información financiera de tu operación, permitiéndote tomar decisiones basadas en datos reales.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Funcionalidades Principales</h3>
+                        <ul class="help-section__list">
+                            <li><strong>Registro de Ingresos:</strong> Control detallado de todas las facturaciones por trabajos realizados.</li>
+                            <li><strong>Control de Gastos:</strong> Combustible, mantenimientos, salarios, seguros y otros gastos operativos.</li>
+                            <li><strong>Flujo de Caja:</strong> Visualización del movimiento de efectivo en tiempo real.</li>
+                            <li><strong>Balance por Período:</strong> Resúmenes mensuales, trimestrales o anuales de ingresos vs. gastos.</li>
+                            <li><strong>Exportación de Datos:</strong> Descarga información contable en formato Excel o PDF para tu contador.</li>
+                        </ul>
+
+                        <h3 class="help-section__subtitle">Categorías de Gastos</h3>
+                        <p class="help-section__text">
+                            El sistema organiza los gastos en las siguientes categorías:
+                        </p>
+                        <ul class="help-section__list">
+                            <li>Combustible</li>
+                            <li>Mantenimientos y reparaciones</li>
+                            <li>Salarios y pagos a choferes</li>
+                            <li>Seguros y permisos</li>
+                            <li>Gastos administrativos</li>
+                            <li>Otros gastos operacionales</li>
+                        </ul>
+
+                        <div class="help-warning">
+                            <span class="help-warning__icon">⚠</span>
+                            <span class="help-warning__title">Importante</span>
+                            <p class="help-warning__text">
+                                Los registros contables son acumulativos. Verifica siempre la fecha correcta antes de ingresar movimientos para evitar inconsistencias en los reportes.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Reportes -->
+                    <section id="reportes" class="help-section">
+                        <h2 class="help-section__title">Centro de Reportes y Análisis</h2>
+                        <p class="help-section__text">
+                            El Centro de Reportes te proporciona análisis visuales y numéricos del desempeño de tu flota, facilitando la toma de decisiones estratégicas.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Reportes Disponibles</h3>
+                        
+                        <div class="help-step">
+                            <div class="help-step__title">1. Rentabilidad por Máquina</div>
+                            <p class="help-step__text">
+                                Analiza qué máquinas generan mayor ganancia neta considerando ingresos totales menos gastos de operación (combustible, pagos a choferes, etc.). 
+                                Este reporte incluye gráfico de barras horizontales y tabla detallada con ranking.
+                            </p>
+                        </div>
+
+                        <div class="help-step">
+                            <div class="help-step__title">2. Ranking de Ingresos (Bruto)</div>
+                            <p class="help-step__text">
+                                Visualiza qué máquinas generan mayores ingresos brutos, sin considerar gastos. Útil para identificar las unidades más demandadas por los clientes.
+                            </p>
+                        </div>
+
+                        <div class="help-step">
+                            <div class="help-step__title">3. Rentabilidad por Chofer</div>
+                            <p class="help-step__text">
+                                Evalúa el desempeño financiero de cada operador, comparando los ingresos que genera versus los costos asociados (pago al chofer, combustible consumido).
+                            </p>
+                        </div>
+
+                        <h3 class="help-section__subtitle">Exportar Reportes</h3>
+                        <p class="help-section__text">
+                            Cada reporte puede ser exportado en tres formatos:
+                        </p>
+                        <ul class="help-section__list">
+                            <li><strong>XLSX (Excel):</strong> Ideal para análisis posterior o integración con otras herramientas.</li>
+                            <li><strong>CSV:</strong> Formato simple compatible con cualquier hoja de cálculo.</li>
+                            <li><strong>PDF:</strong> Perfecto para imprimir o compartir presentaciones.</li>
+                        </ul>
+
+                        <p class="help-section__text">
+                            Para exportar, haz clic en el botón "Exportar" y selecciona el formato deseado del menú desplegable.
+                        </p>
+
+                        <div class="help-tip">
+                            <span class="help-tip__icon">💡</span>
+                            <span class="help-tip__title">Análisis Estratégico</span>
+                            <p class="help-tip__text">
+                                Revisa los reportes mensualmente para identificar tendencias. Una máquina con alto ingreso pero baja rentabilidad puede indicar costos operativos excesivos que requieren atención.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Configuración -->
+                    <section id="configuracion" class="help-section">
+                        <h2 class="help-section__title">Configuración del Sistema</h2>
+                        <p class="help-section__text">
+                            En el módulo de configuración puedes personalizar diversos aspectos de la plataforma según las necesidades de tu negocio.
+                        </p>
+
+                        <h3 class="help-section__subtitle">Opciones de Configuración</h3>
+                        <ul class="help-section__list">
+                            <li><strong>Perfil de Empresa:</strong> Nombre, logo, datos de contacto y configuración regional (moneda, formato de fecha).</li>
+                            <li><strong>Usuarios y Permisos:</strong> Administrar cuentas de acceso, roles y niveles de autorización.</li>
+                            <li><strong>Notificaciones:</strong> Configura alertas automáticas por email o SMS para vencimientos, mantenimientos programados, etc.</li>
+                            <li><strong>Parámetros Contables:</strong> Categorías de gastos personalizadas, centros de costo, tasas de impuestos.</li>
+                            <li><strong>Integraciones:</strong> Conexión con sistemas externos de facturación, contabilidad o GPS.</li>
+                        </ul>
+
+                        <div class="help-warning">
+                            <span class="help-warning__icon">⚠</span>
+                            <span class="help-warning__title">Solo Administradores</span>
+                            <p class="help-warning__text">
+                                Las opciones de configuración solo están disponibles para usuarios con rol de Administrador. Los cambios afectan a todo el sistema.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- FAQ -->
+                    <section id="faq" class="help-section">
+                        <h2 class="help-section__title">Preguntas Frecuentes (FAQ)</h2>
+                        
+                        <h3 class="help-section__subtitle">¿Cómo recupero mi contraseña?</h3>
+                        <p class="help-section__text">
+                            En la pantalla de login, haz clic en "¿Olvidaste tu contraseña?". Ingresa tu email registrado y recibirás instrucciones para crear una nueva contraseña.
+                        </p>
+
+                        <h3 class="help-section__subtitle">¿Puedo editar un registro después de guardarlo?</h3>
+                        <p class="help-section__text">
+                            Sí, los usuarios administradores pueden editar cualquier registro. Accede al detalle del elemento (máquina, chofer, registro diario) y haz clic en el botón "Editar".
+                        </p>
+
+                        <h3 class="help-section__subtitle">¿Los datos se respaldan automáticamente?</h3>
+                        <p class="help-section__text">
+                            Sí, el sistema realiza respaldos automáticos diarios. Adicionalmente, puedes exportar manualmente toda tu información desde el módulo de Configuración.
+                        </p>
+
+                        <h3 class="help-section__subtitle">¿Puedo usar el sistema desde mi celular?</h3>
+                        <p class="help-section__text">
+                            Sí, la plataforma está optimizada para dispositivos móviles. Los choferes pueden registrar sus reportes diarios directamente desde sus smartphones.
+                        </p>
+
+                        <h3 class="help-section__subtitle">¿Cuántos usuarios puedo crear?</h3>
+                        <p class="help-section__text">
+                            No hay límite. Puedes crear cuentas para todos tus choferes y personal administrativo que requiera acceso al sistema.
+                        </p>
+
+                        <h3 class="help-section__subtitle">¿Qué hago si detecto un error en los datos?</h3>
+                        <p class="help-section__text">
+                            Contacta inmediatamente al soporte técnico a través del email de contacto o el formulario disponible en esta sección. Incluye capturas de pantalla y descripción detallada del problema.
+                        </p>
+
+                        <h3 class="help-section__subtitle">¿Puedo eliminar registros?</h3>
+                        <p class="help-section__text">
+                            Los administradores pueden eliminar registros, pero esta acción es irreversible. El sistema solicitará confirmación antes de proceder. Recomendamos editar en lugar de eliminar siempre que sea posible.
+                        </p>
+
+                        <div class="help-tip">
+                            <span class="help-tip__icon">💡</span>
+                            <span class="help-tip__title">¿Necesitas más ayuda?</span>
+                            <p class="help-tip__text">
+                                Si tienes dudas que no están cubiertas en este manual, no dudes en contactar a nuestro equipo de soporte. Estamos aquí para ayudarte a aprovechar al máximo la plataforma.
+                            </p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Manejo de navegación del menú lateral
+            const menuLinks = document.querySelectorAll('.help-menu__link');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Actualizar estado activo
+                    menuLinks.forEach(l => l.classList.remove('is-active'));
+                    this.classList.add('is-active');
+                    
+                    // Scroll suave a la sección
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        const yOffset = -20;
+                        const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Detectar sección visible al hacer scroll
+            const sections = document.querySelectorAll('.help-section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        menuLinks.forEach(link => {
+                            link.classList.remove('is-active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('is-active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
+

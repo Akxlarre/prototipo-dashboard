@@ -22,6 +22,78 @@
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_badge.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        /* Estilos adicionales para el modal de confirmación de pago */
+        #payment-confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #payment-confirmation-modal.is-active {
+            display: flex !important;
+        }
+        
+        /* Asegurar que el contenido del modal esté centrado y con ancho adecuado */
+        #payment-confirmation-modal .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        #payment-confirmation-modal .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #payment-confirmation-modal .modal-header__title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+        
+        #payment-confirmation-modal .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            line-height: 1;
+            padding: 0.25rem;
+        }
+        
+        #payment-confirmation-modal .modal-close-btn:hover {
+            color: #111827;
+        }
+        
+        #payment-confirmation-modal .modal-body {
+            padding: 1.5rem;
+        }
+        
+        #payment-confirmation-modal .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -76,10 +148,16 @@
                         Configuración
                     </span>
                 </a>
-                <a href="#" class="sidebar__nav-item">
+                <a href="admin-help-center.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-ayuda"></span>
                         Centro de Ayuda
+                    </span>
+                </a>
+                <a href="login.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-logout"></span>
+                        Cerrar Sesión
                     </span>
                 </a>
             </nav>
@@ -188,7 +266,7 @@
                                         <th>Chofer</th>
                                         <th>Total Ganado (RF-022)</th>
                                         <th>Mínimo Garantizado (RF-023)</th>
-                                        <th>Monto Faltante (RF-024)</th>
+                                        <th>Monto a Completar (RF-024)</th>
                                         <th>Pago Final (RF-025)</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -196,7 +274,10 @@
                                 <tbody>
                                     <tr data-driver-id="CH001" data-min-guaranteed="400000">
                                         <td>Juan Pérez</td>
-                                        <td data-total-earned="450000">$ 450.000</td>
+                                        <td data-total-earned="450000">
+                                            <div>$ 450.000</div>
+                                            <div class="form-field__helper-text">Suma de reportes diarios del mes</div>
+                                        </td>
                                         <td>$ 400.000</td>
                                         <td>
                                             <input type="number" class="input-text payroll-missing-amount" value="0" disabled>
@@ -209,7 +290,10 @@
                                     </tr>
                                     <tr data-driver-id="CH002" data-min-guaranteed="400000">
                                         <td>Pedro López</td>
-                                        <td data-total-earned="380000">$ 380.000</td>
+                                        <td data-total-earned="380000">
+                                            <div>$ 380.000</div>
+                                            <div class="form-field__helper-text">Suma de reportes diarios del mes</div>
+                                        </td>
                                         <td>$ 400.000</td>
                                         <td>
                                             <input type="number" class="input-text payroll-missing-amount" value="20000">
@@ -222,7 +306,10 @@
                                     </tr>
                                     <tr data-driver-id="CH003" data-min-guaranteed="400000">
                                         <td>María Gómez</td>
-                                        <td data-total-earned="350000">$ 350.000</td>
+                                        <td data-total-earned="350000">
+                                            <div>$ 350.000</div>
+                                            <div class="form-field__helper-text">Suma de reportes diarios del mes</div>
+                                        </td>
                                         <td>$ 400.000</td>
                                         <td>
                                             <input type="number" class="input-text payroll-missing-amount" value="50000">
@@ -294,6 +381,40 @@
 
             </div>
         </main>
+    </div>
+
+    <!-- Modal de Confirmación de Pago -->
+    <div class="modal-overlay" id="payment-confirmation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-header__title">Confirmar Pago</h2>
+                <button class="modal-close-btn" type="button" id="modal-close-btn" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="form-field__helper-text" style="margin-bottom: var(--space-lg);">
+                    Confirma el pago para <strong id="modal-driver-name"></strong> por un monto de <strong id="modal-payment-amount"></strong>
+                </p>
+                
+                <div class="form-field">
+                    <label for="payment-method" class="form-field__label">Método de Pago *</label>
+                    <select id="payment-method" class="input-text" required>
+                        <option value="">Seleccione un método</option>
+                        <option value="transferencia">Transferencia Bancaria</option>
+                        <option value="efectivo">Efectivo</option>
+                    </select>
+                </div>
+
+                <div class="form-field" id="transfer-code-field" style="display: none;">
+                    <label for="transfer-code" class="form-field__label">Código de Transferencia *</label>
+                    <input type="text" id="transfer-code" class="input-text" placeholder="Ej: TRF-2025-001234">
+                    <span class="form-field__helper-text">Ingrese el código o número de referencia de la transferencia</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" id="modal-cancel-btn">Cancelar</button>
+                <button class="btn btn-primary" type="button" id="modal-confirm-btn" disabled>Confirmar Pago</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -473,39 +594,26 @@
                     return `$ ${numeric.toLocaleString('es-CL')}`;
                 };
 
-                const resolveDriverPercentage = (row) => {
-                    const driverId = row.dataset.driverId;
-                    let value = driverId ? driverSplitMap[driverId] : undefined;
-                    if (value === undefined) {
-                        const driverNameCell = row.querySelector('td');
-                        const driverName = driverNameCell ? driverNameCell.textContent.trim() : '';
-                        value = driverSplitMap[driverName];
-                    }
-                    const numeric = Number(value);
-                    return Number.isFinite(numeric) ? numeric : defaultDriverPercentage;
-                };
-
                 const renderFinalPayment = (row) => {
                     const finalPaymentCell = row.querySelector('.payroll-final-payment');
                     if (!finalPaymentCell) return;
 
                     const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
-                    const percentage = Number(row.dataset.splitPercentage) || defaultDriverPercentage;
                     const totalEarned = Number(row.dataset.totalEarned) || 0;
                     const paymentMode = row.dataset.paymentMode;
                     let totalPayment = Number(row.dataset.calculatedPayment) || 0;
 
-                    if (paymentMode !== 'bonus') {
+                    if (paymentMode !== 'above_minimum') {
                         const basePayment = Number(row.dataset.basePayment) || 0;
                         const missingAmountInput = row.querySelector('.payroll-missing-amount');
                         const missingAmount = Math.max(0, Number(missingAmountInput.value) || 0);
                         totalPayment = basePayment + missingAmount;
                     }
 
-                    const extra = Math.max(totalEarned - minGuaranteed, 0);
-                    const metaText = paymentMode === 'bonus'
-                        ? `${percentage}% sobre excedente (${formatCurrency(extra)}) + mínimo garantizado`
-                        : `${percentage}% aplicado · Mínimo: ${formatCurrency(minGuaranteed)}`;
+                    const excedente = Math.max(totalEarned - minGuaranteed, 0);
+                    const metaText = paymentMode === 'above_minimum'
+                        ? `Supera mínimo en ${formatCurrency(excedente)}`
+                        : `Total ganado + monto a completar hasta mínimo garantizado`;
 
                     finalPaymentCell.innerHTML = `
                         <div>${formatCurrency(totalPayment)}</div>
@@ -519,27 +627,30 @@
                     const totalEarned = parseFloat(row.querySelector('[data-total-earned]').dataset.totalEarned) || 0;
                     const minGuaranteed = parseFloat(row.dataset.minGuaranteed) || 0;
                     const missingAmountInput = row.querySelector('.payroll-missing-amount');
-                    const percentage = resolveDriverPercentage(row);
 
-                    row.dataset.splitPercentage = percentage;
                     row.dataset.totalEarned = totalEarned;
 
-                    const percentagePayment = Math.round((totalEarned * percentage) / 100);
-                    const extra = totalEarned - minGuaranteed;
-                    let calculatedPayment = percentagePayment;
-                    let basePayment = percentagePayment;
+                    let calculatedPayment = 0;
+                    let basePayment = 0;
                     let missingAmount = 0;
-                    let paymentMode = 'topup';
+                    let paymentMode = 'complete_minimum'; // 'complete_minimum' o 'above_minimum'
 
-                    if (extra > 0) {
-                        const bonus = Math.round((extra * percentage) / 100);
-                        calculatedPayment = minGuaranteed + bonus;
-                        paymentMode = 'bonus';
+                    // El Total Ganado YA es la suma de todos los reportes diarios del chofer
+                    // No necesitamos aplicar ningún porcentaje adicional aquí
+                    
+                    if (totalEarned >= minGuaranteed) {
+                        // El chofer ganó igual o más que el mínimo garantizado
+                        calculatedPayment = totalEarned;
+                        paymentMode = 'above_minimum';
                         missingAmount = 0;
-                    } else {
-                        missingAmount = Math.max(minGuaranteed - totalEarned, 0);
-                        calculatedPayment = totalEarned + missingAmount;
                         basePayment = totalEarned;
+                    } else {
+                        // El chofer ganó menos que el mínimo garantizado
+                        // Se debe completar hasta el mínimo
+                        missingAmount = minGuaranteed - totalEarned;
+                        calculatedPayment = minGuaranteed;
+                        basePayment = totalEarned;
+                        paymentMode = 'complete_minimum';
                     }
 
                     row.dataset.basePayment = basePayment;
@@ -593,6 +704,123 @@
                     }
                 };
 
+                // --- Lógica del Modal de Confirmación de Pago ---
+                const modal = document.getElementById('payment-confirmation-modal');
+                const modalClose = document.getElementById('modal-close-btn');
+                const modalCancelBtn = document.getElementById('modal-cancel-btn');
+                const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+                const paymentMethodSelect = document.getElementById('payment-method');
+                const transferCodeField = document.getElementById('transfer-code-field');
+                const transferCodeInput = document.getElementById('transfer-code');
+                const modalDriverName = document.getElementById('modal-driver-name');
+                const modalPaymentAmount = document.getElementById('modal-payment-amount');
+
+                let currentPaymentRow = null;
+
+                const openPaymentModal = (row) => {
+                    if (!modal) {
+                        console.error('Modal no encontrado');
+                        return;
+                    }
+                    currentPaymentRow = row;
+
+                    // Obtener datos del chofer
+                    const driverName = row.querySelector('td:first-child').textContent;
+                    const paymentAmount = row.querySelector('.payroll-final-payment').textContent.split('\n')[0].trim();
+
+                    // Actualizar contenido del modal
+                    if (modalDriverName) modalDriverName.textContent = driverName;
+                    if (modalPaymentAmount) modalPaymentAmount.textContent = paymentAmount;
+
+                    // Resetear formulario
+                    if (paymentMethodSelect) paymentMethodSelect.value = '';
+                    if (transferCodeInput) transferCodeInput.value = '';
+                    if (transferCodeField) transferCodeField.style.display = 'none';
+                    if (modalConfirmBtn) modalConfirmBtn.disabled = true;
+
+                    // Mostrar modal con clase is-active
+                    modal.classList.add('is-active');
+                    document.body.style.overflow = 'hidden';
+                };
+
+                const closePaymentModal = () => {
+                    if (!modal) return;
+                    modal.classList.remove('is-active');
+                    document.body.style.overflow = '';
+                    currentPaymentRow = null;
+                };
+
+                const validateModalForm = () => {
+                    if (!paymentMethodSelect || !modalConfirmBtn) return;
+
+                    const method = paymentMethodSelect.value;
+                    let isValid = method !== '';
+
+                    if (method === 'transferencia' && transferCodeInput) {
+                        isValid = isValid && transferCodeInput.value.trim() !== '';
+                    }
+
+                    modalConfirmBtn.disabled = !isValid;
+                };
+
+                // Eventos del modal
+                if (paymentMethodSelect) {
+                    paymentMethodSelect.addEventListener('change', () => {
+                        const isTransfer = paymentMethodSelect.value === 'transferencia';
+                        if (transferCodeField) {
+                            transferCodeField.style.display = isTransfer ? 'block' : 'none';
+                        }
+                        if (!isTransfer && transferCodeInput) {
+                            transferCodeInput.value = '';
+                        }
+                        validateModalForm();
+                    });
+                }
+
+                if (transferCodeInput) {
+                    transferCodeInput.addEventListener('input', validateModalForm);
+                }
+
+                if (modalClose) {
+                    modalClose.addEventListener('click', closePaymentModal);
+                }
+
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        // Cerrar solo si se hace clic en el overlay (no en el contenido)
+                        if (e.target === modal) {
+                            closePaymentModal();
+                        }
+                    });
+                }
+
+                if (modalCancelBtn) {
+                    modalCancelBtn.addEventListener('click', closePaymentModal);
+                }
+
+                if (modalConfirmBtn) {
+                    modalConfirmBtn.addEventListener('click', () => {
+                        if (!currentPaymentRow) return;
+
+                        const method = paymentMethodSelect ? paymentMethodSelect.value : '';
+                        const transferCode = transferCodeInput ? transferCodeInput.value.trim() : '';
+
+                        // Guardar información del pago en el dataset de la fila
+                        currentPaymentRow.dataset.confirmed = 'true';
+                        currentPaymentRow.dataset.paymentMethod = method === 'transferencia' ? 'Transferencia' : 'Efectivo';
+                        currentPaymentRow.dataset.transferCode = method === 'transferencia' ? transferCode : '-';
+                        currentPaymentRow.dataset.paymentDate = new Date().toISOString();
+
+                        updateConfirmButtonState(currentPaymentRow, false);
+                        checkAllPaymentsConfirmed();
+                        closePaymentModal();
+
+                        // Mensaje de confirmación
+                        const driverName = currentPaymentRow.querySelector('td:first-child').textContent;
+                        alert(`Pago confirmado para ${driverName}\nMétodo: ${currentPaymentRow.dataset.paymentMethod}\nCódigo: ${currentPaymentRow.dataset.transferCode}`);
+                    });
+                }
+
                 const initializeRow = (row) => {
                     row.dataset.confirmed = row.dataset.confirmed || 'false';
                     const missingAmountInput = row.querySelector('.payroll-missing-amount');
@@ -606,10 +834,9 @@
 
                     const confirmBtn = row.querySelector('.payroll-confirm-btn');
                     if (confirmBtn) {
-                        confirmBtn.addEventListener('click', () => {
-                            row.dataset.confirmed = 'true';
-                            updateConfirmButtonState(row, false);
-                            checkAllPaymentsConfirmed();
+                        confirmBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            openPaymentModal(row);
                         });
                     }
 
@@ -694,9 +921,9 @@
                     averagePayment: 416667,
                     status: 'Cerrado',
                     drivers: [
-                        { name: 'Juan Pérez', totalEarned: 450000, minGuaranteed: 400000, finalPayment: 420000, status: 'Pagado' },
-                        { name: 'Pedro López', totalEarned: 380000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
-                        { name: 'María Gómez', totalEarned: 350000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' }
+                        { name: 'Juan Pérez', totalEarned: 450000, minGuaranteed: 400000, finalPayment: 420000, status: 'Pagado', paymentMethod: 'Transferencia', transferCode: 'TRF-2025-10001' },
+                        { name: 'Pedro López', totalEarned: 380000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado', paymentMethod: 'Efectivo', transferCode: '-' },
+                        { name: 'María Gómez', totalEarned: 350000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado', paymentMethod: 'Transferencia', transferCode: 'TRF-2025-10002' }
                     ]
                 },
                 'Septiembre 2025': {
@@ -707,9 +934,9 @@
                     averagePayment: 410000,
                     status: 'Cerrado',
                     drivers: [
-                        { name: 'Juan Pérez', totalEarned: 430000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' },
-                        { name: 'Pedro López', totalEarned: 390000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
-                        { name: 'María Gómez', totalEarned: 360000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' }
+                        { name: 'Juan Pérez', totalEarned: 430000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado', paymentMethod: 'Transferencia', transferCode: 'TRF-2025-09001' },
+                        { name: 'Pedro López', totalEarned: 390000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado', paymentMethod: 'Transferencia', transferCode: 'TRF-2025-09002' },
+                        { name: 'María Gómez', totalEarned: 360000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado', paymentMethod: 'Efectivo', transferCode: '-' }
                     ]
                 }
             };
@@ -758,6 +985,8 @@
                         <td>${formatCurrencyCLP(driver.totalEarned)}</td>
                         <td>${formatCurrencyCLP(driver.minGuaranteed)}</td>
                         <td>${formatCurrencyCLP(driver.finalPayment)}</td>
+                        <td>${driver.paymentMethod || 'N/A'}</td>
+                        <td>${driver.transferCode || '-'}</td>
                         <td>${driver.status}</td>
                     </tr>
                 `).join('');
@@ -772,6 +1001,8 @@
                                     <th>Total Ganado</th>
                                     <th>Mínimo Garantizado</th>
                                     <th>Pago Final</th>
+                                    <th>Método de Pago</th>
+                                    <th>Código/Ref.</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>

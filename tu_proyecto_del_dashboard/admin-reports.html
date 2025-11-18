@@ -76,10 +76,16 @@
                         Configuración
                     </span>
                 </a>
-                <a href="#" class="sidebar__nav-item">
+                <a href="admin-help-center.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-ayuda"></span>
                         Centro de Ayuda
+                    </span>
+                </a>
+                <a href="login.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-logout"></span>
+                        Cerrar Sesión
                     </span>
                 </a>
             </nav>
@@ -97,7 +103,6 @@
                     <div class="tabs-container">
                         <div class="tabs-list" role="tablist">
                             <button class="tab-item is-active" type="button" id="tab-machines-profit" role="tab" aria-controls="panel-machines-profit" aria-selected="true" data-tab-target="machines-profit">Rentabilidad por Máquina</button>
-                            <button class="tab-item" type="button" id="tab-diesel-cost" role="tab" aria-controls="panel-diesel-cost" aria-selected="false" data-tab-target="diesel-cost">Análisis Costo de Diésel</button>
                             <button class="tab-item" type="button" id="tab-revenue-ranking" role="tab" aria-controls="panel-revenue-ranking" aria-selected="false" data-tab-target="revenue-ranking">Ranking de Ingresos (Bruto)</button>
                             <button class="tab-item" type="button" id="tab-driver-profit" role="tab" aria-controls="panel-driver-profit" aria-selected="false" data-tab-target="driver-profit">Rentabilidad por Chofer</button>
                         </div>
@@ -177,72 +182,6 @@
                                         <td>$ 990.000</td>
                                         <td>$ 310.000</td>
                                         <td>$ 2.200.000</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-content" id="panel-diesel-cost" role="tabpanel" aria-labelledby="tab-diesel-cost" data-tab-panel="diesel-cost">
-                        <div class="report-header-row">
-                            <div class="chart-kpi">
-                                <span class="chart-kpi__label">Ratio Costo Diésel Promedio</span>
-                                <span class="chart-kpi__value">28,5%</span>
-                            </div>
-                            <div class="export-group">
-                                <button class="btn btn-secondary export-button" type="button">Exportar</button>
-                                <button class="btn btn-secondary export-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Mostrar opciones de exportación">&#9662;</button>
-                                <ul class="export-menu">
-                                    <li class="export-menu__item" data-format="xlsx">Exportar XLSX</li>
-                                    <li class="export-menu__item" data-format="csv">Exportar CSV</li>
-                                    <li class="export-menu__item" data-format="pdf">Exportar PDF</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <div class="chart-wrapper">
-                                <canvas id="dieselCostChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Máquina</th>
-                                        <th>Ingreso Total ($)</th>
-                                        <th>Costo Diésel ($)</th>
-                                        <th>% Costo Diésel</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Máquina 05</td>
-                                        <td>$ 5.200.000</td>
-                                        <td>$ 1.350.000</td>
-                                        <td>26%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Máquina 03</td>
-                                        <td>$ 3.500.000</td>
-                                        <td>$ 1.430.000</td>
-                                        <td>41%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Máquina 01</td>
-                                        <td>$ 3.950.000</td>
-                                        <td>$ 1.210.000</td>
-                                        <td>31%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Máquina 07</td>
-                                        <td>$ 4.250.000</td>
-                                        <td>$ 1.070.000</td>
-                                        <td>25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Máquina 02</td>
-                                        <td>$ 4.700.000</td>
-                                        <td>$ 1.090.000</td>
-                                        <td>23%</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -423,14 +362,6 @@
                 { machine: 'Máquina 03', net: 2200000 }
             ];
 
-            const dieselCostData = [
-                { machine: 'Máquina 05', ratio: 26 },
-                { machine: 'Máquina 03', ratio: 41 },
-                { machine: 'Máquina 01', ratio: 31 },
-                { machine: 'Máquina 07', ratio: 25 },
-                { machine: 'Máquina 02', ratio: 23 }
-            ];
-
             const revenueRankingData = [
                 { machine: 'Máquina 05', revenue: 7500000 },
                 { machine: 'Máquina 02', revenue: 6900000 },
@@ -480,56 +411,6 @@
                                     }
                                 },
                                 y: {
-                                    ticks: {
-                                        color: chartColors.textPrimary
-                                    },
-                                    grid: {
-                                        display: false
-                                    }
-                                }
-                            }
-                        }
-                    });
-                },
-                'diesel-cost': () => {
-                    const canvas = document.getElementById('dieselCostChart');
-                    if (!canvas) return null;
-
-                    return new Chart(canvas, {
-                        type: 'bar',
-                        data: {
-                            labels: dieselCostData.map(item => item.machine),
-                            datasets: [
-                                {
-                                    data: dieselCostData.map(item => item.ratio),
-                                    backgroundColor: chartColors.warning,
-                                    borderRadius: 8
-                                }
-                            ]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: false },
-                                tooltip: {
-                                    callbacks: {
-                                        label: (context) => `${context.label}: ${formatPercentage(context.raw)}`
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    suggestedMax: 50,
-                                    ticks: {
-                                        callback: (value) => formatPercentage(value),
-                                        color: chartColors.textSecondary
-                                    },
-                                    grid: {
-                                        color: chartColors.grid
-                                    }
-                                },
-                                x: {
                                     ticks: {
                                         color: chartColors.textPrimary
                                     },
