@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -23,11 +23,17 @@
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+                        <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div>
-                <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
             </div>
+
             <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -41,7 +47,7 @@
                         Máquinas
                     </span>
                 </a>
-                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                <a href="admin-drivers-list.html" class="sidebar__nav-item is-active">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-choferes"></span>
                         Choferes
@@ -52,11 +58,7 @@
                         <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                         Contabilidad
                     </span>
-                    <span class="badge badge--icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -72,19 +74,25 @@
                         Configuración
                     </span>
                 </a>
+                <a href="#" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
+                    </span>
+                </a>
             </nav>
         </aside>
 
         <main class="main-content">
             <header class="main-content__header">
                 <h1 class="main-content__title">Detalle del Chofer</h1>
-                <p class="main-content__subtitle">Información completa y gestión del chofer.</p>
+                <p class="main-content__subtitle">Informaci�f³n completa y gesti�f³n del chofer.</p>
             </header>
 
             <div class="main-content__grid" style="grid-template-columns: 1fr;">
                 <div class="card" id="general-info-card">
                     <div class="card__header">
-                        <h2 class="card__header-title">Información General</h2>
+                        <h2 class="card__header-title">Informaci�f³n General</h2>
                         <button class="btn btn-secondary" id="edit-general-info-btn">Editar</button>
                     </div>
                     <div class="card__body">
@@ -92,9 +100,9 @@
                             <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
                                 <img src="https://via.placeholder.com/100x100" alt="Foto del Chofer" style="border-radius: var(--border-radius-md); object-fit: cover; flex-shrink: 0;">
                                 <div style="flex-grow: 1;">
-                                    <h3 style="font-size: var(--font-size-desktop-h2); font-weight: var(--font-weight-bold); margin-bottom: var(--space-xs);" id="driver-name-view">Juan Pérez</h3>
+                                    <h3 style="font-size: var(--font-size-desktop-h2); font-weight: var(--font-weight-bold); margin-bottom: var(--space-xs);" id="driver-name-view">Juan P�f©rez</h3>
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary); margin-bottom: var(--space-xs);">**ID Chofer:** <span id="driver-id-view">CH001</span></p>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Teléfono:** <span id="driver-phone-view">+56 9 1234 5678</span></p>
+                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Tel�f©fono:** <span id="driver-phone-view">+56 9 1234 5678</span></p>
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Correo:** <span id="driver-email-view">juan.perez@dominio.com</span></p>
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**RUT:** <span id="driver-rut-view">12.345.678-9</span></p>
                                     <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Estado:** <span id="driver-status-view">Activo</span></p>
@@ -106,18 +114,18 @@
                             <form id="general-info-form">
                                 <div class="form-field">
                                     <label for="driver-name-input" class="form-field__label">Nombre Completo</label>
-                                    <input type="text" id="driver-name-input" class="input-text" value="Juan Pérez">
+                                    <input type="text" id="driver-name-input" class="input-text" value="Juan P�f©rez">
                                 </div>
                                 <div class="form-field">
                                     <label for="driver-rut-input" class="form-field__label">RUT</label>
                                     <input type="text" id="driver-rut-input" class="input-text" value="12.345.678-9">
                                 </div>
                                 <div class="form-field">
-                                    <label for="driver-phone-input" class="form-field__label">Teléfono</label>
+                                    <label for="driver-phone-input" class="form-field__label">Tel�f©fono</label>
                                     <input type="tel" id="driver-phone-input" class="input-text" value="+56 9 1234 5678">
                                 </div>
                                 <div class="form-field">
-                                    <label for="driver-email-input" class="form-field__label">Correo Electrónico</label>
+                                    <label for="driver-email-input" class="form-field__label">Correo Electr�f³nico</label>
                                     <input type="email" id="driver-email-input" class="input-text" value="juan.perez@dominio.com">
                                 </div>
                                 <div class="form-field">
@@ -135,7 +143,7 @@
                                         <span>%</span>
                                     </div>
                                     <p class="form-field__helper-text">
-                                        Este porcentaje reemplaza el valor por defecto configurado en <strong>Configuración</strong> al calcular la liquidación del chofer.
+                                        Este porcentaje reemplaza el valor por defecto configurado en <strong>Configuraci�f³n</strong> al calcular la liquidaci�f³n del chofer.
                                     </p>
                                 </div>
                             </form>
@@ -160,14 +168,14 @@
                                 <p class="input-text" style="display: block; border: none; background: none; color: var(--color-text-primary);" id="license-expiry-view">2023-11-17</p>
                                 <span class="form-field__error-text" id="license-expiry-alert" style="display: block;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
-                                    La licencia vence en 3 días. ¡Renovar pronto!
+                                    La licencia vence en 3 d�f­as. �,¡Renovar pronto!
                                 </span>
                             </div>
                         </div>
                         <div class="edit-mode" id="license-info-edit" style="display: none;">
                             <form id="license-info-form">
                                 <div class="form-field">
-                                    <label for="license-number-input" class="form-field__label">Número de Licencia</label>
+                                    <label for="license-number-input" class="form-field__label">N�fºmero de Licencia</label>
                                     <input type="text" id="license-number-input" class="input-text" value="12345678-9">
                                 </div>
                                 <div class="form-field">
@@ -370,7 +378,7 @@
                     split: driverSplitInput ? driverSplitInput.value : initialGeneralData.split
                 };
 
-                alert('Información General actualizada (simulado)!');
+                alert('Informaci�f³n General actualizada (simulado)!');
                 toggleGeneralInfoEditMode(false);
             });
 
@@ -443,10 +451,10 @@
                     licenseExpiryAlert.textContent = '';
                     licenseExpiryView.style.color = 'var(--color-text-primary)';
                 } else if (expiryDate < today) {
-                    licenseExpiryAlert.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg> La licencia está vencida.';
+                    licenseExpiryAlert.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg> La licencia est�f¡ vencida.';
                     licenseExpiryView.style.color = 'var(--color-state-error)';
                 } else if (diffDays <= 7) {
-                    licenseExpiryAlert.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg> La licencia vence en ' + diffDays + ' días. ¡Renovar pronto!';
+                    licenseExpiryAlert.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg> La licencia vence en ' + diffDays + ' d�f­as. �,¡Renovar pronto!';
                     licenseExpiryView.style.color = 'var(--color-state-warning)';
                 } else {
                     licenseExpiryAlert.textContent = '';
@@ -461,3 +469,6 @@
     <script src="js/main.js"></script>
 </body>
 </html>
+
+
+

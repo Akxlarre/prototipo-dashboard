@@ -25,11 +25,17 @@
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+                        <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div>
-                <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
             </div>
+
             <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -54,11 +60,7 @@
                         <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                         Contabilidad
                     </span>
-                    <span class="badge badge--icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item is-active">
                     <span class="sidebar__nav-item-content">
@@ -72,6 +74,12 @@
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-configuracion"></span>
                         Configuración
+                    </span>
+                </a>
+                <a href="#" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
                     </span>
                 </a>
             </nav>
@@ -666,3 +674,6 @@
     </script>
 </body>
 </html>
+
+
+

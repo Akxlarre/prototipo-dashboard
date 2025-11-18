@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -75,12 +75,18 @@
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+                        <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div>
-                <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
             </div>
-                        <nav class="sidebar__nav">
+
+            <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-dashboard"></span>
@@ -90,7 +96,7 @@
                 <a href="admin-machines-list.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                        M�quinas
+                        Máquinas
                     </span>
                 </a>
                 <a href="admin-drivers-list.html" class="sidebar__nav-item is-active">
@@ -104,11 +110,7 @@
                         <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                         Contabilidad
                     </span>
-                    <span class="badge badge--icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -121,7 +123,13 @@
                 <a href="admin-settings.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                        Configuraci�n
+                        Configuración
+                    </span>
+                </a>
+                <a href="#" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
                     </span>
                 </a>
             </nav>
@@ -130,7 +138,7 @@
         <main class="main-content">
             <header class="main-content__header">
                 <h1 class="main-content__title">Completar Registro Diario</h1>
-                <p class="main-content__subtitle" id="subtitle-text">Corrija o complete la información del registro diario.</p>
+                <p class="main-content__subtitle" id="subtitle-text">Corrija o complete la informaci�f³n del registro diario.</p>
             </header>
 
             <div id="confirmation-message" class="alert-row" style="display: none; background-color: var(--color-surface-success); margin-bottom: var(--space-lg);">
@@ -141,7 +149,7 @@
             <div id="incidente-alert" class="alert-row" style="display: none; background-color: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--color-state-error); margin-bottom: var(--space-lg);">
                 <div class="alert-row__status-bar" style="background-color: var(--color-state-error);"></div>
                 <span class="alert-row__text" style="font-weight: var(--font-weight-medium);">
-                    ⚠️ <strong>INCIDENTE CRÍTICO REPORTADO:</strong> Este registro contiene un incidente que requiere atención inmediata.
+                    âš ï¸ <strong>INCIDENTE CR�fTICO REPORTADO:</strong> Este registro contiene un incidente que requiere atenci�f³n inmediata.
                 </span>
             </div>
 
@@ -168,14 +176,14 @@
                                 <input type="number" id="revenue-edit" class="input-text" value="450000" style="display: none;">
                             </div>
 
-                            <!-- Diésel -->
+                            <!-- Di�f©sel -->
                             <div class="form-field">
-                                <label for="diesel-quantity" class="form-field__label">Litros de Diésel</label>
+                                <label for="diesel-quantity" class="form-field__label">Litros de Di�f©sel</label>
                                 <p id="diesel-quantity-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
                                 <input type="number" id="diesel-quantity-edit" class="input-text" placeholder="0.00" style="display: none;">
                             </div>
                             <div class="form-field">
-                                <label for="diesel-cost" class="form-field__label">Costo Total Diésel ($)</label>
+                                <label for="diesel-cost" class="form-field__label">Costo Total Di�f©sel ($)</label>
                                 <p id="diesel-cost-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
                                 <input type="number" id="diesel-cost-edit" class="input-text" placeholder="0" style="display: none;">
                             </div>
@@ -183,24 +191,24 @@
 
                         <!-- Comprobante -->
                         <div class="form-field" style="margin-top: var(--space-lg);">
-                            <label class="form-field__label">Comprobante de Diésel</label>
+                            <label class="form-field__label">Comprobante de Di�f©sel</label>
                             <div class="file-upload-area" id="file-upload-area">
                                 <input type="file" id="comprobante-file" accept="image/*" style="display: none;">
                                 <div class="edit-mode-content" style="display: none;">
                                     <p>Haz clic para subir o arrastra una imagen</p>
-                                    <p style="font-size: 0.8rem; color: var(--color-text-disabled);">Formatos: JPG, PNG. Máx. 5MB.</p>
+                                    <p style="font-size: 0.8rem; color: var(--color-text-disabled);">Formatos: JPG, PNG. M�f¡x. 5MB.</p>
                                 </div>
-                                <img id="preview-image" src="https://via.placeholder.com/300x200.png?text=COMPROBANTE+PENDIENTE" alt="Previsualización">
+                                <img id="preview-image" src="https://via.placeholder.com/300x200.png?text=COMPROBANTE+PENDIENTE" alt="Previsualizaci�f³n">
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-xs);">
-                                <p class="form-field__helper-text" id="upload-meta">Subido por Juan Pérez - 2025-11-14 18:30</p>
+                                <p class="form-field__helper-text" id="upload-meta">Subido por Juan P�f©rez - 2025-11-14 18:30</p>
                                 <a href="#" id="download-receipt-btn" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">Descargar Original</a>
                             </div>
                         </div>
 
-                        <!-- Cálculo de Pago (RF-014) -->
+                        <!-- C�f¡lculo de Pago (RF-014) -->
                         <div class="form-field" style="margin-top: var(--space-lg); padding: var(--space-md); background-color: var(--color-surface-page); border-radius: var(--border-radius-md);">
-                            <label class="form-field__label">Cálculo de Pago (Previsualización)</label>
+                            <label class="form-field__label">C�f¡lculo de Pago (Previsualizaci�f³n)</label>
                             <div style="display: flex; align-items: center; gap: var(--space-sm); font-size: 0.9rem;">
                                 <span id="calc-revenue">$ 450.000</span>
                                 <span>(Recaudado)</span>
@@ -210,7 +218,7 @@
                                 <span>=</span>
                                 <strong id="calc-payment" style="font-size: 1rem; color: var(--color-action-primary);">$ 135.000</strong>
                             </div>
-                            <p class="form-field__helper-text" style="margin-top: var(--space-xs);">Este cálculo se actualiza en tiempo real al editar el "Monto Recaudado".</p>
+                            <p class="form-field__helper-text" style="margin-top: var(--space-xs);">Este c�f¡lculo se actualiza en tiempo real al editar el "Monto Recaudado".</p>
                         </div>
 
                         <!-- Observaciones -->
@@ -222,7 +230,7 @@
 
                          <div class="form-field" style="margin-top: var(--space-lg);">
                             <label class="form-field__label">Historial de Cambios (RF-011)</label>
-                            <p class="form-field__helper-text">v1: Creado por Juan Pérez (Chofer) - 2025-11-14 18:30</p>
+                            <p class="form-field__helper-text">v1: Creado por Juan P�f©rez (Chofer) - 2025-11-14 18:30</p>
                             <p class="form-field__helper-text">v2: Modificado por Administrador - 2025-11-15 10:00</p>
                         </div>
                     </div>
@@ -233,12 +241,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Función para obtener parámetros de URL
+            // Funci�f³n para obtener par�f¡metros de URL
             const getUrlParams = () => {
                 const params = new URLSearchParams(window.location.search);
                 return {
                     maquina: params.get('maquina') || '05',
-                    chofer: params.get('chofer') || 'Juan Pérez',
+                    chofer: params.get('chofer') || 'Juan P�f©rez',
                     fecha: params.get('fecha') || '2025-11-14',
                     estado: params.get('estado') || 'pending-diesel'
                 };
@@ -281,7 +289,7 @@
             const fileInput = document.getElementById('comprobante-file');
             const previewImage = document.getElementById('preview-image');
 
-            // Datos de ejemplo según el estado del registro
+            // Datos de ejemplo seg�fºn el estado del registro
             const getRecordData = (estado, maquina) => {
                 const baseData = {
                     'initial-km': '125000',
@@ -301,18 +309,18 @@
                         'final-km': '125450',
                         'diesel-quantity': '120.5',
                         'diesel-cost': '85000',
-                        'observaciones': 'Día normal de operación. Todo en orden.',
+                        'observaciones': 'D�f­a normal de operaci�f³n. Todo en orden.',
                         hasComprobante: true
                     };
                 } else if (estado === 'incidente') {
-                    // Registros con incidente crítico
+                    // Registros con incidente cr�f­tico
                     return {
                         'initial-km': '125000',
                         'revenue': '410000',
                         'final-km': '125380',
                         'diesel-quantity': '95.0',
                         'diesel-cost': '67000',
-                        'observaciones': 'Choque menor en intersección. Daños en parachoques delantero. Pasajeros ilesos.',
+                        'observaciones': 'Choque menor en intersecci�f³n. Da�f±os en parachoques delantero. Pasajeros ilesos.',
                         hasComprobante: true
                     };
                 } else {
@@ -322,7 +330,7 @@
                             ...baseData,
                             'revenue': maquina === '05' ? '450000' : baseData['revenue'],
                             'final-km': maquina === '05' ? '125450' : '',
-                            'observaciones': maquina === '05' ? 'Máquina en pana, no hubo recorrido completo.' : ''
+                            'observaciones': maquina === '05' ? 'M�f¡quina en pana, no hubo recorrido completo.' : ''
                         };
                     } else if (estado === 'pending-trabajador') {
                         return {
@@ -331,7 +339,7 @@
                             'final-km': maquina === '02' ? '125200' : '',
                             'diesel-quantity': maquina === '02' ? '80.0' : '',
                             'diesel-cost': maquina === '02' ? '56000' : '',
-                            'observaciones': maquina === '02' ? 'Se derramó combustible en la estación de servicio.' : ''
+                            'observaciones': maquina === '02' ? 'Se derram�f³ combustible en la estaci�f³n de servicio.' : ''
                         };
                     }
                 }
@@ -349,9 +357,9 @@
                 'observaciones': { view: 'observaciones-view', edit: 'observaciones-edit', value: recordData['observaciones'] }
             };
 
-            // Actualizar título y subtítulo según parámetros
+            // Actualizar t�f­tulo y subt�f­tulo seg�fºn par�f¡metros
             recordDateTitle.textContent = `Registro del ${urlParams.fecha}`;
-            subtitleText.textContent = `Corrija o complete la información del registro diario para la Máquina ${urlParams.maquina}.`;
+            subtitleText.textContent = `Corrija o complete la informaci�f³n del registro diario para la M�f¡quina ${urlParams.maquina}.`;
 
             // Mostrar alerta de incidente si aplica
             const incidenteAlert = document.getElementById('incidente-alert');
@@ -359,7 +367,7 @@
                 incidenteAlert.style.display = 'flex';
             }
 
-            // Determinar modo inicial según el estado
+            // Determinar modo inicial seg�fºn el estado
             const initialMode = (normalizedEstado === 'complete') ? 'view' : 'edit';
 
             function setMode(mode) {
@@ -423,7 +431,7 @@
                 }
             }
 
-            // Cambiar texto del botón según el estado
+            // Cambiar texto del bot�f³n seg�fºn el estado
             if (normalizedEstado === 'complete') {
                 editButton.textContent = 'Editar Registro';
             } else if (normalizedEstado === 'incidente') {
@@ -479,10 +487,13 @@
                 }
             });
 
-            // Initial state según parámetros de URL
+            // Initial state seg�fºn par�f¡metros de URL
             setMode(initialMode);
         });
     </script>
 </body>
 </html>
+
+
+
 

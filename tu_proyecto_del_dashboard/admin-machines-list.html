@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador - Lista de Máquinas</title>
+    <title>Administrador - Lista de M�f¡quinas</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -352,22 +352,28 @@
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+                        <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div>
-                <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
             </div>
-                        <nav class="sidebar__nav">
+
+            <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-dashboard"></span>
                         Dashboard
                     </span>
                 </a>
-                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                <a href="admin-machines-list.html" class="sidebar__nav-item is-active">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                        M�quinas
+                        Máquinas
                     </span>
                 </a>
                 <a href="admin-drivers-list.html" class="sidebar__nav-item">
@@ -381,11 +387,7 @@
                         <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                         Contabilidad
                     </span>
-                    <span class="badge badge--icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -398,7 +400,13 @@
                 <a href="admin-settings.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                        Configuraci�n
+                        Configuración
+                    </span>
+                </a>
+                <a href="#" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
                     </span>
                 </a>
             </nav>
@@ -407,12 +415,12 @@
         <main class="main-content">
             <header class="main-content__header">
                 <div>
-                    <h1 class="main-content__title">Lista de Máquinas (Microbuses)</h1>
-                    <p class="main-content__subtitle">Gestiona todas las máquinas registradas en el sistema.</p>
+                    <h1 class="main-content__title">Lista de M�f¡quinas (Microbuses)</h1>
+                    <p class="main-content__subtitle">Gestiona todas las m�f¡quinas registradas en el sistema.</p>
                 </div>
                 <a href="admin-machine-create.html" class="btn btn-primary">
                     <span class="icon-plus"></span>
-                    Registrar Nueva Máquina
+                    Registrar Nueva M�f¡quina
                 </a>
             </header>
 
@@ -422,7 +430,7 @@
                     <div class="card__body">
                         <div style="text-align: center;">
                             <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-success); margin-bottom: var(--space-xs);" id="kpi-operativas">3</div>
-                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Máquinas Operativas</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">M�f¡quinas Operativas</div>
                         </div>
                     </div>
                 </div>
@@ -452,17 +460,17 @@
                 </div>
             </div>
 
-            <!-- Lista de Máquinas adaptable -->
+            <!-- Lista de M�f¡quinas adaptable -->
             <div class="machines-layout-grid">
                 <div class="card">
                     <div class="card__header machines-toolbar">
                         <div>
-                            <h2 class="card__header-title">Máquinas Registradas</h2>
-                            <p class="dashboard-section-subtitle">Escoge cómo visualizar según la tarea: tarjetas para escanear riesgos, tabla para listados extensos.</p>
+                            <h2 class="card__header-title">M�f¡quinas Registradas</h2>
+                            <p class="dashboard-section-subtitle">Escoge c�f³mo visualizar seg�fºn la tarea: tarjetas para escanear riesgos, tabla para listados extensos.</p>
                         </div>
                         <div class="machines-toolbar__meta">
-                            <span class="results-pill" id="machine-results-count">0 máquinas</span>
-                            <div class="machine-view-toggle" role="group" aria-label="Cambiar vista de máquinas">
+                            <span class="results-pill" id="machine-results-count">0 m�f¡quinas</span>
+                            <div class="machine-view-toggle" role="group" aria-label="Cambiar vista de m�f¡quinas">
                                 <button type="button" class="is-active" data-view-mode="cards">Tarjetas</button>
                                 <button type="button" data-view-mode="table">Tabla</button>
                             </div>
@@ -479,7 +487,7 @@
                                 <table class="data-table">
                                     <thead>
                                         <tr>
-                                            <th>Nº Máquina</th>
+                                            <th>N�,º M�f¡quina</th>
                                             <th>Chofer Asignado</th>
                                             <th>Estado Operativo</th>
                                             <th>Estado de Documentos</th>
@@ -487,7 +495,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="machines-table-body">
-                                        <!-- Las filas se generarán dinámicamente con JavaScript -->
+                                        <!-- Las filas se generar�f¡n din�f¡micamente con JavaScript -->
                                     </tbody>
                                 </table>
                             </div>
@@ -497,7 +505,7 @@
                 <aside class="card machines-sidebar-card">
                     <div class="card__body">
                         <section>
-                            <h3>Filtro rápido</h3>
+                            <h3>Filtro r�f¡pido</h3>
                             <div class="chip-group" id="status-filter-group">
                                 <button class="chip is-active" data-status-filter="all">Todas</button>
                                 <button class="chip" data-status-filter="Operativa">Operativas</button>
@@ -511,7 +519,7 @@
                                 <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Sin datos</li>
                             </ul>
                         </section>
-                        <p class="sidebar-note">Los filtros afectan ambas vistas y los conteos de documentos se recalculan automáticamente.</p>
+                        <p class="sidebar-note">Los filtros afectan ambas vistas y los conteos de documentos se recalculan autom�f¡ticamente.</p>
                     </div>
                 </aside>
             </div>
@@ -523,18 +531,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // ============================================
-            // DATOS DE MÁQUINAS (Fuente de Verdad)
+            // DATOS DE M�fQUINAS (Fuente de Verdad)
             // ============================================
             const machinesData = [
                 {
                     number: '05',
                     brand: 'Mercedes-Benz',
                     plate: 'ABCD-12',
-                    driver: 'Juan Pérez',
+                    driver: 'Juan P�f©rez',
                     status: 'Operativa',
                     documents: {
                         revision: '2023-11-20', // Vencida
-                        permit: '2024-03-31',   // Al día
+                        permit: '2024-03-31',   // Al d�f­a
                         insurance: '2024-01-15' // Vence pronto
                     }
                 },
@@ -542,7 +550,7 @@
                     number: '02',
                     brand: 'Caio',
                     plate: 'EFGH-34',
-                    driver: 'María Gómez',
+                    driver: 'Mar�f­a G�f³mez',
                     status: 'Operativa',
                     documents: {
                         revision: '2024-12-31',
@@ -554,7 +562,7 @@
                     number: '07',
                     brand: 'Mercedes-Benz',
                     plate: 'IJKL-56',
-                    driver: 'Pedro López',
+                    driver: 'Pedro L�f³pez',
                     status: 'En Taller',
                     documents: {
                         revision: '2024-11-30',
@@ -598,15 +606,15 @@
                 const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
                 
                 if (Number.isNaN(diffDays)) {
-                    return { text: 'Fecha inválida', className: 'status-pill--error', severity: 'error' };
+                    return { text: 'Fecha inv�f¡lida', className: 'status-pill--error', severity: 'error' };
                 }
                 if (diffDays < 0) {
                     return { text: 'VENCIDA', className: 'status-pill--error', severity: 'error' };
                 }
                 if (diffDays <= 10) {
-                    return { text: `Vence en ${diffDays} días`, className: 'status-pill--warning', severity: 'warning' };
+                    return { text: `Vence en ${diffDays} d�f­as`, className: 'status-pill--warning', severity: 'warning' };
                 }
-                return { text: 'Al día', className: 'status-pill--ok', severity: 'ok' };
+                return { text: 'Al d�f­a', className: 'status-pill--ok', severity: 'ok' };
             };
             
             const getStatusPillClass = (status) => {
@@ -620,7 +628,7 @@
 
             const buildDocIndicators = (documents = {}) => {
                 const config = [
-                    { key: 'revision', label: 'Rev. Téc.' },
+                    { key: 'revision', label: 'Rev. T�f©c.' },
                     { key: 'permit', label: 'Permiso' },
                     { key: 'insurance', label: 'Seguro' }
                 ];
@@ -643,7 +651,7 @@
             };
             
             // ============================================
-            // RENDERIZAR TABLA Y TARJETAS DE MÁQUINAS
+            // RENDERIZAR TABLA Y TARJETAS DE M�fQUINAS
             // ============================================
             const renderMachineTable = (dataset = getFilteredMachines()) => {
                 const tableBody = document.getElementById('machines-table-body');
@@ -659,10 +667,10 @@
                                 <span class="sidebar__nav-item-icon icon-maquinas" style="width: 48px; height: 48px; display: inline-block;"></span>
                             </div>
                             <h3 style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-semi-bold); color: var(--color-text-primary); margin-bottom: var(--space-xs);">
-                                No hay máquinas coincidentes
+                                No hay m�f¡quinas coincidentes
                             </h3>
                             <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">
-                                Ajusta los filtros o registra una nueva máquina.
+                                Ajusta los filtros o registra una nueva m�f¡quina.
                             </p>
                         </td>
                     `;
@@ -673,7 +681,7 @@
                 dataset.forEach(machine => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td data-label="Máquina"><strong>${machine.number}</strong> (${machine.brand})</td>
+                        <td data-label="M�f¡quina"><strong>${machine.number}</strong> (${machine.brand})</td>
                         <td data-label="Chofer">${machine.driver}</td>
                         <td data-label="Estado Operativo">
                             <span class="status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
@@ -696,8 +704,8 @@
                 if (!dataset.length) {
                     cardsGrid.innerHTML = `
                         <div class="empty-state">
-                            <p style="font-weight: var(--font-weight-semi-bold);">No hay máquinas disponibles</p>
-                            <p style="color: var(--color-text-secondary);">Relaja los filtros para ver más resultados.</p>
+                            <p style="font-weight: var(--font-weight-semi-bold);">No hay m�f¡quinas disponibles</p>
+                            <p style="color: var(--color-text-secondary);">Relaja los filtros para ver m�f¡s resultados.</p>
                         </div>
                     `;
                     return;
@@ -709,8 +717,8 @@
                     card.innerHTML = `
                         <div class="machine-card__header">
                             <div class="machine-card__meta">
-                                <span style="text-transform: uppercase; font-size: 0.75rem; color: var(--color-text-secondary);">Máquina</span>
-                                <strong style="font-size: 1.25rem;">${machine.number} · ${machine.brand}</strong>
+                                <span style="text-transform: uppercase; font-size: 0.75rem; color: var(--color-text-secondary);">M�f¡quina</span>
+                                <strong style="font-size: 1.25rem;">${machine.number} �,· ${machine.brand}</strong>
                                 <small>Patente ${machine.plate}</small>
                             </div>
                             <span class="status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
@@ -721,7 +729,7 @@
                                 <p style="margin: 0; font-weight: var(--font-weight-medium);">${machine.driver}</p>
                             </div>
                             <div>
-                                <span class="form-field__label">Documentación</span>
+                                <span class="form-field__label">Documentaci�f³n</span>
                                 ${buildDocIndicators(machine.documents)}
                             </div>
                         </div>
@@ -735,7 +743,7 @@
 
             const updateResultsCount = (count) => {
                 if (!machineResultsCount) return;
-                const label = count === 1 ? 'máquina' : 'máquinas';
+                const label = count === 1 ? 'm�f¡quina' : 'm�f¡quinas';
                 machineResultsCount.textContent = `${count} ${label}`;
             };
 
@@ -757,7 +765,7 @@
                 docAlertsList.innerHTML = `
                     <li><span class="doc-alert-dot doc-alert-dot--error"></span>Vencidos: <strong>${stats.error}</strong></li>
                     <li><span class="doc-alert-dot doc-alert-dot--warning"></span>Por vencer: <strong>${stats.warning}</strong></li>
-                    <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Al día: <strong>${stats.ok}</strong></li>
+                    <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Al d�f­a: <strong>${stats.ok}</strong></li>
                 `;
             };
 
@@ -868,4 +876,7 @@
     </script>
 </body>
 </html>
+
+
+
 

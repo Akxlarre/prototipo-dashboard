@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador - Detalle de Máquina</title>
+    <title>Administrador - Detalle de MÃ¡quina</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,12 +150,18 @@
 </head>
 <body>
     <div class="dashboard-layout">
-        <aside class="sidebar">
+                        <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div>
-                <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
             </div>
-                        <nav class="sidebar__nav">
+
+            <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-dashboard"></span>
@@ -165,7 +171,7 @@
                 <a href="admin-machines-list.html" class="sidebar__nav-item is-active">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                        Máquinas
+                        MÃ¡quinas
                     </span>
                 </a>
                 <a href="admin-drivers-list.html" class="sidebar__nav-item">
@@ -179,11 +185,7 @@
                         <span class="sidebar__nav-item-icon icon-contabilidad"></span>
                         Contabilidad
                     </span>
-                    <span class="badge badge--icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -196,7 +198,13 @@
                 <a href="admin-settings.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                        Configuración
+                        ConfiguraciÃ³n
+                    </span>
+                </a>
+                <a href="#" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
                     </span>
                 </a>
             </nav>
@@ -212,12 +220,12 @@
             </header>
 
             <div class="main-content__grid" style="grid-template-columns: 1fr;">
-                <!-- Card Principal con Pestañas -->
+                <!-- Card Principal con PestaÃ±as -->
                 <div class="card" id="machine-detail-card">
                     <div class="card__body">
                         <div class="section-switcher" role="navigation" aria-label="Secciones del detalle">
                             <button class="section-switcher__button is-active" type="button" data-target="section-info">
-                                Información General
+                                InformaciÃ³n General
                             </button>
                             <button class="section-switcher__button" type="button" data-target="section-records">
                                 Registros Diarios
@@ -227,63 +235,63 @@
                             </button>
                         </div>
                         
-                        <!-- SECCIÓN 1: Información General (combina Info General + Documentación) -->
-                        <section class="detail-section" id="section-info" aria-label="Información General">
-                <!-- Información General -->
+                        <!-- SECCIÃ“N 1: InformaciÃ³n General (combina Info General + DocumentaciÃ³n) -->
+                        <section class="detail-section" id="section-info" aria-label="InformaciÃ³n General">
+                <!-- InformaciÃ³n General -->
                             <div class="card" id="general-info-card" style="border: none; box-shadow: none; margin-bottom: var(--space-xl);">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light); display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); flex-wrap: wrap;">
-                        <h2 class="card__header-title">Información General</h2>
+                        <h2 class="card__header-title">InformaciÃ³n General</h2>
                                     <div style="display: flex; gap: var(--space-sm);">
                                         <button class="btn btn-secondary btn-sm" id="cancel-general-btn" style="display: none;">Cancelar</button>
                                         <button class="btn btn-primary btn-sm" id="save-general-btn" style="display: none;">Guardar</button>
                                         <button class="btn btn-primary btn-sm" id="edit-general-btn">Editar</button>
                                         <button class="btn btn-secondary btn-sm" id="delete-machine-btn" style="background-color: var(--color-state-error); border-color: var(--color-state-error);">
-                                            Eliminar Máquina
+                                            Eliminar MÃ¡quina
                                     </div>
                     </div>
                     <div class="card__body">
                         <div class="view-mode" id="general-info-view">
                             <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
-                                <img src="https://via.placeholder.com/140x100" alt="Foto de la Máquina" style="border-radius: var(--border-radius-md); object-fit: cover; flex-shrink: 0;">
+                                <img src="https://via.placeholder.com/140x100" alt="Foto de la MÃ¡quina" style="border-radius: var(--border-radius-md); object-fit: cover; flex-shrink: 0;">
                                 <div style="flex-grow: 1;">
-                                    <p><strong>Número:</strong> <span id="machine-number-view">05</span></p>
+                                    <p><strong>NÃºmero:</strong> <span id="machine-number-view">05</span></p>
                                     <p><strong>Marca:</strong> <span id="machine-brand-view">Mercedes-Benz</span></p>
                                     <p><strong>Patente:</strong> <span id="machine-plate-view">ABCD-12</span></p>
-                                    <p><strong>Año:</strong> <span id="machine-year-view">2018</span></p>
+                                    <p><strong>AÃ±o:</strong> <span id="machine-year-view">2018</span></p>
                                     <p><strong>Estado Operativo:</strong> <span id="machine-status-view">Operativa</span></p>
-                                    <p><strong>Chofer Asignado:</strong> <span id="machine-driver-view">Juan Pérez</span></p>
+                                    <p><strong>Chofer Asignado:</strong> <span id="machine-driver-view">Juan PÃ©rez</span></p>
                                 </div>
                             </div>
                         </div>
                         <div class="edit-mode" id="general-info-edit">
                             <div id="machine-form-container-edit">
-                                <!-- El formulario se renderizará aquí dinámicamente usando machine-form.js -->
+                                <!-- El formulario se renderizarÃ¡ aquÃ­ dinÃ¡micamente usando machine-form.js -->
                                 </div>
                                 </div>
                     </div>
                 </div>
 
-                            <!-- Documentación (dentro de la misma pestaña) -->
+                            <!-- DocumentaciÃ³n (dentro de la misma pestaÃ±a) -->
                             <div class="card" id="documentation-card" style="border: none; box-shadow: none;">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
                         <div>
-                            <h2 class="card__header-title">Documentación Obligatoria</h2>
+                            <h2 class="card__header-title">DocumentaciÃ³n Obligatoria</h2>
                             <p class="dashboard-section-subtitle">
-                                Control de fechas de Revisión Técnica, Permiso de Circulación y Seguro (RF-031).
+                                Control de fechas de RevisiÃ³n TÃ©cnica, Permiso de CirculaciÃ³n y Seguro (RF-031).
                             </p>
                         </div>
                     </div>
                     <div class="card__body">
                         <div class="view-mode" id="documentation-view">
                             <div class="form-field">
-                                <label class="form-field__label">Revisión Técnica</label>
+                                <label class="form-field__label">RevisiÃ³n TÃ©cnica</label>
                                 <p><span id="rev-date-view">2023-11-20</span></p>
-                                            <span class="status-pill status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
+                                            <span class="status-pill status-pill--warning" id="rev-status-pill">Vence en 6 dÃ­as</span>
                             </div>
                             <div class="form-field">
-                                <label class="form-field__label">Permiso de Circulación</label>
+                                <label class="form-field__label">Permiso de CirculaciÃ³n</label>
                                 <p><span id="permit-date-view">2024-03-31</span></p>
-                                            <span class="status-pill status-pill--ok" id="permit-status-pill">Al día</span>
+                                            <span class="status-pill status-pill--ok" id="permit-status-pill">Al dÃ­a</span>
                             </div>
                             <div class="form-field">
                                 <label class="form-field__label">Seguro Obligatorio</label>
@@ -294,11 +302,11 @@
                                     <div class="edit-mode" id="documentation-edit">
                             <form id="documentation-form">
                                 <div class="form-field">
-                                    <label for="rev-date-input" class="form-field__label">Revisión Técnica</label>
+                                    <label for="rev-date-input" class="form-field__label">RevisiÃ³n TÃ©cnica</label>
                                     <input type="date" id="rev-date-input" class="input-text" value="2023-11-20">
                                 </div>
                                 <div class="form-field">
-                                    <label for="permit-date-input" class="form-field__label">Permiso de Circulación</label>
+                                    <label for="permit-date-input" class="form-field__label">Permiso de CirculaciÃ³n</label>
                                     <input type="date" id="permit-date-input" class="input-text" value="2024-03-31">
                                 </div>
                                 <div class="form-field">
@@ -307,7 +315,7 @@
                                 </div>
                             </form>
                             <p class="form-field__helper-text" style="margin-top: var(--space-md);">
-                                El umbral de alerta para vencimientos está configurado en <strong id="alert-threshold-info">10 días</strong> (configurable en <a href="admin-settings.html">Ajustes</a>).
+                                El umbral de alerta para vencimientos estÃ¡ configurado en <strong id="alert-threshold-info">10 dÃ­as</strong> (configurable en <a href="admin-settings.html">Ajustes</a>).
                             </p>
                         </div>
                     </div>
@@ -315,13 +323,13 @@
                 </div>
                         </section>
 
-                        <!-- SECCIÓN 2: Registros Diarios -->
+                        <!-- SECCIÃ“N 2: Registros Diarios -->
                         <section class="detail-section" id="section-records" aria-label="Registros Diarios">
                             <div class="card" id="daily-records-section" style="border: none; box-shadow: none;">
                     <div class="card__header">
                         <div>
                             <h2 class="card__header-title">Historial de Registros Diarios</h2>
-                            <p class="dashboard-section-subtitle">Últimos registros, estado de cierre y KPIs por jornada.</p>
+                            <p class="dashboard-section-subtitle">Ãšltimos registros, estado de cierre y KPIs por jornada.</p>
                         </div>
                         <a href="admin-registro-diario.html?mode=view" class="card__header-action">
                             Abrir Registro Diario
@@ -355,8 +363,8 @@
                             <div class="form-field" style="min-width: 150px;">
                                 <label class="form-field__label" for="filter-sort-order">Orden</label>
                                 <select id="filter-sort-order" class="input-text">
-                                    <option value="desc">Más reciente</option>
-                                    <option value="asc">Más antiguo</option>
+                                    <option value="desc">MÃ¡s reciente</option>
+                                    <option value="asc">MÃ¡s antiguo</option>
                                 </select>
                             </div>
                             <div style="display: flex; align-items: flex-end;">
@@ -371,7 +379,7 @@
                                         <th>Chofer</th>
                                         <th>Estado</th>
                                         <th>Recaudado</th>
-                                        <th>Diésel</th>
+                                        <th>DiÃ©sel</th>
                                         <th title="Observaciones" style="text-align: center; width: 40px;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="opacity: 0.6;">
                                                 <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
@@ -394,14 +402,14 @@
                         </div>
                         </section>
                         
-                        <!-- SECCIÓN 3: Historial de Asignaciones -->
+                        <!-- SECCIÃ“N 3: Historial de Asignaciones -->
                         <section class="detail-section" id="section-assignments" aria-label="Historial de Asignaciones">
                             <div class="card" id="assignment-card" style="border: none; box-shadow: none;">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
                                     <div>
                                         <h2 class="card__header-title">Historial de Asignaciones</h2>
                                         <p class="dashboard-section-subtitle">
-                                            Controla el chofer activo, registra reasignaciones y mantén trazabilidad por máquina.
+                                            Controla el chofer activo, registra reasignaciones y mantÃ©n trazabilidad por mÃ¡quina.
                                         </p>
                                     </div>
                                 </div>
@@ -412,7 +420,7 @@
                                                 <div>
                                                     <h3 style="margin: 0;">Historial completo</h3>
                                                     <p class="dashboard-section-subtitle" style="margin-top: var(--space-xxs);">
-                                                        Incluye la asignación activa y las anteriores.
+                                                        Incluye la asignaciÃ³n activa y las anteriores.
                                                     </p> 
                                             </div>
                                                 <div class="assignment-history-filters" role="group" aria-label="Filtrar historial">
@@ -422,7 +430,7 @@
                                         </div>
                                     </div>
                                             <div id="assignment-history-empty" class="assignment-history-empty">
-                                                No hay asignaciones registradas aún.
+                                                No hay asignaciones registradas aÃºn.
                                             </div>
                                             <div id="assignment-history-list" class="assignment-history-list"></div>
                                         </section>
@@ -444,4 +452,7 @@
 
 </body>
 </html>
+
+
+
 

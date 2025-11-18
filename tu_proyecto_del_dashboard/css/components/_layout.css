@@ -27,8 +27,14 @@
 .sidebar__header {
     display: flex;
     align-items: center;
-    gap: var(--space-md); /* 16px entre logo y texto */
+    justify-content: space-between;
     padding: 0 var(--space-sm); /* 12px de padding lateral interno */
+}
+
+.sidebar__header-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md); /* 16px entre logo y texto */
 }
 
 .sidebar__logo {
@@ -46,10 +52,24 @@
     color: var(--color-action-text-light); /* Blanco */
 }
 
+.sidebar__header-chevron {
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-disabled);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.sidebar__header-chevron:hover {
+    color: var(--color-action-text-light);
+}
+
 .sidebar__nav {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs); /* 8px entre Ã­tems de navegaciÃ³n */
+    gap: var(--space-xs); /* 8px entre ítems de navegación */
+    flex-grow: 1;
 }
 
 .sidebar__nav-item {
@@ -66,7 +86,7 @@
 }
 
 .sidebar__nav-item:hover {
-    background-color: var(--color-text-primary); /* Gris-800 mÃ¡s oscuro (o un matiz) */
+    background-color: rgba(255, 255, 255, 0.05);
     color: var(--color-action-text-light); /* Blanco */
 }
 
@@ -128,3 +148,4 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas responsivas */
     gap: var(--space-xl); /* 24px de espacio entre widgets */
 }
+
