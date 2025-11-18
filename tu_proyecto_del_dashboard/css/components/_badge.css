@@ -1,0 +1,39 @@
+﻿/* ==================================== */
+/* _badge.css - Átomo: Badge (Insignia) */
+/* ==================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--space-xs); /* 0 8px */
+    border-radius: 999px; /* Forma de píldora */
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-desktop-small); /* 12px */
+    line-height: var(--line-height-desktop-small);
+    height: 20px; /* Altura fija */
+    min-width: 20px; /* Ancho mínimo para insignias de solo número */
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+/* Modificador: Insignia de Texto (ej. "NUEVO") */
+.badge--text {
+    background-color: var(--color-state-success); /* Verde */
+    color: var(--color-action-text-light); /* Blanco */
+}
+
+/* Modificador: Insignia de Icono (ej. "✓") */
+.badge--icon {
+    background-color: transparent;
+    color: var(--color-state-success); /* Verde */
+    padding: 0;
+    width: 20px;
+    height: 20px;
+}
+
+.badge--icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}

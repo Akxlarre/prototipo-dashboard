@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
+    <link rel="stylesheet" href="css/components/_badge.css">
     <style>
         .machines-layout-grid {
             display: grid;
@@ -356,31 +357,49 @@
                 <div class="sidebar__logo"></div>
                 <span class="sidebar__app-name">Nombre de la App</span>
             </div>
-            <nav class="sidebar__nav">
+                        <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
-                    Dashboard
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                        Dashboard
+                    </span>
                 </a>
                 <a href="admin-machines-list.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                    MÃ¡quinas
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                        Máquinas
+                    </span>
                 </a>
                 <a href="admin-drivers-list.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-choferes"></span>
-                    Choferes
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-choferes"></span>
+                        Choferes
+                    </span>
                 </a>
                 <a href="admin-accounting.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
-                    Contabilidad
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                        Contabilidad
+                    </span>
+                    <span class="badge badge--icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-reportes"></span>
-                    Reportes
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-reportes"></span>
+                        Reportes
+                    </span>
+                    <span class="badge badge--text">3</span>
                 </a>
                 <div class="sidebar__nav-separator"></div>
                 <a href="admin-settings.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                    ConfiguraciÃ³n
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                        Configuración
+                    </span>
                 </a>
             </nav>
         </aside>
@@ -849,3 +868,4 @@
     </script>
 </body>
 </html>
+

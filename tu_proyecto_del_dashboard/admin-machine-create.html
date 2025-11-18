@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador - Registrar MÃ¡quina</title>
+    <title>Administrador - Registrar Máquina</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/components/_forms.css">
     <link rel="stylesheet" href="css/components/_cards.css">
     <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_badge.css">
     <link rel="stylesheet" href="css/components/_modal.css">
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
@@ -77,7 +78,7 @@
         }
 
         .progress-chip.is-complete::after {
-            content: 'âœ”';
+            content: '?';
             position: absolute;
             left: 0.4rem;
             top: 0.05rem;
@@ -158,46 +159,64 @@
                 <div class="sidebar__logo"></div>
                 <span class="sidebar__app-name">Nombre de la App</span>
             </div>
-            <nav class="sidebar__nav">
-                <a href="admin-dashboard.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
-                    Dashboard
-                </a>
-                <a href="admin-machines-list.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                    MÃ¡quinas
-                </a>
-                <a href="admin-drivers-list.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-choferes"></span>
-                    Choferes
-                </a>
-                <a href="admin-accounting.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
-                    Contabilidad
-                </a>
-                <a href="admin-reports.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-reportes"></span>
-                    Reportes
-                </a>
-                <div class="sidebar__nav-separator"></div>
-                <a href="admin-settings.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                    ConfiguraciÃ³n
-                </a>
-            </nav>
+                            <nav class="sidebar__nav">
+                    <a href="admin-dashboard.html" class="sidebar__nav-item">
+                        <span class="sidebar__nav-item-content">
+                            <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                            Dashboard
+                        </span>
+                    </a>
+                    <a href="admin-machines-list.html" class="sidebar__nav-item">
+                        <span class="sidebar__nav-item-content">
+                            <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                            Máquinas
+                        </span>
+                    </a>
+                    <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                        <span class="sidebar__nav-item-content">
+                            <span class="sidebar__nav-item-icon icon-choferes"></span>
+                            Choferes
+                        </span>
+                    </a>
+                    <a href="admin-accounting.html" class="sidebar__nav-item">
+                        <span class="sidebar__nav-item-content">
+                            <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                            Contabilidad
+                        </span>
+                        <span class="badge badge--icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="admin-reports.html" class="sidebar__nav-item">
+                        <span class="sidebar__nav-item-content">
+                            <span class="sidebar__nav-item-icon icon-reportes"></span>
+                            Reportes
+                        </span>
+                        <span class="badge badge--text">3</span>
+                    </a>
+                    <div class="sidebar__nav-separator"></div>
+                    <a href="admin-settings.html" class="sidebar__nav-item">
+                        <span class="sidebar__nav-item-content">
+                            <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                            Configuración
+                        </span>
+                    </a>
+                </nav>
         </aside>
 
         <main class="main-content">
             <header class="main-content__header">
                 <div>
-                    <h1 class="main-content__title">Registrar Nueva MÃ¡quina</h1>
-                    <p class="main-content__subtitle">Completa la informaciÃ³n para aÃ±adir una nueva mÃ¡quina al sistema.</p>
+                    <h1 class="main-content__title">Registrar Nueva Máquina</h1>
+                    <p class="main-content__subtitle">Completa la información para añadir una nueva máquina al sistema.</p>
                 </div>
                 <div class="header-progress-actions">
                     <div class="progress-chips">
                         <span class="progress-chip is-active" data-step="general">Datos generales</span>
-                        <span class="progress-chip" data-step="docs">DocumentaciÃ³n</span>
-                        <span class="progress-chip" data-step="confirm">ConfirmaciÃ³n</span>
+                        <span class="progress-chip" data-step="docs">Documentación</span>
+                        <span class="progress-chip" data-step="confirm">Confirmación</span>
                     </div>
                     <button class="btn btn-primary" id="save-machine-top-btn">Guardar y continuar</button>
                 </div>
@@ -207,7 +226,7 @@
                 <div class="card">
                     <div class="card__header">
                         <div>
-                            <h2 class="card__header-title">Datos de la MÃ¡quina</h2>
+                            <h2 class="card__header-title">Datos de la Máquina</h2>
                             <p class="dashboard-section-subtitle">Prioriza los campos requeridos; se reutilizan en reportes y asignaciones.</p>
                         </div>
                     </div>
@@ -215,19 +234,19 @@
                     <div class="section-divider"></div>
                     <div class="card__header" style="border-top: none;">
                         <div>
-                            <h2 class="card__header-title">DocumentaciÃ³n Inicial (RF-007)</h2>
-                            <p class="dashboard-section-subtitle">Debe estar vigente antes de liberar la mÃ¡quina.</p>
+                            <h2 class="card__header-title">Documentación Inicial (RF-007)</h2>
+                            <p class="dashboard-section-subtitle">Debe estar vigente antes de liberar la máquina.</p>
                         </div>
                     </div>
                     <div class="card__body">
                         <form id="documentation-form-create" class="form-grid-two-cols">
                             <div class="form-field">
-                                <label for="rev-date-input" class="form-field__label">Fecha Vencimiento RevisiÃ³n TÃ©cnica</label>
+                                <label for="rev-date-input" class="form-field__label">Fecha Vencimiento Revisión Técnica</label>
                                 <input type="date" id="rev-date-input" class="input-text">
                                 <span class="form-field__helper-text">Campo obligatorio para el registro inicial.</span>
                             </div>
                             <div class="form-field">
-                                <label for="permit-date-input" class="form-field__label">Fecha Vencimiento Permiso de CirculaciÃ³n</label>
+                                <label for="permit-date-input" class="form-field__label">Fecha Vencimiento Permiso de Circulación</label>
                                 <input type="date" id="permit-date-input" class="input-text">
                                 <span class="form-field__helper-text">Campo obligatorio para el registro inicial.</span>
                             </div>
@@ -240,14 +259,14 @@
                     </div>
                     <div class="card__footer">
                         <a href="admin-machines-list.html" class="btn btn-secondary">Cancelar</a>
-                        <button type="button" class="btn btn-primary" id="save-machine-button">Guardar MÃ¡quina</button>
+                        <button type="button" class="btn btn-primary" id="save-machine-button">Guardar Máquina</button>
                     </div>
                 </div>
                 <aside class="card create-helper-card">
                     <div class="card__body">
                         <h3 class="card__header-title" style="font-size: 1rem;">Resumen en vivo</h3>
                         <div class="summary-item">
-                            <span>MÃ¡quina</span>
+                            <span>Máquina</span>
                             <strong id="summary-machine-number">--</strong>
                         </div>
                         <div class="summary-item">
@@ -256,18 +275,18 @@
                         </div>
                         <div class="summary-item">
                             <span>Chofer sugerido</span>
-                            <strong id="summary-machine-driver">â€” Sin asignar â€”</strong>
+                            <strong id="summary-machine-driver">— Sin asignar —</strong>
                         </div>
                         <div class="summary-item">
                             <span>Estado operativo</span>
                             <strong id="summary-machine-status">--</strong>
                         </div>
                         <p class="sidebar-note">Se actualiza a medida que completes el formulario. Revisa antes de guardar.</p>
-                        <h3 class="card__header-title" style="font-size: 1rem; margin-top: var(--space-lg);">Checklist rÃ¡pido</h3>
+                        <h3 class="card__header-title" style="font-size: 1rem; margin-top: var(--space-lg);">Checklist rápido</h3>
                         <ul class="doc-alerts-list">
-                            <li>â€¢ Campos con * son obligatorios.</li>
-                            <li>â€¢ DocumentaciÃ³n vigente â‰¥ 30 dÃ­as.</li>
-                            <li>â€¢ Patente Ãºnica en el sistema.</li>
+                            <li>• Campos con * son obligatorios.</li>
+                            <li>• Documentación vigente = 30 días.</li>
+                            <li>• Patente única en el sistema.</li>
                         </ul>
                     </div>
                 </aside>
@@ -309,7 +328,7 @@
                 const status = form.querySelector('select[name="machine-status"]')?.value;
                 summaryMachineNumber.textContent = number || '--';
                 summaryMachineBrand.textContent = brand || '--';
-                summaryMachineDriver.textContent = driver || 'â€” Sin asignar â€”';
+                summaryMachineDriver.textContent = driver || '— Sin asignar —';
                 summaryMachineStatus.textContent = status || '--';
             };
 
@@ -376,12 +395,12 @@
                 }
                 const docsComplete = Array.from(docInputs).every(input => input.value);
                 if (!docsComplete) {
-                    alert('Completa la documentaciÃ³n inicial para continuar.');
+                    alert('Completa la documentación inicial para continuar.');
                     return;
                 }
                 const formData = getMachineFormData('machine-form');
                 console.log('Datos del formulario:', formData);
-                alert('MÃ¡quina registrada exitosamente (simulado)!');
+                alert('Máquina registrada exitosamente (simulado)!');
                 window.location.href = 'admin-machine-detail.html';
             };
 
@@ -393,3 +412,4 @@
     </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/components/_table.css">
     <link rel="stylesheet" href="css/components/_tabs.css">
     <link rel="stylesheet" href="css/components/_chart.css">
+    <link rel="stylesheet" href="css/components/_badge.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -29,39 +30,57 @@
                 <div class="sidebar__logo"></div>
                 <span class="sidebar__app-name">Nombre de la App</span>
             </div>
-            <nav class="sidebar__nav">
+                        <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-dashboard"></span>
-                    Dashboard
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                        Dashboard
+                    </span>
                 </a>
                 <a href="admin-machines-list.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                    MÃ¡quinas
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                        Máquinas
+                    </span>
                 </a>
                 <a href="admin-drivers-list.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-choferes"></span>
-                    Choferes
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-choferes"></span>
+                        Choferes
+                    </span>
                 </a>
                 <a href="admin-accounting.html" class="sidebar__nav-item is-active">
-                    <span class="sidebar__nav-item-icon icon-contabilidad"></span>
-                    Contabilidad
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                        Contabilidad
+                    </span>
+                    <span class="badge badge--icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
                 </a>
                 <a href="admin-reports.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-reportes"></span>
-                    Reportes
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-reportes"></span>
+                        Reportes
+                    </span>
+                    <span class="badge badge--text">3</span>
                 </a>
                 <div class="sidebar__nav-separator"></div>
                 <a href="admin-settings.html" class="sidebar__nav-item">
-                    <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                    ConfiguraciÃ³n
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                        Configuración
+                    </span>
                 </a>
             </nav>
         </aside>
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Contabilidad y LiquidaciÃ³n</h1>
-                <p class="main-content__subtitle">Revisa resÃºmenes financieros y procesa la nÃ³mina de choferes.</p>
+                <h1 class="main-content__title">Contabilidad y Liquidación</h1>
+                <p class="main-content__subtitle">Revisa resúmenes financieros y procesa la nómina de choferes.</p>
             </header>
 
             <div class="card">
@@ -72,7 +91,7 @@
                                 Resumen General (RF-019)
                             </button>
                             <button class="tab-item" id="tab-payroll" role="tab" aria-controls="content-payroll" aria-selected="false">
-                                LiquidaciÃ³n de Choferes (RF-022)
+                                Liquidación de Choferes (RF-022)
                             </button>
                             <button class="tab-item" id="tab-history" role="tab" aria-controls="content-history" aria-selected="false">
                                 Historial de Liquidaciones
@@ -95,7 +114,7 @@
                                     </select>
                                 </div>
                                 <div class="form-field form-field--inline">
-                                    <label for="select-year-summary" class="form-field__label">AÃ±o</label>
+                                    <label for="select-year-summary" class="form-field__label">Año</label>
                                     <select id="select-year-summary" class="input-text input-text--small">
                                         <option value="2024">2024</option>
                                         <option value="2025" selected>2025</option>
@@ -112,7 +131,7 @@
                                 <span class="kpi-card__context kpi-card__context--positive" id="context-recaudado">Acumulado hasta hoy</span>
                             </div>
                             <div class="kpi-card">
-                                <span class="kpi-card__label">Costo DiÃ©sel (Total)</span>
+                                <span class="kpi-card__label">Costo Diésel (Total)</span>
                                 <span class="kpi-card__value">$ 4.158.024</span>
                                 <span class="kpi-card__context kpi-card__context--negative" id="context-diesel">Acumulado hasta hoy</span>
                             </div>
@@ -122,15 +141,15 @@
                                 <span class="kpi-card__context kpi-card__context--negative" id="context-choferes">Acumulado hasta hoy</span>
                             </div>
                             <div class="kpi-card">
-                                <span class="kpi-card__label">Ganancia LÃ­quida (Neta)</span>
+                                <span class="kpi-card__label">Ganancia Líquida (Neta)</span>
                                 <span class="kpi-card__value">$ 8.765.432</span>
                                 <span class="kpi-card__context kpi-card__context--positive" id="context-ganancia">Acumulado hasta hoy</span>
                             </div>
                         </div>
 
                         <div class="chart-container-wrapper chart-container-wrapper--spaced">
-                            <h3 class="chart-title">EvoluciÃ³n de Rentabilidad (Diaria)</h3>
-                            <p class="form-field__helper-text chart-helper-text">Muestra la acumulaciÃ³n de ingresos, egresos y ganancia neta dÃ­a a dÃ­a (MTD).</p>
+                            <h3 class="chart-title">Evolución de Rentabilidad (Diaria)</h3>
+                            <p class="form-field__helper-text chart-helper-text">Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).</p>
                             <div class="chart-container">
                                 <canvas id="rentabilidad-line-chart"></canvas>
                             </div>
@@ -141,7 +160,7 @@
                 <div class="tab-content" id="content-payroll" role="tabpanel" aria-labelledby="tab-payroll">
                     <div class="card__body">
                         <div class="card-controls-row">
-                            <h2 class="card__header-title">Procesar LiquidaciÃ³n</h2>
+                            <h2 class="card__header-title">Procesar Liquidación</h2>
                             <div class="period-selector-group" id="payroll-period-selector">
                                 <div class="form-field form-field--inline">
                                     <label for="select-month-payroll" class="form-field__label">Mes</label>
@@ -160,7 +179,7 @@
                                     <tr>
                                         <th>Chofer</th>
                                         <th>Total Ganado (RF-022)</th>
-                                        <th>MÃ­nimo Garantizado (RF-023)</th>
+                                        <th>Mínimo Garantizado (RF-023)</th>
                                         <th>Monto Faltante (RF-024)</th>
                                         <th>Pago Final (RF-025)</th>
                                         <th>Acciones</th>
@@ -168,7 +187,7 @@
                                 </thead>
                                 <tbody>
                                     <tr data-driver-id="CH001" data-min-guaranteed="400000">
-                                        <td>Juan PÃ©rez</td>
+                                        <td>Juan Pérez</td>
                                         <td data-total-earned="450000">$ 450.000</td>
                                         <td>$ 400.000</td>
                                         <td>
@@ -181,7 +200,7 @@
                                         </td>
                                     </tr>
                                     <tr data-driver-id="CH002" data-min-guaranteed="400000">
-                                        <td>Pedro LÃ³pez</td>
+                                        <td>Pedro López</td>
                                         <td data-total-earned="380000">$ 380.000</td>
                                         <td>$ 400.000</td>
                                         <td>
@@ -194,7 +213,7 @@
                                         </td>
                                     </tr>
                                     <tr data-driver-id="CH003" data-min-guaranteed="400000">
-                                        <td>MarÃ­a GÃ³mez</td>
+                                        <td>María Gómez</td>
                                         <td data-total-earned="350000">$ 350.000</td>
                                         <td>$ 400.000</td>
                                         <td>
@@ -211,7 +230,7 @@
                         </div>
                     </div>
                     <div class="card__footer" id="payroll-footer">
-                        <span class="form-field__helper-text" id="payroll-closed-notice" hidden>Este perÃ­odo fue cerrado y no puede ser modificado.</span>
+                        <span class="form-field__helper-text" id="payroll-closed-notice" hidden>Este período fue cerrado y no puede ser modificado.</span>
                         <button class="btn btn-secondary" id="save-payroll-draft">Guardar Borrador</button>
                         <button class="btn btn-primary" id="close-payroll-period">Cerrar y Finalizar Mes</button>
                     </div>
@@ -224,7 +243,7 @@
                             <table class="data-table">
                                 <thead>
                                     <tr>
-                                        <th>PerÃ­odo</th>
+                                        <th>Período</th>
                                         <th>Fecha de Cierre</th>
                                         <th>Total Pagado</th>
                                         <th>Cerrado por</th>
@@ -255,9 +274,9 @@
                         </div>
                         <div class="history-detail-panel" id="history-detail-panel" hidden>
                             <div class="history-detail-panel__header">
-                                <h3 class="card__header-title" id="history-detail-title">Detalle de LiquidaciÃ³n</h3>
+                                <h3 class="card__header-title" id="history-detail-title">Detalle de Liquidación</h3>
                                 <p class="form-field__helper-text" id="history-detail-description">
-                                    Selecciona un perÃ­odo para revisar su desglose de pagos.
+                                    Selecciona un período para revisar su desglose de pagos.
                                 </p>
                             </div>
                             <div id="history-detail-body"></div>
@@ -270,7 +289,7 @@
     </div>
 
     <script>
-        // Script para inicializar los nuevos grÃ¡ficos de contabilidad (v2)
+        // Script para inicializar los nuevos gráficos de contabilidad (v2)
         const formatCurrencyCLP = (value) => {
             return new Intl.NumberFormat('es-CL', {
                 style: 'currency',
@@ -405,7 +424,7 @@
                 return Number.isFinite(stored) ? stored : 30;
             };
 
-            // --- LÃ³gica de PestaÃ±as (Tabs) ---
+            // --- Lógica de Pestañas (Tabs) ---
             const tabButtons = document.querySelectorAll('.tab-item');
             const tabContents = document.querySelectorAll('.tab-content');
 
@@ -427,7 +446,7 @@
                 });
             });
 
-            // --- LÃ³gica de LiquidaciÃ³n (Payroll) ---
+            // --- Lógica de Liquidación (Payroll) ---
             const payrollTable = document.getElementById('payroll-table');
             if (payrollTable) {
                 const driverSplitMap = safeJSONParse(localStorage.getItem(DRIVER_SPLIT_STORAGE_KEY), {});
@@ -437,8 +456,8 @@
                 const closedNotice = document.getElementById('payroll-closed-notice');
                 const filterPayrollBtn = document.getElementById('btn-apply-filter-payroll');
                 const selectMonthPayroll = document.getElementById('select-month-payroll');
-                const BASE_CLOSED_MESSAGE = 'Este perÃ­odo fue cerrado y no puede ser modificado.';
-                const AUTO_CLOSED_MESSAGE = 'Todos los pagos fueron confirmados. Este perÃ­odo se cerrÃ³ automÃ¡ticamente.';
+                const BASE_CLOSED_MESSAGE = 'Este período fue cerrado y no puede ser modificado.';
+                const AUTO_CLOSED_MESSAGE = 'Todos los pagos fueron confirmados. Este período se cerró automáticamente.';
                 const CURRENT_MONTH_VALUE = '11';
 
                 const formatCurrency = (value) => {
@@ -477,8 +496,8 @@
 
                     const extra = Math.max(totalEarned - minGuaranteed, 0);
                     const metaText = paymentMode === 'bonus'
-                        ? `${percentage}% sobre excedente (${formatCurrency(extra)}) + mÃ­nimo garantizado`
-                        : `${percentage}% aplicado Â· MÃ­nimo: ${formatCurrency(minGuaranteed)}`;
+                        ? `${percentage}% sobre excedente (${formatCurrency(extra)}) + mínimo garantizado`
+                        : `${percentage}% aplicado · Mínimo: ${formatCurrency(minGuaranteed)}`;
 
                     finalPaymentCell.innerHTML = `
                         <div>${formatCurrency(totalPayment)}</div>
@@ -633,8 +652,8 @@
 
                 if (closePeriodBtn) {
                     closePeriodBtn.addEventListener('click', () => {
-                        if (confirm('Â¿EstÃ¡ seguro de que desea cerrar y finalizar este perÃ­odo de liquidaciÃ³n? Esta acciÃ³n es irreversible.')) {
-                            alert('PerÃ­odo cerrado y finalizado exitosamente. (simulado)');
+                        if (confirm('¿Está seguro de que desea cerrar y finalizar este período de liquidación? Esta acción es irreversible.')) {
+                            alert('Período cerrado y finalizado exitosamente. (simulado)');
                             markCurrentMonthAsClosed(BASE_CLOSED_MESSAGE);
                         }
                     });
@@ -667,9 +686,9 @@
                     averagePayment: 416667,
                     status: 'Cerrado',
                     drivers: [
-                        { name: 'Juan PÃ©rez', totalEarned: 450000, minGuaranteed: 400000, finalPayment: 420000, status: 'Pagado' },
-                        { name: 'Pedro LÃ³pez', totalEarned: 380000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
-                        { name: 'MarÃ­a GÃ³mez', totalEarned: 350000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' }
+                        { name: 'Juan Pérez', totalEarned: 450000, minGuaranteed: 400000, finalPayment: 420000, status: 'Pagado' },
+                        { name: 'Pedro López', totalEarned: 380000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
+                        { name: 'María Gómez', totalEarned: 350000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' }
                     ]
                 },
                 'Septiembre 2025': {
@@ -680,9 +699,9 @@
                     averagePayment: 410000,
                     status: 'Cerrado',
                     drivers: [
-                        { name: 'Juan PÃ©rez', totalEarned: 430000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' },
-                        { name: 'Pedro LÃ³pez', totalEarned: 390000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
-                        { name: 'MarÃ­a GÃ³mez', totalEarned: 360000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' }
+                        { name: 'Juan Pérez', totalEarned: 430000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' },
+                        { name: 'Pedro López', totalEarned: 390000, minGuaranteed: 400000, finalPayment: 400000, status: 'Pagado' },
+                        { name: 'María Gómez', totalEarned: 360000, minGuaranteed: 400000, finalPayment: 415000, status: 'Pagado' }
                     ]
                 }
             };
@@ -696,7 +715,7 @@
                 const detail = HISTORY_DETAILS[period];
                 if (!detail) {
                     historyDetailTitle.textContent = `Detalle de ${period}`;
-                    historyDetailDescription.textContent = 'No hay registros disponibles para este perÃ­odo.';
+                    historyDetailDescription.textContent = 'No hay registros disponibles para este período.';
                     historyDetailBody.innerHTML = '<p class="form-field__helper-text">Sin datos para mostrar.</p>';
                     return;
                 }
@@ -743,7 +762,7 @@
                                 <tr>
                                     <th>Chofer</th>
                                     <th>Total Ganado</th>
-                                    <th>MÃ­nimo Garantizado</th>
+                                    <th>Mínimo Garantizado</th>
                                     <th>Pago Final</th>
                                     <th>Estado</th>
                                 </tr>
@@ -766,3 +785,4 @@
     </script>
 </body>
 </html>
+
