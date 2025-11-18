@@ -146,6 +146,17 @@
         .detail-section {
             margin-bottom: var(--space-xxl);
         }
+
+        /* Control de modos vista/edición para documentación */
+        #documentation-card .edit-mode {
+            display: none;
+        }
+        #documentation-card.is-editing .view-mode {
+            display: none;
+        }
+        #documentation-card.is-editing .edit-mode {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -279,12 +290,17 @@
 
                             <!-- Documentación (dentro de la misma pestaña) -->
                             <div class="card" id="documentation-card" style="border: none; box-shadow: none;">
-                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
+                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light); display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); flex-wrap: wrap;">
                         <div>
                             <h2 class="card__header-title">Documentación Obligatoria</h2>
                             <p class="dashboard-section-subtitle">
                                 Control de fechas de Revisión Técnica, Permiso de Circulación y Seguro (RF-031).
                             </p>
+                        </div>
+                        <div style="display: flex; gap: var(--space-sm);">
+                            <button class="btn btn-primary" id="documentation-edit-btn" type="button">Editar</button>
+                            <button class="btn btn-primary" id="documentation-save-btn" type="button" style="display: none;">Guardar</button>
+                            <button class="btn btn-secondary" id="documentation-cancel-btn" type="button" style="display: none;">Cancelar</button>
                         </div>
                     </div>
                     <div class="card__body">

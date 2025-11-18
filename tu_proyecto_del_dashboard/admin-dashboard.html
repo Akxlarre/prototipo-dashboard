@@ -143,14 +143,14 @@
             letter-spacing: 0.025em;
         }
 
-        .record-status-badge--pending-diesel {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: #DC2626;
-        }
-
         .record-status-badge--pending-trabajador {
             background-color: rgba(245, 158, 11, 0.1);
             color: #D97706;
+        }
+
+        .record-status-badge--no-trabajado {
+            background-color: rgba(107, 114, 128, 0.1);
+            color: #6B7280;
         }
 
         .record-status-badge--complete {
@@ -663,27 +663,6 @@
                                     </thead>
                                     <tbody class="space-between-rows">
                                         <!-- Registros pendientes primero (prioridad visual) -->
-                                        <tr class="record-row--pending" data-status="pending">
-                                            <td data-label=""><strong>05</strong></td>
-                                            <td data-label="Chofer">Juan Pérez</td>
-                                            <td class="record-date" data-label="Fecha">2025-11-14</td>
-                                            <td data-label="Estado">
-                                                <span class="record-status-badge record-status-badge--pending-diesel" aria-describedby="tooltip-diesel-05" tabindex="0">
-                                                    Pendiente Diesel
-                                                    <span class="tooltip" id="tooltip-diesel-05" role="tooltip">Campo 'Costo Total Diésel' faltante en el registro del día</span>
-                                                </span>
-                                            </td>
-                                            <td data-label="Recaudación Reportada (Hoy)">
-                                                <span class="record-recaudacion">
-                                                    $ 100.000
-                                                </span>
-                                            </td>
-                                            <td data-label="Acción">
-                                                <a href="admin-registro-diario.html?maquina=05&chofer=Juan Pérez&fecha=2025-11-14&estado=pending-diesel&mode=edit" class="link-inline alert-row__action-link">
-                                                    Resolver
-                                                </a>
-                                            </td>
-                                        </tr>
                                         <tr class="record-row--pending-warning" data-status="pending">
                                             <td data-label=""><strong>02</strong></td>
                                             <td data-label="Chofer">Ana Gómez</td>
@@ -744,6 +723,27 @@
                                             </td>
                                             <td data-label="Acción">
                                                 <a href="admin-registro-diario.html?maquina=01&chofer=Carlos Rodríguez&fecha=2025-11-14&estado=complete&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
+                                                    Ver detalle
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr data-status="no-trabajado">
+                                            <td data-label="">05</td>
+                                            <td data-label="Chofer">Juan Pérez</td>
+                                            <td class="record-date" data-label="Fecha">2025-11-13</td>
+                                            <td data-label="Estado">
+                                                <span class="record-status-badge record-status-badge--no-trabajado" aria-describedby="tooltip-no-trabajado-05" tabindex="0">
+                                                    Día No Trabajado
+                                                    <span class="tooltip" id="tooltip-no-trabajado-05" role="tooltip">Motivo: Descanso Semanal</span>
+                                                </span>
+                                            </td>
+                                            <td data-label="Recaudación Reportada (Hoy)">
+                                                <span class="record-recaudacion" style="color: var(--color-text-disabled);">
+                                                    N/A
+                                                </span>
+                                            </td>
+                                            <td data-label="Acción">
+                                                <a href="admin-registro-diario.html?maquina=05&chofer=Juan Pérez&fecha=2025-11-13&estado=no-trabajado&mode=view" class="link-inline" style="color: var(--color-text-disabled); font-size: 0.75rem;">
                                                     Ver detalle
                                                 </a>
                                             </td>
@@ -832,7 +832,7 @@
                                 </table>
                             </div>
                             <p class="dashboard-section-subtitle" style="margin-top: var(--space-sm);">
-                                Los registros "PENDIENTE_DIESEL", "PENDIENTE_TRABAJADOR" e "INCIDENTE_REPORTADO" generan alertas en tiempo real (RF-038, RF-039).
+                                Los registros "PENDIENTE_TRABAJADOR" e "INCIDENTE_REPORTADO" generan alertas en tiempo real (RF-038, RF-039).
                             </p>
                         </div>
                     </div>
@@ -909,27 +909,19 @@
                 
                 // Datos de ejemplo (en producción vendría de localStorage o API)
                 const dailyRecords = [
-                    { machineId: '05', driver: 'Juan Pérez', date: yesterday, status: 'PENDIENTE_DIESEL' },
                     { machineId: '02', driver: 'Ana Gómez', date: yesterday, status: 'PENDIENTE_TRABAJADOR' },
                     { machineId: '04', driver: 'Luis Martínez', date: today, status: 'INCIDENTE_REPORTADO' },
+                    { machineId: '05', driver: 'Juan Pérez', date: yesterday, status: 'NO_TRABAJADO', motivo: 'Descanso Semanal' },
                     { machineId: '01', driver: 'Carlos Rodríguez', date: today, status: 'COMPLETO' }
                 ];
 
                 dailyRecords.forEach(record => {
-                    if (record.status === 'PENDIENTE_DIESEL') {
-                        alerts.push({
-                            id: `record-diesel-${record.machineId}-${record.date}`,
-                            type: 'operational',
-                            severity: 'critical',
-                            title: `Registro Incompleto - Máquina ${record.machineId}`,
-                            description: `Falta ingresar datos de diésel para el registro del ${record.date}. Chofer: ${record.driver}.`,
-                            machineId: record.machineId,
-                            driverName: record.driver,
-                            date: record.date,
-                            actionLabel: 'Resolver',
-                            actionHref: `admin-registro-diario.html?maquina=${record.machineId}&chofer=${encodeURIComponent(record.driver)}&fecha=${record.date}&estado=pending-diesel&mode=edit`
-                        });
-                    } else if (record.status === 'PENDIENTE_TRABAJADOR') {
+                    // NO generar alertas para días no trabajados
+                    if (record.status === 'NO_TRABAJADO') {
+                        return; // Skip, no es un problema
+                    }
+                    
+                    if (record.status === 'PENDIENTE_TRABAJADOR') {
                         alerts.push({
                             id: `record-worker-${record.machineId}-${record.date}`,
                             type: 'operational',

@@ -93,6 +93,79 @@
             justify-content: flex-end;
             gap: 0.75rem;
         }
+
+        /* Estilos para el toggle de vista (Diaria/Semanal) */
+        .view-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .view-toggle-container__label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .btn-group {
+            display: inline-flex;
+            border-radius: var(--border-radius-md);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .btn-toggle {
+            position: relative;
+            background-color: white;
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border-default);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin: 0;
+        }
+
+        .btn-toggle:first-child {
+            border-top-left-radius: var(--border-radius-md);
+            border-bottom-left-radius: var(--border-radius-md);
+        }
+
+        .btn-toggle:last-child {
+            border-top-right-radius: var(--border-radius-md);
+            border-bottom-right-radius: var(--border-radius-md);
+            border-left: none;
+        }
+
+        .btn-toggle:hover:not(.is-active) {
+            background-color: var(--color-background-secondary);
+            color: var(--color-text-primary);
+        }
+
+        .btn-toggle.is-active {
+            background-color: var(--color-action-primary);
+            color: white;
+            border-color: var(--color-action-primary);
+            z-index: 1;
+        }
+
+        .btn-toggle:focus {
+            outline: 2px solid var(--color-action-primary);
+            outline-offset: 2px;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .view-toggle-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+        }
     </style>
 </head>
 <body>
@@ -210,6 +283,15 @@
                             </div>
                         </div>
 
+                        <!-- Toggle Vista Diaria/Semanal -->
+                        <div class="view-toggle-container">
+                            <span class="view-toggle-container__label">Granularidad:</span>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-toggle is-active" type="button" data-view="daily" id="toggle-daily">Diaria</button>
+                                <button class="btn btn-sm btn-toggle" type="button" data-view="weekly" id="toggle-weekly">Semanal</button>
+                            </div>
+                        </div>
+
                         <div class="kpi-card-row">
                             <div class="kpi-card">
                                 <span class="kpi-card__label">Total Recaudado (Bruto)</span>
@@ -234,8 +316,8 @@
                         </div>
 
                         <div class="chart-container-wrapper chart-container-wrapper--spaced">
-                            <h3 class="chart-title">Evolución de Rentabilidad (Diaria)</h3>
-                            <p class="form-field__helper-text chart-helper-text">Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).</p>
+                            <h3 class="chart-title" id="chart-title">Evolución de Rentabilidad (Diaria)</h3>
+                            <p class="form-field__helper-text chart-helper-text" id="chart-description">Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).</p>
                             <div class="chart-container">
                                 <canvas id="rentabilidad-line-chart"></canvas>
                             </div>
@@ -433,36 +515,106 @@
         const colorError = getCSSColor('--color-state-error') || '#c0392b';
         const colorPrimary = getCSSColor('--color-action-primary') || '#1d4ed8';
 
-        const ctxLine = document.getElementById('rentabilidad-line-chart');
-        if (ctxLine && window.Chart) {
-            new Chart(ctxLine, {
+        // Datos de ejemplo (30 días completos de un mes)
+        const dailyDataExample = {
+            labels: Array.from({length: 30}, (_, i) => String(i + 1)),
+            ingresos: [510000, 520000, 500000, 530000, 540000, 515000, 525000, 505000, 535000, 545000,
+                       520000, 530000, 510000, 540000, 550000, 525000, 535000, 515000, 545000, 555000,
+                       530000, 540000, 520000, 550000, 560000, 535000, 545000, 525000, 555000, 565000],
+            egresos: [210000, 215000, 205000, 220000, 225000, 212000, 217000, 207000, 222000, 227000,
+                      215000, 220000, 210000, 225000, 230000, 217000, 222000, 212000, 227000, 232000,
+                      220000, 225000, 215000, 230000, 235000, 222000, 227000, 217000, 232000, 237000],
+            ganancia: [300000, 305000, 295000, 310000, 315000, 303000, 308000, 298000, 313000, 318000,
+                       305000, 310000, 300000, 315000, 320000, 308000, 313000, 303000, 318000, 323000,
+                       310000, 315000, 305000, 320000, 325000, 313000, 318000, 308000, 323000, 328000]
+        };
+
+        // Función para agrupar datos diarios en semanas
+        const groupDataByWeek = (dailyData) => {
+            const weeks = [];
+            const weekLabels = [];
+            const ingresosByWeek = [];
+            const egresosByWeek = [];
+            const gananciaByWeek = [];
+
+            // Agrupar cada 7 días
+            for (let i = 0; i < dailyData.labels.length; i += 7) {
+                const weekNumber = Math.floor(i / 7) + 1;
+                weekLabels.push(`Sem ${weekNumber}`);
+
+                const weekIngresos = dailyData.ingresos.slice(i, i + 7).reduce((a, b) => a + b, 0);
+                const weekEgresos = dailyData.egresos.slice(i, i + 7).reduce((a, b) => a + b, 0);
+                const weekGanancia = dailyData.ganancia.slice(i, i + 7).reduce((a, b) => a + b, 0);
+
+                ingresosByWeek.push(weekIngresos);
+                egresosByWeek.push(weekEgresos);
+                gananciaByWeek.push(weekGanancia);
+            }
+
+            return {
+                labels: weekLabels,
+                ingresos: ingresosByWeek,
+                egresos: egresosByWeek,
+                ganancia: gananciaByWeek
+            };
+        };
+
+        // Variable global para el gráfico
+        let rentabilidadChart = null;
+        let currentView = 'daily'; // 'daily' o 'weekly'
+
+        // Función para crear o actualizar el gráfico
+        const renderRentabilidadChart = (view = 'daily') => {
+            const ctxLine = document.getElementById('rentabilidad-line-chart');
+            if (!ctxLine || !window.Chart) return;
+
+            currentView = view;
+            const chartData = view === 'weekly' ? groupDataByWeek(dailyDataExample) : dailyDataExample;
+
+            // Actualizar título y descripción
+            const chartTitle = document.getElementById('chart-title');
+            const chartDescription = document.getElementById('chart-description');
+            
+            if (chartTitle) {
+                chartTitle.textContent = view === 'weekly' 
+                    ? 'Evolución de Rentabilidad (Semanal)' 
+                    : 'Evolución de Rentabilidad (Diaria)';
+            }
+            
+            if (chartDescription) {
+                chartDescription.textContent = view === 'weekly'
+                    ? 'Muestra la acumulación de ingresos, egresos y ganancia neta agrupada por semana (MTD).'
+                    : 'Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).';
+            }
+
+            const chartConfig = {
                 type: 'line',
                 data: {
-                    labels: ['1', '2', '3', '4', '5'],
+                    labels: chartData.labels,
                     datasets: [
                         {
                             label: 'Ingresos (Bruto)',
-                            data: [510000, 520000, 500000, 530000, 540000],
+                            data: chartData.ingresos,
                             borderColor: colorSuccess,
                             backgroundColor: colorSuccess,
                             tension: 0.3,
-                            pointRadius: 2
+                            pointRadius: view === 'weekly' ? 4 : 2
                         },
                         {
                             label: 'Egresos (Total)',
-                            data: [210000, 215000, 205000, 220000, 225000],
+                            data: chartData.egresos,
                             borderColor: colorError,
                             backgroundColor: colorError,
                             tension: 0.3,
-                            pointRadius: 2
+                            pointRadius: view === 'weekly' ? 4 : 2
                         },
                         {
                             label: 'Ganancia (Neta)',
-                            data: [300000, 305000, 295000, 310000, 315000],
+                            data: chartData.ganancia,
                             borderColor: colorPrimary,
                             backgroundColor: colorPrimary,
                             tension: 0.3,
-                            pointRadius: 2,
+                            pointRadius: view === 'weekly' ? 4 : 2,
                             borderDash: [5, 5]
                         }
                     ]
@@ -479,7 +631,7 @@
                         },
                         x: {
                             ticks: {
-                                maxTicksLimit: 10
+                                maxTicksLimit: view === 'weekly' ? 6 : 15
                             }
                         }
                     },
@@ -495,6 +647,35 @@
                         mode: 'index'
                     }
                 }
+            };
+
+            // Destruir gráfico anterior si existe
+            if (rentabilidadChart) {
+                rentabilidadChart.destroy();
+            }
+
+            // Crear nuevo gráfico
+            rentabilidadChart = new Chart(ctxLine, chartConfig);
+        };
+
+        // Inicializar gráfico con vista diaria
+        renderRentabilidadChart('daily');
+
+        // Event listeners para los botones de toggle
+        const toggleDailyBtn = document.getElementById('toggle-daily');
+        const toggleWeeklyBtn = document.getElementById('toggle-weekly');
+
+        if (toggleDailyBtn && toggleWeeklyBtn) {
+            toggleDailyBtn.addEventListener('click', () => {
+                toggleDailyBtn.classList.add('is-active');
+                toggleWeeklyBtn.classList.remove('is-active');
+                renderRentabilidadChart('daily');
+            });
+
+            toggleWeeklyBtn.addEventListener('click', () => {
+                toggleWeeklyBtn.classList.add('is-active');
+                toggleDailyBtn.classList.remove('is-active');
+                renderRentabilidadChart('weekly');
             });
         }
 
@@ -529,6 +710,8 @@
             applyFilterBtnSummary.addEventListener('click', (event) => {
                 event.preventDefault();
                 updateSummaryContext();
+                // Regenerar el gráfico con la vista actual cuando se cambia de período
+                renderRentabilidadChart(currentView);
             });
         }
 

@@ -172,6 +172,40 @@
                 </div>
 
                 <div class="card__body">
+                    <!-- Checkbox para Día No Trabajado -->
+                    <div class="form-field" id="dia-no-trabajado-section" style="margin-bottom: var(--space-lg); padding: var(--space-md); background-color: rgba(59, 130, 246, 0.05); border-radius: var(--border-radius-md); border: 2px solid rgba(59, 130, 246, 0.2);">
+                        <label style="display: flex; align-items: flex-start; gap: var(--space-md); cursor: pointer;">
+                            <input type="checkbox" id="dia-no-trabajado-checkbox" style="width: 20px; height: 20px; cursor: pointer; margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <span style="font-weight: 600; font-size: 1rem; display: block; margin-bottom: 0.25rem;">
+                                    📅 Marcar como Día No Trabajado
+                                </span>
+                                <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0;">
+                                    El conductor no operó este día (descanso, vacaciones, licencia médica, etc.)
+                                </p>
+                            </div>
+                        </label>
+                        
+                        <!-- Selector de motivo (se muestra al marcar el checkbox) -->
+                        <div id="motivo-no-trabajado-container" style="display: none; margin-top: var(--space-md);">
+                            <label for="motivo-no-trabajado" class="form-field__label">Motivo *</label>
+                            <select id="motivo-no-trabajado" class="input-text" style="margin-bottom: var(--space-sm);">
+                                <option value="">Seleccionar motivo...</option>
+                                <option value="Descanso Semanal">Descanso Semanal</option>
+                                <option value="Vacaciones">Vacaciones</option>
+                                <option value="Licencia Médica">Licencia Médica</option>
+                                <option value="Permiso Personal">Permiso Personal</option>
+                                <option value="Máquina en Mantenimiento">Máquina en Mantenimiento</option>
+                                <option value="Sin Asignación de Ruta">Sin Asignación de Ruta</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                            
+                            <div id="motivo-otro-container" style="display: none;">
+                                <input type="text" id="motivo-otro-texto" class="input-text" placeholder="Especificar motivo...">
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="form-container" class="view-mode">
                         <div class="form-grid">
 
@@ -184,13 +218,13 @@
 
                             <!-- Diesel -->
                             <div class="form-field">
-                                <label for="diesel-quantity" class="form-field__label">Litros de Diesel</label>
-                                <p id="diesel-quantity-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
+                                <label for="diesel-quantity" class="form-field__label">Litros de Diesel <span style="color: var(--color-text-secondary); font-weight: normal;">(Opcional)</span></label>
+                                <p id="diesel-quantity-view" class="view-mode-value" style="color: var(--color-text-secondary);">Sin carga</p>
                                 <input type="number" id="diesel-quantity-edit" class="input-text" placeholder="0.00" style="display: none;">
                             </div>
                             <div class="form-field">
-                                <label for="diesel-cost" class="form-field__label">Costo Total Diesel ($)</label>
-                                <p id="diesel-cost-view" class="view-mode-value" style="color: var(--color-state-error);">-- PENDIENTE --</p>
+                                <label for="diesel-cost" class="form-field__label">Costo Total Diesel ($) <span style="color: var(--color-text-secondary); font-weight: normal;">(Opcional)</span></label>
+                                <p id="diesel-cost-view" class="view-mode-value" style="color: var(--color-text-secondary);">Sin carga</p>
                                 <input type="number" id="diesel-cost-edit" class="input-text" placeholder="0" style="display: none;">
                             </div>
                         </div>
@@ -271,7 +305,10 @@
                     'incidente-reportado': 'incidente',
                     'incidente-reportada': 'incidente',
                     'completo': 'complete',
-                    'complete': 'complete'
+                    'complete': 'complete',
+                    'no-trabajado': 'no-trabajado',
+                    'no-laborado': 'no-trabajado',
+                    'dia-no-trabajado': 'no-trabajado'
                 };
                 if (mapping[normalized]) {
                     return mapping[normalized];
@@ -294,6 +331,14 @@
             const fileUploadArea = document.getElementById('file-upload-area');
             const fileInput = document.getElementById('comprobante-file');
             const previewImage = document.getElementById('preview-image');
+
+            // Variables para día no trabajado
+            const diaNoTrabajadoCheckbox = document.getElementById('dia-no-trabajado-checkbox');
+            const diaNoTrabajadoSection = document.getElementById('dia-no-trabajado-section');
+            const motivoContainer = document.getElementById('motivo-no-trabajado-container');
+            const motivoSelect = document.getElementById('motivo-no-trabajado');
+            const motivoOtroContainer = document.getElementById('motivo-otro-container');
+            const motivoOtroTexto = document.getElementById('motivo-otro-texto');
 
             // Datos de ejemplo segun el estado del registro
             const getRecordData = (estado, maquina) => {
@@ -328,6 +373,19 @@
                         'diesel-cost': '67000',
                         'observaciones': 'Choque menor en interseccion. Daños en parachoques delantero. Pasajeros ilesos.',
                         hasComprobante: true
+                    };
+                } else if (estado === 'no-trabajado') {
+                    // Día no trabajado - sin datos de operación
+                    return {
+                        'initial-km': '125000',
+                        'revenue': '',
+                        'final-km': '',
+                        'diesel-quantity': '',
+                        'diesel-cost': '',
+                        'observaciones': '',
+                        hasComprobante: false,
+                        isNoTrabajado: true,
+                        motivo: 'Descanso Semanal'
                     };
                 } else {
                     // Registros pendientes pueden tener algunos datos
@@ -423,8 +481,14 @@
                             }
                             viewEl.style.color = 'var(--color-text-primary)';
                         } else {
-                            viewEl.textContent = '-- PENDIENTE --';
-                            viewEl.style.color = 'var(--color-state-error)';
+                            // Los campos de diesel son opcionales
+                            if (key.includes('diesel')) {
+                                viewEl.textContent = 'Sin carga';
+                                viewEl.style.color = 'var(--color-text-secondary)';
+                            } else {
+                                viewEl.textContent = '-- PENDIENTE --';
+                                viewEl.style.color = 'var(--color-state-error)';
+                            }
                         }
                     }
                 }
@@ -454,26 +518,57 @@
             });
 
             saveButton.addEventListener('click', () => {
-                // Validar campos requeridos
-                const finalKm = document.getElementById('final-km-edit').value;
-                const dieselQuantity = document.getElementById('diesel-quantity-edit').value;
-                const dieselCost = document.getElementById('diesel-cost-edit').value;
-
-                if (!finalKm || !dieselQuantity || !dieselCost) {
-                    alert('Por favor complete todos los campos requeridos.');
-                    return;
-                }
-
-                // Save new values
-                for (const key in fields) {
-                    const editEl = document.getElementById(fields[key].edit);
-                    if (editEl) {
-                        fields[key].value = editEl.value;
+                const isDiaNoTrabajado = diaNoTrabajadoCheckbox.checked;
+                
+                if (isDiaNoTrabajado) {
+                    // Validar que tenga motivo seleccionado
+                    const motivo = motivoSelect.value;
+                    if (!motivo) {
+                        alert('Por favor selecciona un motivo para el día no trabajado.');
+                        return;
                     }
+                    if (motivo === 'Otro' && !motivoOtroTexto.value.trim()) {
+                        alert('Por favor especifica el motivo.');
+                        return;
+                    }
+                    
+                    // Guardar día no trabajado
+                    const motivoFinal = motivo === 'Otro' ? motivoOtroTexto.value.trim() : motivo;
+                    console.log('Guardando día no trabajado con motivo:', motivoFinal);
+                    
+                    // Aquí se guardaría en DB/localStorage con:
+                    // { status: 'NO_TRABAJADO', motivo: motivoFinal, fecha: urlParams.fecha, maquina: urlParams.maquina }
+                    
+                    confirmationMessage.querySelector('.alert-row__text').textContent = 
+                        `Día marcado como NO TRABAJADO exitosamente (${motivoFinal}).`;
+                    confirmationMessage.style.display = 'flex';
+                    setTimeout(() => { confirmationMessage.style.display = 'none'; }, 5000);
+                    
+                    setMode('view');
+                } else {
+                    // Validación normal para días trabajados
+                    const finalKm = document.getElementById('final-km-edit').value;
+
+                    if (!finalKm) {
+                        alert('Por favor complete todos los campos requeridos (Kilómetros Finales).');
+                        return;
+                    }
+
+                    // Save new values
+                    for (const key in fields) {
+                        const editEl = document.getElementById(fields[key].edit);
+                        if (editEl) {
+                            fields[key].value = editEl.value;
+                        }
+                    }
+                    
+                    confirmationMessage.querySelector('.alert-row__text').textContent = 
+                        'Registro guardado y actualizado a "Completo" exitosamente.';
+                    confirmationMessage.style.display = 'flex';
+                    setTimeout(() => { confirmationMessage.style.display = 'none'; }, 5000);
+                    
+                    setMode('view');
                 }
-                setMode('view');
-                confirmationMessage.style.display = 'flex';
-                setTimeout(() => { confirmationMessage.style.display = 'none'; }, 5000);
             });
 
             fileUploadArea.addEventListener('click', () => {
@@ -492,6 +587,51 @@
                     reader.readAsDataURL(file);
                 }
             });
+
+            // Event listener para checkbox de día no trabajado
+            diaNoTrabajadoCheckbox.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                
+                if (isChecked) {
+                    // Mostrar selector de motivo
+                    motivoContainer.style.display = 'block';
+                    
+                    // Deshabilitar/ocultar campos normales
+                    formContainer.style.opacity = '0.5';
+                    formContainer.style.pointerEvents = 'none';
+                    
+                } else {
+                    // Ocultar motivo y restaurar campos
+                    motivoContainer.style.display = 'none';
+                    motivoSelect.value = '';
+                    motivoOtroContainer.style.display = 'none';
+                    motivoOtroTexto.value = '';
+                    
+                    formContainer.style.opacity = '1';
+                    formContainer.style.pointerEvents = 'auto';
+                }
+            });
+
+            // Event listener para selector de motivo "Otro"
+            motivoSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'Otro') {
+                    motivoOtroContainer.style.display = 'block';
+                } else {
+                    motivoOtroContainer.style.display = 'none';
+                    motivoOtroTexto.value = '';
+                }
+            });
+
+            // Si el estado es 'no-trabajado', marcar el checkbox y mostrar el motivo
+            if (normalizedEstado === 'no-trabajado') {
+                diaNoTrabajadoCheckbox.checked = true;
+                motivoContainer.style.display = 'block';
+                if (recordData.motivo) {
+                    motivoSelect.value = recordData.motivo;
+                }
+                formContainer.style.opacity = '0.5';
+                formContainer.style.pointerEvents = 'none';
+            }
 
             // Initial state segun parametros de URL
             setMode(initialMode);

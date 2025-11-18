@@ -56,6 +56,11 @@
   const permitDateInput  = document.getElementById('permit-date-input');
   const insDateInput     = document.getElementById('insurance-date-input');
 
+  const documentationCard     = document.getElementById('documentation-card');
+  const editDocumentationBtn  = document.getElementById('documentation-edit-btn');
+  const saveDocumentationBtn  = document.getElementById('documentation-save-btn');
+  const cancelDocumentationBtn = document.getElementById('documentation-cancel-btn');
+
   const filterDriverSelect = document.getElementById('filter-driver-select');
   const filterStatusSelect = document.getElementById('filter-status-select');
   const recordsBody        = document.getElementById('daily-records-body');
@@ -245,13 +250,35 @@
     state.general.status = form.querySelector('#machine-status').value.trim();
     state.general.driver = form.querySelector('#machine-driver').value.trim();
 
+    renderInfoView();
+    renderDocumentation();
+    exitEditMode();
+  };
+
+  const enterDocumentationEditMode = () => {
+    documentationCard.classList.add('is-editing');
+    editDocumentationBtn.style.display   = 'none';
+    saveDocumentationBtn.style.display   = 'inline-flex';
+    cancelDocumentationBtn.style.display = 'inline-flex';
+  };
+
+  const exitDocumentationEditMode = () => {
+    documentationCard.classList.remove('is-editing');
+    editDocumentationBtn.style.display   = 'inline-flex';
+    saveDocumentationBtn.style.display   = 'none';
+    cancelDocumentationBtn.style.display = 'none';
+  };
+
+  const saveDocumentation = () => {
     state.documentation.revision  = revDateInput?.value || state.documentation.revision;
     state.documentation.permit    = permitDateInput?.value || state.documentation.permit;
     state.documentation.insurance = insDateInput?.value || state.documentation.insurance;
 
-    renderInfoView();
     renderDocumentation();
-    exitEditMode();
+    exitDocumentationEditMode();
+    
+    // Aquí se podría agregar una llamada a una API para guardar los datos
+    console.log('Documentación actualizada:', state.documentation);
   };
 
   sectionButtons.forEach(btn => {
@@ -274,6 +301,13 @@
   cancelGeneralBtn?.addEventListener('click', () => {
     exitEditMode();
     renderInfoView();
+    renderDocumentation();
+  });
+
+  editDocumentationBtn?.addEventListener('click', enterDocumentationEditMode);
+  saveDocumentationBtn?.addEventListener('click', saveDocumentation);
+  cancelDocumentationBtn?.addEventListener('click', () => {
+    exitDocumentationEditMode();
     renderDocumentation();
   });
 
