@@ -24,12 +24,60 @@
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_badge.css">
+    <link rel="stylesheet" href="css/components/_toast.css">
 
     <style>
         /* Pequeñas utilidades locales, sin romper tu sistema atómico */
 
-        .settings-layout {
-            max-width: 880px;
+        .settings-layout-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(300px, 1fr);
+            gap: var(--space-xl);
+            align-items: flex-start;
+        }
+
+        .settings-sidebar-card {
+            position: sticky;
+            top: var(--space-xl);
+        }
+
+        .sidebar-note {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding: 1rem;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        .sidebar-note:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar-note strong {
+            color: var(--text-strong);
+            display: block;
+            margin-bottom: 0.375rem;
+        }
+
+        .sidebar-note ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+        .sidebar-note li {
+            margin-bottom: 0.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .settings-layout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-sidebar-card {
+                position: static;
+            }
         }
 
         .settings-card__header-meta {
@@ -46,15 +94,23 @@
         }
 
         .settings-section-title {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-strong, #111827);
         }
 
         .settings-section-description {
             font-size: 0.875rem;
             color: var(--text-muted, #6b7280);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
+            line-height: 1.5;
+        }
+
+        .settings-section + .settings-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle, #E5E7EB);
         }
 
         .settings-view-row {
@@ -81,9 +137,10 @@
         }
 
         .settings-view-value {
-            font-size: 0.95rem;
-            font-weight: 500;
+            font-size: 1.125rem;
+            font-weight: 600;
             margin-top: 0.25rem;
+            color: var(--text-strong, #111827);
         }
 
         .settings-view-helper {
@@ -167,8 +224,13 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar__header">
-                <div class="sidebar__logo"></div>
-                <span class="sidebar__app-name">Nombre de la App</span>
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
             </div>
             <nav class="sidebar__nav">
                 <a href="admin-dashboard.html" class="sidebar__nav-item">
@@ -238,7 +300,7 @@
                 </p>
             </header>
 
-            <section class="settings-layout">
+            <div class="settings-layout-grid">
                 <article class="card settings-card" id="settings-card">
                     <div class="card__header">
                         <div>
@@ -326,7 +388,7 @@
                                 </div>
                             </div>
 
-                            <div class="settings-section" style="margin-top: 2rem;">
+                            <div class="settings-section">
                                 <p class="settings-section-title">Parámetros de Alertas y Vencimientos</p>
                                 <p class="settings-section-description">
                                     Controla cuántos días antes se generan alertas visuales para documentación próxima a vencer.
@@ -440,7 +502,37 @@
                     <!-- Footer con acciones según modo -->
                     <div class="card__footer settings-card__footer settings-card__footer--spaced"></div>
                 </article>
-            </section>
+
+                <!-- Sidebar Helper -->
+                <aside class="settings-sidebar-card">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3 class="card__header-title">Información</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="sidebar-note">
+                                <strong>Permisos:</strong>
+                                Solo usuarios con rol de Administrador pueden editar esta configuración.
+                            </div>
+                            
+                            <div class="sidebar-note">
+                                <strong>Impacto:</strong>
+                                Los cambios aquí afectan cálculos de nómina, alertas de documentación y reportes generales del sistema.
+                            </div>
+
+                            <div class="sidebar-note">
+                                <strong>Referencias:</strong>
+                                <ul>
+                                    <li>RF-023: Liquidación de choferes</li>
+                                    <li>RF-031: Alertas de licencias</li>
+                                    <li>RF-034: Alertas de seguros</li>
+                                    <li>RF-036: Configuración general</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
         </main>
     </div>
 
@@ -513,6 +605,7 @@
                 } catch {
                     return '$' + value.toLocaleString('es-CL');
                 }
+
             }
 
             function renderViewMode() {
@@ -569,17 +662,17 @@
                 const dias = Number(inputDiasAlerta.value);
 
                 if (isNaN(sueldo) || sueldo <= 0) {
-                    alert('El sueldo mínimo garantizado debe ser un número mayor a 0.');
+                    showToast('El sueldo mínimo garantizado debe ser un número mayor a 0', 'error');
                     return null;
                 }
 
                 if (isNaN(porcentaje) || porcentaje < 0 || porcentaje > 100) {
-                    alert('El porcentaje por defecto debe estar entre 0 y 100.');
+                    showToast('El porcentaje por defecto debe estar entre 0 y 100', 'error');
                     return null;
                 }
 
                 if (isNaN(dias) || dias < 0) {
-                    alert('Los días de alerta deben ser un número mayor o igual a 0.');
+                    showToast('Los días de alerta deben ser un número mayor o igual a 0', 'error');
                     return null;
                 }
 
@@ -619,8 +712,8 @@
                 // Vuelve a modo lectura
                 setMode('view');
 
-                // Mensaje de feedback (puedes reemplazar por tu sistema de alerts)
-                alert('Configuración general guardada correctamente (simulado).');
+                // Mensaje de feedback
+                showToast('Configuración general guardada correctamente', 'success');
             });
         });
     </script>
