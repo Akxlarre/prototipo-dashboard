@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -23,12 +23,420 @@
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_badge.css">
+    <link rel="stylesheet" href="css/components/_detail.css">
     
     <style>
         /* FIX: Eliminar espacio en blanco superior */
         body { line-height: 0 !important; }
         .dashboard-layout { line-height: 1.5; }
         .sidebar, .main-content { line-height: var(--line-height-desktop-base); }
+    </style>
+    
+    <style>
+        /* KPIs Grid */
+        .main-content__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        /* Layout Grid con Sidebar */
+        .drivers-layout-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2.5fr) minmax(260px, 1fr);
+            gap: var(--space-xl);
+            align-items: start;
+        }
+
+        .drivers-sidebar-card h3 {
+            font-size: var(--font-size-desktop-label);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Toolbar */
+        .drivers-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .drivers-toolbar__meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .results-pill {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            background-color: var(--color-surface-widget);
+        }
+
+        /* View Toggle */
+        .driver-view-toggle {
+            display: inline-flex;
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            overflow: hidden;
+        }
+
+        .driver-view-toggle button {
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1.25rem;
+            font-size: var(--font-size-desktop-label);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .driver-view-toggle button.is-active {
+            background: var(--color-action-primary);
+            color: #fff;
+        }
+
+        /* View Sections */
+        .machine-view-section {
+            display: none;
+        }
+
+        .machine-view-section.is-active {
+            display: block;
+        }
+
+        .machine-view-section--cards {
+            padding: var(--space-xl);
+        }
+
+        /* Cards Grid - Estilo mejorado similar a máquinas */
+        .driver-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .driver-card {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-lg);
+            background: var(--color-surface-widget);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            overflow: hidden;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .driver-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-border-medium);
+        }
+
+        /* Contenedor del layout interno de la card */
+        .driver-card__inner {
+            display: flex;
+            gap: var(--space-md);
+            position: relative;
+        }
+
+        /* Status pill flotante en la esquina superior derecha */
+        .driver-card__status {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        /* Contenido principal (todo excepto avatar) */
+        .driver-card__content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            min-width: 0; /* Permite que el contenido se encoja si es necesario */
+        }
+
+        /* Sección de identificación (nombre, RUT, email) */
+        .driver-card__identity {
+            padding-right: 80px; /* Espacio para el status pill */
+        }
+
+        .driver-card__name {
+            font-size: 1.125rem;
+            font-weight: var(--font-weight-bold);
+            line-height: 1.3;
+            color: var(--color-text-primary);
+            word-wrap: break-word;
+        }
+
+        .driver-card__detail {
+            font-size: var(--font-size-desktop-label);
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+            word-wrap: break-word;
+        }
+
+        /* Separador horizontal */
+        .driver-card__separator {
+            height: 1px;
+            background: var(--color-border-light);
+            margin: var(--space-xs) 0;
+        }
+
+        /* Sección de información adicional (máquina y licencia) */
+        .driver-card__info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .driver-card__machine {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .driver-card__machine-icon {
+            opacity: 0.5;
+        }
+
+        .driver-card__machine-text {
+            font-size: var(--font-size-desktop-label);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .driver-card__docs {
+            display: flex;
+            gap: var(--space-xxs);
+        }
+
+        /* Botón de acción */
+        .driver-card__actions {
+            margin-top: var(--space-xs);
+        }
+
+        /* Doc Indicators - Estilo badge como en máquinas */
+        .doc-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .doc-indicator {
+            border-radius: var(--border-radius-sm);
+            padding: var(--space-xxs) var(--space-sm);
+            font-size: 0.75rem;
+            font-weight: var(--font-weight-medium);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--color-surface-page);
+            border: 1px solid var(--color-border-light);
+        }
+
+        .doc-indicator::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .doc-indicator--ok::before {
+            background: var(--color-state-success);
+        }
+
+        .doc-indicator--warning::before {
+            background: var(--color-state-warning);
+        }
+
+        .doc-indicator--error::before {
+            background: var(--color-state-error);
+        }
+
+        /* Sidebar Filters - Estilo consistente con máquinas */
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .chip {
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-full);
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            background: var(--color-surface-widget);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .chip.is-active {
+            background: var(--color-action-primary);
+            color: #fff;
+            border-color: var(--color-action-primary);
+        }
+
+        /* Doc Alerts */
+        .doc-alerts-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .doc-alerts-list li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.9rem;
+        }
+
+        .doc-alert-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .doc-alert-dot--error {
+            background: var(--color-state-error);
+        }
+
+        .doc-alert-dot--warning {
+            background: var(--color-state-warning);
+        }
+
+        .doc-alert-dot--ok {
+            background: var(--color-state-success);
+        }
+
+        .sidebar-note {
+            margin-top: var(--space-lg);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xl);
+            border: 1px dashed var(--color-border-light);
+            border-radius: var(--border-radius-md);
+            background: var(--color-surface-page);
+        }
+
+        /* Tabla refinada */
+        .data-table thead th {
+            padding: var(--space-md) var(--space-xl);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+
+        .data-table tbody td {
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--color-surface-page);
+        }
+
+        .data-table .action-cell {
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .data-table thead {
+                display: none;
+            }
+
+            .data-table tbody tr {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: var(--space-sm);
+                padding: var(--space-md);
+                border: 1px solid var(--color-border-light);
+                border-radius: var(--border-radius-md);
+                margin-bottom: var(--space-md);
+            }
+
+            .data-table tbody td {
+                border: none;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                font-size: 0.95rem;
+            }
+
+            .data-table tbody td::before {
+                content: attr(data-label);
+                font-size: 0.75rem;
+                font-weight: var(--font-weight-medium);
+                color: var(--color-text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+
+            .data-table .action-cell {
+                grid-column: 1 / -1;
+                text-align: left;
+                margin-top: var(--space-sm);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .drivers-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .driver-view-toggle {
+                width: 100%;
+            }
+
+            .driver-view-toggle button {
+                flex: 1;
+                text-align: center;
+            }
+
+            .machine-view-section--cards {
+                padding: var(--space-lg);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .drivers-layout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .drivers-toolbar__meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
     </style>
 </head>
 <body>
@@ -81,7 +489,7 @@
                 <a href="admin-settings.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-configuracion"></span>
-                        Configuracion
+                        Configuración
                     </span>
                 </a>
                 <a href="admin-help-center.html" class="sidebar__nav-item">
@@ -101,83 +509,520 @@
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Lista de Choferes</h1>
-                <p class="main-content__subtitle">Gestiona todos los choferes registrados en el sistema.</p>
+                <div>
+                    <h1 class="main-content__title">Lista de Choferes</h1>
+                    <p class="main-content__subtitle">Gestiona todos los choferes registrados en el sistema</p>
+                </div>
+                <a href="admin-driver-create.html" class="btn btn-primary">
+                    <span class="icon-plus"></span>
+                    Registrar Chofer
+                </a>
             </header>
 
-            <div class="card">
-                <div class="card__header">
-                    <h2 class="card__header-title">Todos los Choferes</h2>
-                    <a href="admin-driver-create.html" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
-                        Registrar Nuevo Chofer
-                    </a>
-                </div>
-                <div class="card__body card__body--no-padding"> 
-                    <div class="data-table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>RUT</th>
-                                    <th>Telefono</th>
-                                    <th>Correo Electronico</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Juan Perez</td>
-                                    <td>12.345.678-9</td>
-                                    <td>+56 9 1234 5678</td>
-                                    <td>juan.perez@dominio.com</td>
-                                    <td><span class="status-cell status-cell--approved">Activo</span></td>
-                                    <td class="action-cell">
-                                        <a href="admin-driver-detail.html" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                        <a href="#" class="btn btn-secondary btn-sm">Eliminar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Maria Gomez</td>
-                                    <td>9.876.543-2</td>
-                                    <td>+56 9 9876 5432</td>
-                                    <td>maria.gomez@dominio.com</td>
-                                    <td><span class="status-cell status-cell--approved">Activo</span></td>
-                                    <td class="action-cell">
-                                        <a href="#" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                        <a href="#" class="btn btn-secondary btn-sm">Eliminar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Pedro Lopez</td>
-                                    <td>10.111.222-K</td>
-                                    <td>+56 9 1011 1222</td>
-                                    <td>pedro.lopez@dominio.com</td>
-                                    <td><span class="status-cell status-cell--rejected">Inactivo</span></td>
-                                    <td class="action-cell">
-                                        <a href="#" class="btn btn-secondary btn-sm">Ver/Editar</a>
-                                        <a href="#" class="btn btn-secondary btn-sm">Eliminar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <!-- Resumen de Flota - KPIs (Job-to-be-Done: respuesta en menos de 3 segundos) -->
+            <div class="main-content__grid">
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-success); margin-bottom: var(--space-xs);" id="kpi-activos">0</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Choferes Activos</div>
+                        </div>
                     </div>
                 </div>
-                <div class="pagination">
-                    <span class="pagination__info">Mostrando 1-3 de 3 registros</span>
-                    <button class="pagination__button" disabled>&laquo; Anterior</button>
-                    <button class="pagination__button">1</button>
-                    <button class="pagination__button" disabled>Siguiente &raquo;</button>
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-warning); margin-bottom: var(--space-xs);" id="kpi-inactivos">0</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Choferes Inactivos</div>
+                        </div>
+                    </div>
                 </div>
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-text-disabled); margin-bottom: var(--space-xs);" id="kpi-con-maquina">0</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Maquinas asignadas</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: var(--font-weight-bold); color: var(--color-state-error); margin-bottom: var(--space-xs);" id="kpi-docs-vencer">0</div>
+                            <div style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">Licencias por Vencer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Choferes -->
+            <div class="drivers-layout-grid">
+                <div class="card">
+                    <div class="card__header drivers-toolbar">
+                        <div>
+                            <h2 class="card__header-title">Choferes Registrados</h2>
+                            <p class="dashboard-section-subtitle">Escoge como visualizar segun la tarea: tarjetas para escanear riesgos, tabla para listados extensos.</p>
+                        </div>
+                        <div class="drivers-toolbar__meta">
+                            <span class="results-pill" id="driver-results-count">0 choferes</span>
+                            <div class="driver-view-toggle" role="group" aria-label="Cambiar vista de choferes">
+                                <button type="button" class="is-active" data-view-mode="cards">Tarjetas</button>
+                                <button type="button" data-view-mode="table">Tabla</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card__body card__body--no-padding">
+                        <!-- Cards View -->
+                        <div id="drivers-card-view" class="machine-view-section machine-view-section--cards">
+                            <div class="driver-card-grid" id="drivers-card-grid">
+                                <!-- Tarjetas inyectadas por JS -->
+                            </div>
+                        </div>
+
+                        <!-- Table View -->
+                        <div id="drivers-table-view" class="machine-view-section machine-view-section--table">
+                            <div class="data-table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Chofer</th>
+                                            <th>RUT</th>
+                                            <th>Máquina Asignada</th>
+                                            <th>Estado</th>
+                                            <th>Licencia</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="drivers-table-body">
+                                        <!-- Las filas se generan dinamicamente con JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="card drivers-sidebar-card">
+                    <div class="card__body">
+                        <section>
+                            <h3>Filtro rapido</h3>
+                            <div class="chip-group" id="status-filter-group">
+                                <button class="chip is-active" data-status-filter="all">Todos</button>
+                                <button class="chip" data-status-filter="Activo">Activos</button>
+                                <button class="chip" data-status-filter="Inactivo">Inactivos</button>
+                            </div>
+                        </section>
+                        <section style="margin-top: var(--space-xl);">
+                            <h3>Alertas de Licencias</h3>
+                            <ul class="doc-alerts-list" id="doc-alerts-list">
+                                <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Sin datos</li>
+                            </ul>
+                        </section>
+                        <p class="sidebar-note">Los filtros afectan ambas vistas y los conteos de documentos se recalculan automaticamente.</p>
+                    </div>
+                </aside>
             </div>
         </main>
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ============================================
+            // DATOS DE CHOFERES (Fuente de Verdad)
+            // ============================================
+            const driversData = [
+            {
+                id: 1,
+                primerNombre: 'Juan',
+                segundoNombre: 'Carlos',
+                apellidoPaterno: 'Pérez',
+                apellidoMaterno: 'González',
+                rut: '12.345.678-9',
+                telefono: '+56 9 1234 5678',
+                email: 'juan.perez@ejemplo.cl',
+                estado: 'Activo',
+                maquina: 'Máquina 01',
+                licenciaVence: '2024-12-15',
+                porcentaje: 50
+            },
+            {
+                id: 2,
+                primerNombre: 'María',
+                segundoNombre: '',
+                apellidoPaterno: 'López',
+                apellidoMaterno: 'Silva',
+                rut: '18.765.432-1',
+                telefono: '+56 9 8765 4321',
+                email: 'maria.lopez@ejemplo.cl',
+                estado: 'Activo',
+                maquina: 'Máquina 03',
+                licenciaVence: '2025-06-20',
+                porcentaje: 45
+            },
+            {
+                id: 3,
+                primerNombre: 'Pedro',
+                segundoNombre: 'Antonio',
+                apellidoPaterno: 'Ramírez',
+                apellidoMaterno: 'Torres',
+                rut: '15.987.654-3',
+                telefono: '+56 9 5987 6543',
+                email: 'pedro.ramirez@ejemplo.cl',
+                estado: 'Inactivo',
+                maquina: null,
+                licenciaVence: '2024-11-25',
+                porcentaje: 50
+            },
+            {
+                id: 4,
+                primerNombre: 'Ana',
+                segundoNombre: 'María',
+                apellidoPaterno: 'Fernández',
+                apellidoMaterno: 'Muñoz',
+                rut: '14.258.963-7',
+                telefono: '+56 9 4258 9637',
+                email: 'ana.fernandez@ejemplo.cl',
+                estado: 'Activo',
+                maquina: 'Máquina 05',
+                licenciaVence: '2025-03-10',
+                porcentaje: 48
+            },
+            {
+                id: 5,
+                primerNombre: 'Carlos',
+                segundoNombre: '',
+                apellidoPaterno: 'Soto',
+                apellidoMaterno: 'Bravo',
+                rut: '16.357.159-2',
+                telefono: '+56 9 6357 1592',
+                email: 'carlos.soto@ejemplo.cl',
+                estado: 'Activo',
+                maquina: null,
+                licenciaVence: '2025-08-15',
+                porcentaje: 50
+            }
+            ];
+
+            const cardViewSection = document.getElementById('drivers-card-view');
+            const tableViewSection = document.getElementById('drivers-table-view');
+            const viewToggleButtons = document.querySelectorAll('[data-view-mode]');
+            const statusFilterButtons = document.querySelectorAll('[data-status-filter]');
+            const driverResultsCount = document.getElementById('driver-results-count');
+            const docAlertsList = document.getElementById('doc-alerts-list');
+            
+            // ============================================
+            // FUNCIONES AUXILIARES
+            // ============================================
+            function getNombreCompleto(driver) {
+                return [driver.primerNombre, driver.segundoNombre, driver.apellidoPaterno, driver.apellidoMaterno]
+                    .filter(n => n).join(' ');
+            }
+
+            const getStatusPillClass = (status) => {
+                switch(status) {
+                    case 'Activo': return 'status-pill--ok';
+                    case 'Inactivo': return 'status-pill--warning';
+                    default: return 'status-pill--warning';
+                }
+            };
+
+            function getLicenseStatus(licenciaVence) {
+                if (!licenciaVence) return { text: 'Sin registro', className: 'status-pill--warning', severity: 'warning' };
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const vence = new Date(licenciaVence);
+                vence.setHours(0, 0, 0, 0);
+                const diffDays = Math.ceil((vence - today) / (1000 * 60 * 60 * 24));
+                
+                if (Number.isNaN(diffDays)) {
+                    return { text: 'Fecha invalida', className: 'status-pill--error', severity: 'error' };
+                }
+                if (diffDays < 0) {
+                    return { text: 'VENCIDA', className: 'status-pill--error', severity: 'error' };
+                }
+                if (diffDays <= 30) {
+                    return { text: `Vence en ${diffDays} dias`, className: 'status-pill--warning', severity: 'warning' };
+                }
+                return { text: 'Al dia', className: 'status-pill--ok', severity: 'ok' };
+            }
+
+            const buildDocIndicators = (licenciaVence) => {
+                const status = getLicenseStatus(licenciaVence);
+                const dateText = licenciaVence ? ` (${licenciaVence})` : '';
+                return `
+                    <div class="doc-indicators" role="group" aria-label="Estado de licencia">
+                        <span class="doc-indicator doc-indicator--${status.severity}" title="Licencia: ${status.text}${dateText}">Licencia</span>
+                    </div>
+                `;
+            };
+
+            let activeStatusFilter = 'all';
+
+            const getFilteredDrivers = () => {
+                if (activeStatusFilter === 'all') return [...driversData];
+                return driversData.filter(driver => driver.estado === activeStatusFilter);
+            };
+
+            // ============================================
+            // CALCULAR KPIs
+            // ============================================
+            const calculateKPIs = () => {
+                let activos = 0;
+                let inactivos = 0;
+                let conMaquina = 0;
+                let docsVencer = 0;
+                
+                driversData.forEach(driver => {
+                    if (driver.estado === 'Activo') activos++;
+                    else if (driver.estado === 'Inactivo') inactivos++;
+                    
+                    if (driver.maquina) conMaquina++;
+                    
+                    // Contar licencias por vencer o vencidas
+                    const status = getLicenseStatus(driver.licenciaVence);
+                    if (status.severity !== 'ok') {
+                        docsVencer++;
+                    }
+                });
+                
+                const kpiActivos = document.getElementById('kpi-activos');
+                const kpiInactivos = document.getElementById('kpi-inactivos');
+                const kpiConMaquina = document.getElementById('kpi-con-maquina');
+                const kpiDocsVencer = document.getElementById('kpi-docs-vencer');
+                
+                if (kpiActivos) kpiActivos.textContent = activos;
+                if (kpiInactivos) kpiInactivos.textContent = inactivos;
+                if (kpiConMaquina) kpiConMaquina.textContent = conMaquina;
+                if (kpiDocsVencer) kpiDocsVencer.textContent = docsVencer;
+            };
+
+            const updateDocAlertsSummary = (dataset = getFilteredDrivers()) => {
+                if (!docAlertsList) return;
+                const stats = { error: 0, warning: 0, ok: 0 };
+                dataset.forEach(driver => {
+                    const severity = getLicenseStatus(driver.licenciaVence).severity;
+                    stats[severity] = (stats[severity] || 0) + 1;
+                });
+                const total = stats.error + stats.warning + stats.ok;
+                if (!total) {
+                    docAlertsList.innerHTML = '<li><span class="doc-alert-dot doc-alert-dot--ok"></span>Sin licencias registradas</li>';
+                    return;
+                }
+                docAlertsList.innerHTML = `
+                    <li><span class="doc-alert-dot doc-alert-dot--error"></span>Vencidas: <strong>${stats.error}</strong></li>
+                    <li><span class="doc-alert-dot doc-alert-dot--warning"></span>Por vencer: <strong>${stats.warning}</strong></li>
+                    <li><span class="doc-alert-dot doc-alert-dot--ok"></span>Al dia: <strong>${stats.ok}</strong></li>
+                `;
+            };
+
+            // ============================================
+            // RENDERIZAR TABLA Y TARJETAS DE CHOFERES
+            // ============================================
+            const renderDriverTable = (dataset = getFilteredDrivers()) => {
+                const tableBody = document.getElementById('drivers-table-body');
+                if (!tableBody) return;
+                
+                tableBody.innerHTML = '';
+                
+                if (!dataset.length) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = `
+                        <td colspan="6" style="text-align: center; padding: var(--space-xl) 0;">
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.5;">
+                                <span class="sidebar__nav-item-icon icon-choferes" style="width: 48px; height: 48px; display: inline-block;"></span>
+                            </div>
+                            <h3 style="font-size: var(--font-size-desktop-base); font-weight: var(--font-weight-semi-bold); color: var(--color-text-primary); margin-bottom: var(--space-xs);">
+                                No hay choferes coincidentes
+                            </h3>
+                            <p style="font-size: var(--font-size-desktop-label); color: var(--color-text-secondary);">
+                                Ajusta los filtros o registra un nuevo chofer.
+                            </p>
+                        </td>
+                    `;
+                    tableBody.appendChild(emptyRow);
+                    return;
+                }
+                
+                dataset.forEach(driver => {
+                    const row = document.createElement('tr');
+                    const nombreCompleto = getNombreCompleto(driver);
+                    const licenseStatus = getLicenseStatus(driver.licenciaVence);
+                    
+                    row.innerHTML = `
+                        <td data-label="Chofer">
+                            <strong>${nombreCompleto}</strong>
+                            <br><small style="color: var(--color-text-secondary);">${driver.email}</small>
+                        </td>
+                        <td data-label="RUT">${driver.rut}</td>
+                        <td data-label="Máquina">${driver.maquina || '<span style="color: var(--color-text-secondary);">Sin asignar</span>'}</td>
+                        <td data-label="Estado">
+                            <span class="status-pill ${getStatusPillClass(driver.estado)}">${driver.estado}</span>
+                        </td>
+                        <td data-label="Licencia">
+                            ${buildDocIndicators(driver.licenciaVence)}
+                        </td>
+                        <td class="action-cell" data-label="Acciones">
+                            <a href="admin-driver-detail.html" class="btn btn-secondary btn-sm">Gestionar</a>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            const renderDriverCards = (dataset = getFilteredDrivers()) => {
+                const grid = document.getElementById('drivers-card-grid');
+                if (!grid) return;
+                grid.innerHTML = '';
+
+                if (!dataset.length) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <p style="font-weight: var(--font-weight-semi-bold);">No hay choferes disponibles</p>
+                            <p style="color: var(--color-text-secondary);">Relaja los filtros para ver mas resultados.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                dataset.forEach(driver => {
+                    const card = document.createElement('div');
+                    card.className = 'driver-card';
+                    const nombreCompleto = getNombreCompleto(driver);
+                    
+                    // Generar iniciales (primera letra de primer nombre y apellido paterno)
+                    const iniciales = driver.primerNombre.charAt(0) + (driver.apellidoPaterno ? driver.apellidoPaterno.charAt(0) : driver.apellidoMaterno.charAt(0));
+                    
+                    card.innerHTML = `
+                        <div class="driver-card__inner">
+                            <!-- Avatar con iniciales -->
+                            <div class="driver-avatar" role="img" aria-label="Avatar de ${nombreCompleto}">
+                                ${iniciales.toUpperCase()}
+                            </div>
+                            
+                            <!-- Status Pill (posición absoluta, esquina superior derecha) -->
+                            <span class="driver-card__status status-pill ${getStatusPillClass(driver.estado)}">${driver.estado}</span>
+                            
+                            <!-- Contenido principal -->
+                            <div class="driver-card__content">
+                                <!-- Identificación -->
+                                <div class="driver-card__identity">
+                                    <div class="driver-card__name">
+                                        ${nombreCompleto}
+                                    </div>
+                                    <div class="driver-card__detail">
+                                        ${driver.rut}
+                                    </div>
+                                    <div class="driver-card__detail">
+                                        ${driver.email}
+                                    </div>
+                                </div>
+                                
+                                <!-- Separador -->
+                                <div class="driver-card__separator"></div>
+                                
+                                <!-- Máquina y Licencia (en una línea) -->
+                                <div class="driver-card__info">
+                                    <div class="driver-card__machine">
+                                        <svg class="driver-card__machine-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7Z"/>
+                                            <path d="M4 10H20" stroke="currentColor" stroke-width="1.5"/>
+                                        </svg>
+                                        <span class="driver-card__machine-text">${driver.maquina || 'Sin asignar'}</span>
+                                    </div>
+                                    <div class="driver-card__docs">
+                                        ${buildDocIndicators(driver.licenciaVence)}
+                                    </div>
+                                </div>
+                                
+                                <!-- Botón de acción -->
+                                <div class="driver-card__actions">
+                                    <a href="admin-driver-detail.html" class="btn btn-primary btn-sm" style="width: 100%;">Ver Detalle</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            };
+
+            const updateResultsCount = (count) => {
+                if (!driverResultsCount) return;
+                const label = count === 1 ? 'chofer' : 'choferes';
+                driverResultsCount.textContent = `${count} ${label}`;
+            };
+
+            const getPreferredViewMode = (length = getFilteredDrivers().length) => {
+                if (window.innerWidth < 768) return 'cards';
+                return length <= 6 ? 'cards' : 'table';
+            };
+
+            let currentViewMode = getPreferredViewMode();
+            let userSelectedView = false;
+
+            const applyViewMode = (mode) => {
+                currentViewMode = mode;
+                if (cardViewSection) cardViewSection.classList.toggle('is-active', mode === 'cards');
+                if (tableViewSection) tableViewSection.classList.toggle('is-active', mode === 'table');
+                viewToggleButtons.forEach(button => {
+                    const isActive = button.dataset.viewMode === mode;
+                    button.classList.toggle('is-active', isActive);
+                    button.setAttribute('aria-pressed', isActive.toString());
+                });
+            };
+
+            const refreshDriverViews = () => {
+                const dataset = getFilteredDrivers();
+                renderDriverCards(dataset);
+                renderDriverTable(dataset);
+                updateDocAlertsSummary(dataset);
+                updateResultsCount(dataset.length);
+                if (!userSelectedView) {
+                    const preferred = getPreferredViewMode(dataset.length);
+                    if (preferred !== currentViewMode) {
+                        applyViewMode(preferred);
+                        return;
+                    }
+                }
+                applyViewMode(currentViewMode);
+            };
+
+            viewToggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const mode = button.dataset.viewMode;
+                    if (!mode) return;
+                    userSelectedView = true;
+                    applyViewMode(mode);
+                });
+            });
+
+            window.addEventListener('resize', () => {
+                if (userSelectedView) return;
+                const preferred = getPreferredViewMode();
+                if (preferred !== currentViewMode) {
+                    applyViewMode(preferred);
+                }
+            });
+
+            statusFilterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.dataset.statusFilter || 'all';
+                    if (value === activeStatusFilter) return;
+                    activeStatusFilter = value;
+                    statusFilterButtons.forEach(btn => {
+                        btn.classList.toggle('is-active', btn === button);
+                    });
+                    refreshDriverViews();
+                });
+            });
+            
+            // ============================================
+            // INICIALIZAR
+            // ============================================
+            calculateKPIs();
+            refreshDriverViews();
+        });
+    </script>
 </body>
 </html>
-
-
-
-

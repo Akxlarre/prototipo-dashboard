@@ -16,10 +16,203 @@
     <link rel="stylesheet" href="css/components/_inputs.css">
     <link rel="stylesheet" href="css/components/_forms.css">
     <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_tabs.css">
+    <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_badge.css">
+    <link rel="stylesheet" href="css/components/_modal.css">
     <link rel="stylesheet" href="css/components/_alert-row.css">
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
-    <link rel="stylesheet" href="css/components/_badge.css">
+
+    <style>
+        .driver-detail-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(300px, 1fr);
+            gap: var(--space-xl);
+            align-items: flex-start;
+        }
+
+        .detail-sidebar-card {
+            position: sticky;
+            top: var(--space-xl);
+        }
+
+        .driver-header-card {
+            background: white;
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            display: flex;
+            gap: var(--space-xl);
+            align-items: flex-start;
+        }
+
+        .driver-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .driver-header-info {
+            flex: 1;
+        }
+
+        .driver-header-info h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-strong);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.375rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .info-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .driver-header-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .status-badge--active {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .status-badge--inactive {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .status-badge__dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .form-grid-two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+
+        .alert-box {
+            padding: 1rem;
+            border-left: 3px solid var(--warning);
+            background: var(--warning-bg);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .alert-box svg {
+            width: 20px;
+            height: 20px;
+            color: var(--warning);
+            flex-shrink: 0;
+        }
+
+        .alert-box--danger {
+            border-left-color: var(--danger);
+            background: var(--danger-bg);
+        }
+
+        .alert-box--danger svg {
+            color: var(--danger);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.875rem;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item__label {
+            color: var(--text-muted);
+        }
+
+        .summary-item__value {
+            font-weight: 500;
+            color: var(--text-strong);
+            text-align: right;
+        }
+
+        .sidebar-note {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding: 1rem;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .driver-detail-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-sidebar-card {
+                position: static;
+            }
+
+            .form-grid-two-cols {
+                grid-template-columns: 1fr;
+            }
+
+            .driver-header-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .driver-header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-layout">
@@ -44,7 +237,7 @@
                 <a href="admin-machines-list.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
                         <span class="sidebar__nav-item-icon icon-maquinas"></span>
-                        Maquinas
+                        Máquinas
                     </span>
                 </a>
                 <a href="admin-drivers-list.html" class="sidebar__nav-item is-active">
@@ -91,385 +284,618 @@
 
         <main class="main-content">
             <header class="main-content__header">
-                <h1 class="main-content__title">Detalle del Chofer</h1>
-                <p class="main-content__subtitle">Informacion completa y gestion del chofer.</p>
+                <div>
+                    <h1 class="main-content__title">Detalle del Chofer</h1>
+                    <p class="main-content__subtitle">Información completa y gestión del chofer</p>
+                </div>
+                <a href="admin-drivers-list.html" class="btn btn-secondary">Volver a lista</a>
             </header>
 
-            <div class="main-content__grid" style="grid-template-columns: 1fr;">
-                <div class="card" id="general-info-card">
-                    <div class="card__header">
-                        <h2 class="card__header-title">Informacion General</h2>
-                        <button class="btn btn-secondary" id="edit-general-info-btn">Editar</button>
+            <!-- Driver Header Card -->
+            <div class="driver-header-card">
+                <div class="driver-avatar" id="driver-avatar">JP</div>
+                <div class="driver-header-info">
+                    <h1 id="driver-full-name">Juan Pérez</h1>
+                    <div class="info-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 003 3.5v13A1.5 1.5 0 004.5 18h11a1.5 1.5 0 001.5-1.5v-13A1.5 1.5 0 0015.5 2h-11zm4.5 8a1 1 0 100-2 1 1 0 000 2zm2.5-1a1 1 0 11-2 0 1 1 0 012 0zm1.5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                        <span id="driver-rut-header">12.345.678-9</span>
                     </div>
-                    <div class="card__body">
-                        <div class="view-mode" id="general-info-view">
-                            <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
-                                <img src="https://via.placeholder.com/100x100" alt="Foto del Chofer" style="border-radius: var(--border-radius-md); object-fit: cover; flex-shrink: 0;">
-                                <div style="flex-grow: 1;">
-                                    <h3 style="font-size: var(--font-size-desktop-h2); font-weight: var(--font-weight-bold); margin-bottom: var(--space-xs);" id="driver-name-view">Juan Perez</h3>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary); margin-bottom: var(--space-xs);">**ID Chofer:** <span id="driver-id-view">CH001</span></p>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Telefono:** <span id="driver-phone-view">+56 9 1234 5678</span></p>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Correo:** <span id="driver-email-view">juan.perez@dominio.com</span></p>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**RUT:** <span id="driver-rut-view">12.345.678-9</span></p>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**Estado:** <span id="driver-status-view">Activo</span></p>
-                                    <p style="font-size: var(--font-size-desktop-base); color: var(--color-text-secondary);">**% Pago Individual:** <span id="driver-split-view" data-raw="30">30%</span></p>
-                                </div>
-                            </div>
+                    <div class="info-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
+                        <span id="driver-email-header">juan.perez@ejemplo.cl</span>
+                    </div>
+                    <div class="info-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                        </svg>
+                        <span id="driver-phone-header">+56 9 1234 5678</span>
+                    </div>
+                    <div class="status-badge status-badge--active" id="driver-status-badge">
+                        <span class="status-badge__dot"></span>
+                        <span>Activo</span>
+                    </div>
+                </div>
+                <div class="driver-header-actions">
+                    <button class="btn btn-secondary btn-sm" id="btn-edit-driver">Editar</button>
+                </div>
+            </div>
+
+            <div class="driver-detail-layout">
+                <div>
+                    <!-- Información Personal -->
+                    <div class="card" id="personal-info-card">
+                        <div class="card__header">
+                            <h2 class="card__header-title">Información Personal</h2>
+                            <button class="btn btn-secondary btn-sm" id="btn-edit-personal">Editar</button>
+                            <button class="btn btn-secondary btn-sm" id="btn-cancel-personal" style="display: none;">Cancelar</button>
+                            <button class="btn btn-primary btn-sm" id="btn-save-personal" style="display: none;">Guardar</button>
                         </div>
-                        <div class="edit-mode" id="general-info-edit" style="display: none;">
-                            <form id="general-info-form">
-                                <div class="form-field">
-                                    <label for="driver-name-input" class="form-field__label">Nombre Completo</label>
-                                    <input type="text" id="driver-name-input" class="input-text" value="Juan Perez">
-                                </div>
-                                <div class="form-field">
-                                    <label for="driver-rut-input" class="form-field__label">RUT</label>
-                                    <input type="text" id="driver-rut-input" class="input-text" value="12.345.678-9">
-                                </div>
-                                <div class="form-field">
-                                    <label for="driver-phone-input" class="form-field__label">Telefono</label>
-                                    <input type="tel" id="driver-phone-input" class="input-text" value="+56 9 1234 5678">
-                                </div>
-                                <div class="form-field">
-                                    <label for="driver-email-input" class="form-field__label">Correo Electronico</label>
-                                    <input type="email" id="driver-email-input" class="input-text" value="juan.perez@dominio.com">
-                                </div>
-                                <div class="form-field">
-                                    <label for="driver-status-input" class="form-field__label">Estado</label>
-                                    <select id="driver-status-input" class="input-text">
-                                        <option value="Activo">Activo</option>
-                                        <option value="Inactivo">Inactivo</option>
-                                        <option value="De Licencia">De Licencia</option>
-                                    </select>
-                                </div>
-                                <div class="form-field">
-                                    <label for="driver-split-input" class="form-field__label">% Porcentaje Individual</label>
-                                    <div style="display: flex; gap: var(--space-sm); align-items: center;">
-                                        <input type="number" id="driver-split-input" class="input-text" value="30" min="0" max="100" step="0.5" style="max-width: 140px;">
-                                        <span>%</span>
+                        <div class="card__body">
+                            <!-- View Mode -->
+                            <div id="personal-view-mode">
+                                <div class="form-grid-two-cols">
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Primer Nombre</label>
+                                        <div style="font-weight: 500;" id="view-primer-nombre">Juan</div>
                                     </div>
-                                    <p class="form-field__helper-text">
-                                        Este porcentaje reemplaza el valor por defecto configurado en <strong>Configuracion</strong> al calcular la liquidacion del chofer.
-                                    </p>
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Segundo Nombre</label>
+                                        <div style="font-weight: 500;" id="view-segundo-nombre">Carlos</div>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card__footer" id="general-info-footer" style="display: none;">
-                        <button class="btn btn-secondary" id="cancel-general-info-btn">Cancelar</button>
-                        <button class="btn btn-primary" id="save-general-info-btn">Guardar Cambios</button>
-                    </div>
-                </div>
+                                <div class="form-grid-two-cols" style="margin-top: 1rem;">
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Apellido Paterno</label>
+                                        <div style="font-weight: 500;" id="view-apellido-paterno">Pérez</div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Apellido Materno</label>
+                                        <div style="font-weight: 500;" id="view-apellido-materno">González</div>
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols" style="margin-top: 1rem;">
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">RUT</label>
+                                        <div style="font-weight: 500;" id="view-rut">12.345.678-9</div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Teléfono</label>
+                                        <div style="font-weight: 500;" id="view-telefono">+56 9 1234 5678</div>
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols" style="margin-top: 1rem;">
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Email</label>
+                                        <div style="font-weight: 500;" id="view-email">juan.perez@ejemplo.cl</div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Estado</label>
+                                        <div style="font-weight: 500;" id="view-estado">Activo</div>
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols" style="margin-top: 1rem;">
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Máquina Asignada</label>
+                                        <div style="font-weight: 500;" id="view-maquina">Máquina 01</div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Porcentaje</label>
+                                        <div style="font-weight: 500;" id="view-porcentaje">50%</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="card" id="license-info-card">
-                    <div class="card__header">
-                        <h2 class="card__header-title">Detalles de Licencia</h2>
-                        <button class="btn btn-secondary" id="edit-license-info-btn">Actualizar</button>
-                    </div>
-                    <div class="card__body">
-                        <div class="view-mode" id="license-info-view">
-
-                            <div class="form-field">
-                                <label class="form-field__label">Fecha de Vencimiento</label>
-                                <p class="input-text" style="display: block; border: none; background: none; color: var(--color-text-primary);" id="license-expiry-view">2023-11-17</p>
-                                <span class="form-field__error-text" id="license-expiry-alert" style="display: block;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
-                                    La licencia vence en 3 dias. Renovar pronto!!
-                                </span>
+                            <!-- Edit Mode -->
+                            <div id="personal-edit-mode" style="display: none;">
+                                <div class="form-grid-two-cols">
+                                    <div class="form-field">
+                                        <label for="edit-primer-nombre" class="form-field__label">Primer Nombre *</label>
+                                        <input type="text" id="edit-primer-nombre" class="input-text">
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="edit-segundo-nombre" class="form-field__label">Segundo Nombre</label>
+                                        <p class="form-field__helper-text">Opcional</p>
+                                        <input type="text" id="edit-segundo-nombre" class="input-text">
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols">
+                                    <div class="form-field">
+                                        <label for="edit-apellido-paterno" class="form-field__label">Apellido Paterno *</label>
+                                        <input type="text" id="edit-apellido-paterno" class="input-text">
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="edit-apellido-materno" class="form-field__label">Apellido Materno *</label>
+                                        <input type="text" id="edit-apellido-materno" class="input-text">
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols">
+                                    <div class="form-field">
+                                        <label for="edit-rut" class="form-field__label">RUT *</label>
+                                        <input type="text" id="edit-rut" class="input-text" maxlength="12">
+                                        <div class="form-field__error" id="edit-rut-error" style="display: none;"></div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="edit-telefono" class="form-field__label">Teléfono *</label>
+                                        <input type="tel" id="edit-telefono" class="input-text">
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols">
+                                    <div class="form-field">
+                                        <label for="edit-email" class="form-field__label">Email *</label>
+                                        <input type="email" id="edit-email" class="input-text">
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="edit-estado" class="form-field__label">Estado *</label>
+                                        <select id="edit-estado" class="input-text">
+                                            <option value="Activo">Activo</option>
+                                            <option value="Inactivo">Inactivo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-grid-two-cols">
+                                    <div class="form-field">
+                                        <label for="edit-maquina" class="form-field__label">Máquina Asignada</label>
+                                        <select id="edit-maquina" class="input-text">
+                                            <option value="">Sin asignar</option>
+                                            <option value="Máquina 01">Máquina 01</option>
+                                            <option value="Máquina 02">Máquina 02</option>
+                                            <option value="Máquina 03">Máquina 03</option>
+                                            <option value="Máquina 04">Máquina 04</option>
+                                            <option value="Máquina 05">Máquina 05</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="edit-porcentaje" class="form-field__label">Porcentaje Individual</label>
+                                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                            <input type="number" id="edit-porcentaje" class="input-text" min="0" max="100" step="0.5" style="max-width: 140px;">
+                                            <span>%</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="edit-mode" id="license-info-edit" style="display: none;">
-                            <form id="license-info-form">
+                    </div>
+
+                    <!-- Detalles de Licencia -->
+                    <div class="card" style="margin-top: var(--space-lg);" id="license-info-card">
+                        <div class="card__header">
+                            <h2 class="card__header-title">Detalles de Licencia</h2>
+                            <button class="btn btn-secondary btn-sm" id="btn-edit-license">Editar</button>
+                            <button class="btn btn-secondary btn-sm" id="btn-cancel-license" style="display: none;">Cancelar</button>
+                            <button class="btn btn-primary btn-sm" id="btn-save-license" style="display: none;">Guardar</button>
+                        </div>
+                        <div class="card__body">
+                            <!-- View Mode -->
+                            <div id="license-view-mode">
+                                <label style="font-size: 0.875rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Fecha de Vencimiento</label>
+                                <div style="font-weight: 500;" id="view-licencia-vence">2024-12-15</div>
+                                <div id="license-alert-container"></div>
+                            </div>
+
+                            <!-- Edit Mode -->
+                            <div id="license-edit-mode" style="display: none;">
                                 <div class="form-field">
-                                    <label for="license-number-input" class="form-field__label">Numero de Licencia</label>
-                                    <input type="text" id="license-number-input" class="input-text" value="12345678-9">
+                                    <label for="edit-licencia-vence" class="form-field__label">Fecha de Vencimiento de Licencia</label>
+                                    <p class="form-field__helper-text">Opcional</p>
+                                    <input type="date" id="edit-licencia-vence" class="input-text">
                                 </div>
-                                <div class="form-field">
-                                    <label for="license-expiry-input" class="form-field__label">Fecha de Vencimiento</label>
-                                    <input type="date" id="license-expiry-input" class="input-text" value="2023-11-17">
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="card__footer" id="license-info-footer" style="display: none;">
-                        <button class="btn btn-secondary" id="cancel-license-info-btn">Cancelar</button>
-                        <button class="btn btn-primary" id="save-license-info-btn">Guardar Cambios</button>
+
+                    <!-- Historial con Tabs -->
+                    <div class="card" style="margin-top: var(--space-lg);">
+                        <div class="card__header">
+                            <h2 class="card__header-title">Historial</h2>
+                        </div>
+                        <div class="card__body">
+                            <!-- Tabs -->
+                            <div class="tabs-container" role="tablist">
+                                <button class="tab-item tab-item--active" id="tab-reportes" role="tab" aria-controls="content-reportes" aria-selected="true">
+                                    Reportes del Chofer
+                                </button>
+                                <button class="tab-item" id="tab-liquidaciones" role="tab" aria-controls="content-liquidaciones" aria-selected="false">
+                                    Liquidaciones
+                                </button>
+                            </div>
+
+                            <!-- Tab Content: Reportes -->
+                            <div id="content-reportes" class="tab-content" role="tabpanel" aria-labelledby="tab-reportes" style="display: block;">
+                                <div class="data-table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Recaudado</th>
+                                                <th>Diésel</th>
+                                                <th>Observaciones</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td data-label="Fecha">14 Nov 2024</td>
+                                                <td data-label="Estado"><span class="status-pill status-pill--success">Completado</span></td>
+                                                <td data-label="Recaudado">$450.000</td>
+                                                <td data-label="Diésel">$80.000</td>
+                                                <td data-label="Observaciones">Sin novedades</td>
+                                                <td class="action-cell" data-label="Acciones"><a href="admin-registro-diario.html" class="btn btn-secondary btn-sm">Ver</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td data-label="Fecha">13 Nov 2024</td>
+                                                <td data-label="Estado"><span class="status-pill status-pill--warning">Pendiente</span></td>
+                                                <td data-label="Recaudado">—</td>
+                                                <td data-label="Diésel">—</td>
+                                                <td data-label="Observaciones">—</td>
+                                                <td class="action-cell" data-label="Acciones"><a href="admin-registro-diario.html" class="btn btn-secondary btn-sm">Ver</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td data-label="Fecha">12 Nov 2024</td>
+                                                <td data-label="Estado"><span class="status-pill status-pill--success">Completado</span></td>
+                                                <td data-label="Recaudado">$520.000</td>
+                                                <td data-label="Diésel">$75.000</td>
+                                                <td data-label="Observaciones">Buen día</td>
+                                                <td class="action-cell" data-label="Acciones"><a href="admin-registro-diario.html" class="btn btn-secondary btn-sm">Ver</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab Content: Liquidaciones -->
+                            <div id="content-liquidaciones" class="tab-content" role="tabpanel" aria-labelledby="tab-liquidaciones" style="display: none;">
+                                <div class="data-table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Total Ganado</th>
+                                                <th>Mínimo Garantizado</th>
+                                                <th>Pago Final</th>
+                                                <th>Método de Pago</th>
+                                                <th>Código/Ref.</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td data-label="Fecha">01 Nov 2024</td>
+                                                <td data-label="Total Ganado">$450.000</td>
+                                                <td data-label="Mínimo Garantizado">$400.000</td>
+                                                <td data-label="Pago Final">$450.000</td>
+                                                <td data-label="Método de Pago">Transferencia</td>
+                                                <td data-label="Código/Ref.">TRF-2024-001</td>
+                                                <td data-label="Estado"><span class="status-pill status-pill--success">Pagado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td data-label="Fecha">01 Oct 2024</td>
+                                                <td data-label="Total Ganado">$380.000</td>
+                                                <td data-label="Mínimo Garantizado">$400.000</td>
+                                                <td data-label="Pago Final">$400.000</td>
+                                                <td data-label="Método de Pago">Transferencia</td>
+                                                <td data-label="Código/Ref.">TRF-2024-002</td>
+                                                <td data-label="Estado"><span class="status-pill status-pill--success">Pagado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td data-label="Fecha">01 Sep 2024</td>
+                                                <td data-label="Total Ganado">$520.000</td>
+                                                <td data-label="Mínimo Garantizado">$400.000</td>
+                                                <td data-label="Pago Final">$520.000</td>
+                                                <td data-label="Método de Pago">Transferencia</td>
+                                                <td data-label="Código/Ref.">TRF-2024-003</td>
+                                                <td data-label="Estado"><span class="status-pill status-pill--warning">Pendiente</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card__header">
-                        <h2 class="card__header-title">Historial de Reportes</h2>
-                        <a href="#" class="card__header-action">Ver Completo 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
-                        </a>
-                    </div>
-                    <div class="card__body card__body--no-padding"> 
-                        <div class="alert-row">
-                            <div class="alert-row__status-bar alert-row__status-bar--approved"></div>
-                            <span class="alert-row__text">Reporte del 14/11/2023: <strong>Aprobado</strong>.</span>
-                            <a href="admin-registro-diario.html?mode=view" class="alert-row__action-link">Ver Detalle</a>
+                <!-- Sidebar -->
+                <aside class="detail-sidebar-card">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3 class="card__header-title">Resumen Rápido</h3>
                         </div>
-                        <div class="alert-row">
-                            <div class="alert-row__status-bar alert-row__status-bar--approved"></div>
-                            <span class="alert-row__text">Reporte del 12/11/2023: <strong>Aprobado</strong>.</span>
-                            <a href="admin-registro-diario.html?mode=view" class="alert-row__action-link">Ver Detalle</a>
+                        <div class="card__body">
+                            <div class="summary-item">
+                                <span class="summary-item__label">ID Chofer</span>
+                                <span class="summary-item__value">CH-001</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item__label">Fecha Registro</span>
+                                <span class="summary-item__value">01 Ene 2024</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item__label">Reportes Totales</span>
+                                <span class="summary-item__value">45</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item__label">Último Reporte</span>
+                                <span class="summary-item__value">14 Nov 2024</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                    <div class="sidebar-note">
+                        Usa los tabs arriba para navegar entre los reportes diarios y las liquidaciones mensuales de este chofer.
+                    </div>
+                </aside>
             </div>
         </main>
     </div>
 
+    <script src="js/main.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- General Info Card ---
-            const generalInfoView = document.getElementById('general-info-view');
-            const generalInfoEdit = document.getElementById('general-info-edit');
-            const editGeneralInfoBtn = document.getElementById('edit-general-info-btn');
-            const saveGeneralInfoBtn = document.getElementById('save-general-info-btn');
-            const cancelGeneralInfoBtn = document.getElementById('cancel-general-info-btn');
-            const generalInfoFooter = document.getElementById('general-info-footer');
+        // RUT validation functions
+        function cleanRut(rut) {
+            return rut.replace(/[^0-9kK]/g, '');
+        }
 
-            const driverNameView = document.getElementById('driver-name-view');
-            const driverIdView = document.getElementById('driver-id-view');
-            const driverPhoneView = document.getElementById('driver-phone-view');
-            const driverEmailView = document.getElementById('driver-email-view');
-            const driverRutView = document.getElementById('driver-rut-view');
-            const driverStatusView = document.getElementById('driver-status-view');
-            const driverSplitView = document.getElementById('driver-split-view');
+        function formatRut(rut) {
+            const cleaned = cleanRut(rut);
+            if (cleaned.length < 2) return cleaned;
+            
+            const body = cleaned.slice(0, -1);
+            const dv = cleaned.slice(-1).toUpperCase();
+            
+            let formatted = '';
+            for (let i = body.length - 1, j = 0; i >= 0; i--, j++) {
+                if (j > 0 && j % 3 === 0) formatted = '.' + formatted;
+                formatted = body[i] + formatted;
+            }
+            
+            return formatted + '-' + dv;
+        }
 
-            const driverNameInput = document.getElementById('driver-name-input');
-            const driverRutInput = document.getElementById('driver-rut-input');
-            const driverPhoneInput = document.getElementById('driver-phone-input');
-            const driverEmailInput = document.getElementById('driver-email-input');
-            const driverStatusInput = document.getElementById('driver-status-input');
-            const driverSplitInput = document.getElementById('driver-split-input');
+        function validateRut(rut) {
+            const cleaned = cleanRut(rut);
+            if (cleaned.length < 2) return false;
+            
+            const body = cleaned.slice(0, -1);
+            const dv = cleaned.slice(-1).toUpperCase();
+            
+            let sum = 0;
+            let multiplier = 2;
+            
+            for (let i = body.length - 1; i >= 0; i--) {
+                sum += parseInt(body[i]) * multiplier;
+                multiplier = multiplier === 7 ? 2 : multiplier + 1;
+            }
+            
+            const expectedDv = 11 - (sum % 11);
+            const finalDv = expectedDv === 11 ? '0' : expectedDv === 10 ? 'K' : expectedDv.toString();
+            
+            return dv === finalDv;
+        }
 
-            const DRIVER_SPLIT_STORAGE_KEY = 'driverSplitPercentages';
-            const DEFAULT_PERCENTAGE_KEY = 'cfg_porcentajeDefectoChofer';
-            const driverIdValue = driverIdView ? driverIdView.textContent.trim() : (driverNameView ? driverNameView.textContent.trim() : 'driver');
+        // Get initials
+        function getInitials(primerNombre, apellidoPaterno) {
+            return (primerNombre.charAt(0) + apellidoPaterno.charAt(0)).toUpperCase();
+        }
 
-            const safeJSONParse = (value, fallback = {}) => {
-                try {
-                    return value ? JSON.parse(value) : fallback;
-                } catch {
-                    return fallback;
-                }
-            };
+        // Update driver header
+        function updateDriverHeader() {
+            const primerNombre = document.getElementById('view-primer-nombre').textContent;
+            const segundoNombre = document.getElementById('view-segundo-nombre').textContent;
+            const apellidoPaterno = document.getElementById('view-apellido-paterno').textContent;
+            const apellidoMaterno = document.getElementById('view-apellido-materno').textContent;
+            const rut = document.getElementById('view-rut').textContent;
+            const email = document.getElementById('view-email').textContent;
+            const telefono = document.getElementById('view-telefono').textContent;
+            const estado = document.getElementById('view-estado').textContent;
 
-            const getDefaultPercentage = () => {
-                const stored = Number(localStorage.getItem(DEFAULT_PERCENTAGE_KEY));
-                return Number.isFinite(stored) ? stored : 30;
-            };
+            const nombreCompleto = [primerNombre, segundoNombre, apellidoPaterno, apellidoMaterno].filter(n => n && n !== '—').join(' ');
 
-            const getSplitStore = () => safeJSONParse(localStorage.getItem(DRIVER_SPLIT_STORAGE_KEY), {});
+            document.getElementById('driver-full-name').textContent = nombreCompleto;
+            document.getElementById('driver-rut-header').textContent = rut;
+            document.getElementById('driver-email-header').textContent = email;
+            document.getElementById('driver-phone-header').textContent = telefono;
+            document.getElementById('driver-avatar').textContent = getInitials(primerNombre, apellidoPaterno);
 
-            const applyDriverSplit = (value) => {
-                if (!driverSplitView) return;
-                const numeric = Number(value);
-                if (Number.isFinite(numeric)) {
-                    driverSplitView.textContent = `${numeric}%`;
-                    driverSplitView.dataset.raw = numeric;
-                } else {
-                    driverSplitView.textContent = 'Sin definir';
-                    driverSplitView.dataset.raw = '';
-                }
-            };
+            const statusBadge = document.getElementById('driver-status-badge');
+            statusBadge.innerHTML = `<span class="status-badge__dot"></span><span>${estado}</span>`;
+            statusBadge.className = 'status-badge ' + (estado === 'Activo' ? 'status-badge--active' : 'status-badge--inactive');
+        }
 
-            const persistDriverSplit = (value) => {
-                if (!driverSplitInput || !driverSplitView) return;
-                const store = getSplitStore();
-                const numeric = Number(value);
-                if (Number.isFinite(numeric)) {
-                    store[driverIdValue] = numeric;
-                } else {
-                    delete store[driverIdValue];
-                }
-                localStorage.setItem(DRIVER_SPLIT_STORAGE_KEY, JSON.stringify(store));
-                applyDriverSplit(numeric);
-            };
+        // Personal Info Edit Mode
+        function togglePersonalEditMode(isEdit) {
+            const viewMode = document.getElementById('personal-view-mode');
+            const editMode = document.getElementById('personal-edit-mode');
+            const btnEdit = document.getElementById('btn-edit-personal');
+            const btnCancel = document.getElementById('btn-cancel-personal');
+            const btnSave = document.getElementById('btn-save-personal');
 
-            const loadDriverSplit = () => {
-                if (!driverSplitInput || !driverSplitView) return;
-                const store = getSplitStore();
-                let value = store[driverIdValue];
-                if (!Number.isFinite(value)) {
-                    value = getDefaultPercentage();
-                }
-                driverSplitInput.value = value;
-                applyDriverSplit(value);
-            };
+            if (isEdit) {
+                // Populate edit fields
+                document.getElementById('edit-primer-nombre').value = document.getElementById('view-primer-nombre').textContent;
+                document.getElementById('edit-segundo-nombre').value = document.getElementById('view-segundo-nombre').textContent === '—' ? '' : document.getElementById('view-segundo-nombre').textContent;
+                document.getElementById('edit-apellido-paterno').value = document.getElementById('view-apellido-paterno').textContent;
+                document.getElementById('edit-apellido-materno').value = document.getElementById('view-apellido-materno').textContent;
+                document.getElementById('edit-rut').value = document.getElementById('view-rut').textContent;
+                document.getElementById('edit-telefono').value = document.getElementById('view-telefono').textContent;
+                document.getElementById('edit-email').value = document.getElementById('view-email').textContent;
+                document.getElementById('edit-estado').value = document.getElementById('view-estado').textContent;
+                document.getElementById('edit-maquina').value = document.getElementById('view-maquina').textContent === 'Sin asignar' ? '' : document.getElementById('view-maquina').textContent;
+                document.getElementById('edit-porcentaje').value = document.getElementById('view-porcentaje').textContent.replace('%', '');
 
-            loadDriverSplit();
+                viewMode.style.display = 'none';
+                editMode.style.display = 'block';
+                btnEdit.style.display = 'none';
+                btnCancel.style.display = 'inline-block';
+                btnSave.style.display = 'inline-block';
+            } else {
+                viewMode.style.display = 'block';
+                editMode.style.display = 'none';
+                btnEdit.style.display = 'inline-block';
+                btnCancel.style.display = 'none';
+                btnSave.style.display = 'none';
+            }
+        }
 
-            let initialGeneralData = {
-                name: driverNameView.textContent,
-                rut: driverRutView.textContent,
-                phone: driverPhoneView.textContent,
-                email: driverEmailView.textContent,
-                status: driverStatusView.textContent,
-                split: driverSplitInput ? driverSplitInput.value : (driverSplitView ? driverSplitView.dataset.raw : '')
-            };
-
-            function toggleGeneralInfoEditMode(enable) {
-                if (enable) {
-                    generalInfoView.style.display = 'none';
-                    generalInfoEdit.style.display = 'block';
-                    generalInfoFooter.style.display = 'flex';
-                    editGeneralInfoBtn.style.display = 'none';
-
-                    driverNameInput.value = driverNameView.textContent;
-                    driverRutInput.value = driverRutView.textContent;
-                    driverPhoneInput.value = driverPhoneView.textContent;
-                    driverEmailInput.value = driverEmailView.textContent;
-                    driverStatusInput.value = driverStatusView.textContent;
-                    if (driverSplitInput && driverSplitView) {
-                        driverSplitInput.value = driverSplitView.dataset.raw || driverSplitInput.value || getDefaultPercentage();
-                    }
-
-                    initialGeneralData = {
-                        name: driverNameView.textContent,
-                        rut: driverRutView.textContent,
-                        phone: driverPhoneView.textContent,
-                        email: driverEmailView.textContent,
-                        status: driverStatusView.textContent,
-                        split: driverSplitInput ? driverSplitInput.value : (driverSplitView ? driverSplitView.dataset.raw : '')
-                    };
-                } else {
-                    generalInfoView.style.display = 'block';
-                    generalInfoEdit.style.display = 'none';
-                    generalInfoFooter.style.display = 'none';
-                    editGeneralInfoBtn.style.display = 'inline-flex';
-                }
+        function savePersonalInfo() {
+            const rut = document.getElementById('edit-rut').value;
+            if (!validateRut(rut)) {
+                showToast('RUT inválido', 'error');
+                return;
             }
 
-            editGeneralInfoBtn.addEventListener('click', () => toggleGeneralInfoEditMode(true));
+            document.getElementById('view-primer-nombre').textContent = document.getElementById('edit-primer-nombre').value;
+            document.getElementById('view-segundo-nombre').textContent = document.getElementById('edit-segundo-nombre').value || '—';
+            document.getElementById('view-apellido-paterno').textContent = document.getElementById('edit-apellido-paterno').value;
+            document.getElementById('view-apellido-materno').textContent = document.getElementById('edit-apellido-materno').value;
+            document.getElementById('view-rut').textContent = rut;
+            document.getElementById('view-telefono').textContent = document.getElementById('edit-telefono').value;
+            document.getElementById('view-email').textContent = document.getElementById('edit-email').value;
+            document.getElementById('view-estado').textContent = document.getElementById('edit-estado').value;
+            document.getElementById('view-maquina').textContent = document.getElementById('edit-maquina').value || 'Sin asignar';
+            document.getElementById('view-porcentaje').textContent = document.getElementById('edit-porcentaje').value + '%';
 
-            cancelGeneralInfoBtn.addEventListener('click', () => {
-                driverNameInput.value = initialGeneralData.name;
-                driverRutInput.value = initialGeneralData.rut;
-                driverPhoneInput.value = initialGeneralData.phone;
-                driverEmailInput.value = initialGeneralData.email;
-                driverStatusInput.value = initialGeneralData.status;
-                if (driverSplitInput) {
-                    driverSplitInput.value = initialGeneralData.split || getDefaultPercentage();
-                }
+            updateDriverHeader();
+            togglePersonalEditMode(false);
+            showToast('Información personal actualizada correctamente', 'success');
+        }
 
-                toggleGeneralInfoEditMode(false);
-            });
+        // License Info Edit Mode
+        function toggleLicenseEditMode(isEdit) {
+            const viewMode = document.getElementById('license-view-mode');
+            const editMode = document.getElementById('license-edit-mode');
+            const btnEdit = document.getElementById('btn-edit-license');
+            const btnCancel = document.getElementById('btn-cancel-license');
+            const btnSave = document.getElementById('btn-save-license');
 
-            saveGeneralInfoBtn.addEventListener('click', () => {
-                driverNameView.textContent = driverNameInput.value;
-                driverRutView.textContent = driverRutInput.value;
-                driverPhoneView.textContent = driverPhoneInput.value;
-                driverEmailView.textContent = driverEmailInput.value;
-                driverStatusView.textContent = driverStatusInput.value;
-                if (driverSplitInput) {
-                    persistDriverSplit(driverSplitInput.value);
-                }
+            if (isEdit) {
+                document.getElementById('edit-licencia-vence').value = document.getElementById('view-licencia-vence').textContent === '—' ? '' : document.getElementById('view-licencia-vence').textContent;
 
-                initialGeneralData = {
-                    name: driverNameInput.value,
-                    rut: driverRutInput.value,
-                    phone: driverPhoneInput.value,
-                    email: driverEmailInput.value,
-                    status: driverStatusInput.value,
-                    split: driverSplitInput ? driverSplitInput.value : initialGeneralData.split
-                };
+                viewMode.style.display = 'none';
+                editMode.style.display = 'block';
+                btnEdit.style.display = 'none';
+                btnCancel.style.display = 'inline-block';
+                btnSave.style.display = 'inline-block';
+            } else {
+                viewMode.style.display = 'block';
+                editMode.style.display = 'none';
+                btnEdit.style.display = 'inline-block';
+                btnCancel.style.display = 'none';
+                btnSave.style.display = 'none';
+            }
+        }
 
-                alert('Informacion General actualizada (simulada)!');
-                toggleGeneralInfoEditMode(false);
-            });
+        function saveLicenseInfo() {
+            const licenciaVence = document.getElementById('edit-licencia-vence').value;
+            document.getElementById('view-licencia-vence').textContent = licenciaVence || '—';
+            updateLicenseAlert();
+            toggleLicenseEditMode(false);
+            showToast('Información de licencia actualizada correctamente', 'success');
+        }
 
-            // --- License Info Card ---
-            const licenseInfoView = document.getElementById('license-info-view');
-            const licenseInfoEdit = document.getElementById('license-info-edit');
-            const editLicenseInfoBtn = document.getElementById('edit-license-info-btn');
-            const saveLicenseInfoBtn = document.getElementById('save-license-info-btn');
-            const cancelLicenseInfoBtn = document.getElementById('cancel-license-info-btn');
-            const licenseInfoFooter = document.getElementById('license-info-footer');
+        function updateLicenseAlert() {
+            const licenciaVence = document.getElementById('view-licencia-vence').textContent;
+            const alertContainer = document.getElementById('license-alert-container');
 
-            const licenseNumberView = document.getElementById('license-number-view');
-            const licenseExpiryView = document.getElementById('license-expiry-view');
-            const licenseExpiryAlert = document.getElementById('license-expiry-alert');
-
-            const licenseNumberInput = document.getElementById('license-number-input');
-            const licenseExpiryInput = document.getElementById('license-expiry-input');
-
-            let initialLicenseData = {
-                number: licenseNumberView.textContent,
-                expiry: licenseExpiryView.textContent
-            };
-
-            function toggleLicenseInfoEditMode(enable) {
-                if (enable) {
-                    licenseInfoView.style.display = 'none';
-                    licenseInfoEdit.style.display = 'block';
-                    licenseInfoFooter.style.display = 'flex';
-                    editLicenseInfoBtn.style.display = 'none';
-
-                    licenseNumberInput.value = licenseNumberView.textContent;
-                    licenseExpiryInput.value = licenseExpiryView.textContent;
-
-                    initialLicenseData = {
-                        number: licenseNumberView.textContent,
-                        expiry: licenseExpiryView.textContent
-                    };
-                } else {
-                    licenseInfoView.style.display = 'block';
-                    licenseInfoEdit.style.display = 'none';
-                    licenseInfoFooter.style.display = 'none';
-                    editLicenseInfoBtn.style.display = 'inline-flex';
-                }
+            if (!licenciaVence || licenciaVence === '—') {
+                alertContainer.innerHTML = '';
+                return;
             }
 
-            editLicenseInfoBtn.addEventListener('click', () => toggleLicenseInfoEditMode(true));
+            const today = new Date();
+            const vence = new Date(licenciaVence);
+            const diffDays = Math.ceil((vence - today) / (1000 * 60 * 60 * 24));
 
-            cancelLicenseInfoBtn.addEventListener('click', () => {
-                licenseNumberInput.value = initialLicenseData.number;
-                licenseExpiryInput.value = initialLicenseData.expiry;
+            if (diffDays < 0) {
+                alertContainer.innerHTML = `
+                    <div class="alert-box alert-box--danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                        <div><strong>Licencia vencida</strong><br>La licencia venció hace ${Math.abs(diffDays)} días. Se debe renovar de inmediato.</div>
+                    </div>
+                `;
+            } else if (diffDays <= 30) {
+                alertContainer.innerHTML = `
+                    <div class="alert-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                        <div><strong>Licencia por vencer</strong><br>La licencia vence en ${diffDays} días. Se recomienda renovar pronto.</div>
+                    </div>
+                `;
+            } else {
+                alertContainer.innerHTML = '';
+            }
+        }
 
-                toggleLicenseInfoEditMode(false);
-            });
+        // Tabs
+        const tabButtons = document.querySelectorAll('.tab-item');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-            saveLicenseInfoBtn.addEventListener('click', () => {
-                licenseNumberView.textContent = licenseNumberInput.value;
-                licenseExpiryView.textContent = licenseExpiryInput.value;
-
-                initialLicenseData = {
-                    number: licenseNumberInput.value,
-                    expiry: licenseExpiryInput.value
-                };
-
-                const today = new Date();
-                const expiryDate = new Date(licenseExpiryInput.value);
-                const diffTime = expiryDate - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (isNaN(expiryDate.getTime())) {
-                    licenseExpiryAlert.textContent = '';
-                    licenseExpiryView.style.color = 'var(--color-text-primary)';
-                } else if (expiryDate < today) {
-                    licenseExpiryAlert.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg> La licencia esta vencida.';
-                    licenseExpiryView.style.color = 'var(--color-state-error)';
-                } else if (diffDays <= 7) {
-                    licenseExpiryAlert.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg> La licencia vence en ' + diffDays + ' dias. Renovar pronto!';
-                    licenseExpiryView.style.color = 'var(--color-state-warning)';
-                } else {
-                    licenseExpiryAlert.textContent = '';
-                    licenseExpiryView.style.color = 'var(--color-text-primary)';
-                }
-
-                alert('Detalles de Licencia actualizados (simulado)!');
-                toggleLicenseInfoEditMode(false);
+        tabButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('aria-controls');
+                
+                tabButtons.forEach(btn => {
+                    btn.setAttribute('aria-selected', 'false');
+                    btn.classList.remove('tab-item--active');
+                });
+                button.setAttribute('aria-selected', 'true');
+                button.classList.add('tab-item--active');
+                
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
             });
         });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Main edit button (header)
+            document.getElementById('btn-edit-driver').addEventListener('click', () => {
+                togglePersonalEditMode(true);
+            });
+
+            // Personal info buttons
+            document.getElementById('btn-edit-personal').addEventListener('click', () => togglePersonalEditMode(true));
+            document.getElementById('btn-cancel-personal').addEventListener('click', () => togglePersonalEditMode(false));
+            document.getElementById('btn-save-personal').addEventListener('click', savePersonalInfo);
+
+            // License info buttons
+            document.getElementById('btn-edit-license').addEventListener('click', () => toggleLicenseEditMode(true));
+            document.getElementById('btn-cancel-license').addEventListener('click', () => toggleLicenseEditMode(false));
+            document.getElementById('btn-save-license').addEventListener('click', saveLicenseInfo);
+
+            // RUT validation on edit
+            const editRutInput = document.getElementById('edit-rut');
+            const editRutError = document.getElementById('edit-rut-error');
+            editRutInput.addEventListener('input', (e) => {
+                const formatted = formatRut(e.target.value);
+                e.target.value = formatted;
+                
+                if (formatted.length >= 3) {
+                    const isValid = validateRut(formatted);
+                    if (!isValid) {
+                        editRutInput.classList.add('is-invalid');
+                        editRutError.textContent = 'RUT inválido';
+                        editRutError.style.display = 'block';
+                    } else {
+                        editRutInput.classList.remove('is-invalid');
+                        editRutError.style.display = 'none';
+                    }
+                }
+            });
+
+            // Initialize
+            updateDriverHeader();
+            updateLicenseAlert();
+        });
     </script>
-    <script src="js/main.js"></script>
 </body>
 </html>
-
-
-

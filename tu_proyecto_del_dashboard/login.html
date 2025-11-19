@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/components/_inputs.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
     <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_modal.css">
 
     <style>
         body {
@@ -22,6 +23,10 @@
             align-items: center;
             min-height: 100vh;
             padding: var(--space-lg);
+        }
+
+        body.is-modal-open {
+            overflow: hidden;
         }
 
         .login-card {
@@ -75,6 +80,61 @@
         .login-footer-links a:hover {
             text-decoration: underline;
         }
+
+        .login-footer-links button {
+            background: none;
+            border: none;
+            color: var(--color-action-primary);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.95rem;
+        }
+
+        .login-footer-links button:hover {
+            text-decoration: underline;
+        }
+
+        .login-footer-links button:focus-visible {
+            outline: 2px solid var(--color-action-primary);
+            outline-offset: 2px;
+        }
+
+        .form-helper-text {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            margin-top: var(--space-xs);
+            line-height: 1.4;
+        }
+
+        .support-list {
+            display: grid;
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .support-item {
+            padding: var(--space-md);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xxs);
+        }
+
+        .support-item strong {
+            color: var(--color-text-primary);
+        }
+
+        .support-item span {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-helper-text--success {
+            color: var(--color-state-success);
+            font-weight: var(--font-weight-medium);
+        }
     </style>
 </head>
 <body>
@@ -110,8 +170,61 @@
         </div>
 
         <div class="login-footer-links">
-            <a href="#" aria-disabled="true">Recuperar contraseña</a>
-            <a href="#" aria-disabled="true">¿Necesitas ayuda?</a>
+            <button type="button" id="forgot-password-trigger">Recuperar contraseña</button>
+            <button type="button" id="help-trigger">¿Necesitas ayuda?</button>
+        </div>
+    </div>
+
+    <!-- Modal Recuperar contraseña -->
+    <div class="modal-overlay" id="forgot-password-modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="forgot-password-title">
+            <div class="modal-header">
+                <h2 class="modal-header__title" id="forgot-password-title">Recuperar contraseña</h2>
+                <button class="modal-close-btn" type="button" data-close-modal aria-label="Cerrar">×</button>
+            </div>
+            <form id="forgot-password-form">
+                <div class="modal-body">
+                    <p>Ingresa el correo asociado a tu cuenta para enviarte un enlace seguro y restablecer tu contraseña.</p>
+                    <div class="form-field" style="margin-top: var(--space-md);">
+                        <label class="form-field__label" for="forgot-password-email">Correo electrónico</label>
+                        <input id="forgot-password-email" type="email" class="input-text" placeholder="nombre@empresa.cl" required data-initial-focus>
+                    </div>
+                    <p class="form-helper-text">Si no recuerdas qué correo usaste, contacta a soporte y te ayudaremos a verificar tu identidad.</p>
+                    <p class="form-helper-text form-helper-text--success" id="forgot-password-feedback" aria-live="polite" hidden></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="forgot-password-submit">Enviar enlace</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Necesitas ayuda -->
+    <div class="modal-overlay" id="help-modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="help-modal-title">
+            <div class="modal-header">
+                <h2 class="modal-header__title" id="help-modal-title">¿Necesitas ayuda?</h2>
+                <button class="modal-close-btn" type="button" data-close-modal aria-label="Cerrar">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Estamos disponibles para acompañarte. Elige el canal que prefieras y te responderemos en menos de 24 horas.</p>
+                <div class="support-list">
+                    <div class="support-item">
+                        <strong>Correo de soporte</strong>
+                        <span>soporte@flotasafe.cl</span>
+                        <span>Disponible 24/7 · Respondemos en 2-4 horas hábiles.</span>
+                    </div>
+                    <div class="support-item">
+                        <strong>Línea directa</strong>
+                        <span>+56 2 2789 4560</span>
+                        <span>Horario: Lunes a Viernes, 08:00 - 18:00.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-close-modal>Entendido</button>
+            </div>
         </div>
     </div>
 

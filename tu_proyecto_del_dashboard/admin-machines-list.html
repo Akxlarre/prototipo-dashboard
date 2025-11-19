@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="css/components/_chart-controls.css">
     <link rel="stylesheet" href="css/components/_chart.css">
     <link rel="stylesheet" href="css/components/_badge.css">
+    <link rel="stylesheet" href="css/components/_detail.css">
     
     <style>
         /* FIX: Eliminar espacio en blanco superior */
@@ -108,7 +109,7 @@
 
         .machine-card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: var(--space-lg);
         }
 
@@ -120,29 +121,103 @@
             display: flex;
             flex-direction: column;
             gap: var(--space-md);
+            overflow: hidden;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
-        .machine-card__header {
+        .machine-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-border-medium);
+        }
+
+        /* Contenedor del layout interno de la card */
+        .machine-card__inner {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            gap: var(--space-md);
+            position: relative;
         }
 
-        .machine-card__meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
+        /* Status pill flotante en la esquina superior derecha */
+        .machine-card__status {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
         }
 
-        .machine-card__meta small {
-            color: var(--color-text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .machine-card__status-group {
+        /* Contenido principal (todo excepto avatar) */
+        .machine-card__content {
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: var(--space-sm);
+            min-width: 0;
+        }
+
+        /* Sección de identificación (número, marca, patente) */
+        .machine-card__identity {
+            padding-right: 80px;
+        }
+
+        .machine-card__number {
+            font-size: 1.75rem;
+            font-weight: var(--font-weight-bold);
+            line-height: 1.2;
+            color: var(--color-text-primary);
+        }
+
+        .machine-card__brand {
+            font-size: var(--font-size-desktop-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-primary);
+            margin-top: 2px;
+        }
+
+        .machine-card__detail {
+            font-size: var(--font-size-desktop-label);
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Separador horizontal */
+        .machine-card__separator {
+            height: 1px;
+            background: var(--color-border-light);
+            margin: var(--space-xs) 0;
+        }
+
+        /* Sección de información adicional (chofer y documentación) */
+        .machine-card__info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .machine-card__driver {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .machine-card__driver-icon {
+            opacity: 0.5;
+        }
+
+        .machine-card__driver-text {
+            font-size: var(--font-size-desktop-label);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .machine-card__docs {
+            display: flex;
+            gap: var(--space-xxs);
+        }
+
+        /* Botón de acción */
+        .machine-card__actions {
+            margin-top: var(--space-xs);
         }
 
         .doc-indicators {
@@ -729,26 +804,64 @@
                     const card = document.createElement('div');
                     card.className = 'machine-card';
                     card.innerHTML = `
-                        <div class="machine-card__header">
-                            <div class="machine-card__meta">
-                                <span style="text-transform: uppercase; font-size: 0.75rem; color: var(--color-text-secondary);">Maquina</span>
-                                <strong style="font-size: 1.25rem;">${machine.number} · ${machine.brand}</strong>
-                                <small>Patente ${machine.plate}</small>
+                        <div class="machine-card__inner">
+                            <!-- Avatar -->
+                            <div class="machine-avatar machine-avatar--small" role="img" aria-label="Icono de Micro ${machine.brand} ${machine.number}">
+                                <svg class="machine-avatar__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M4 10H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M7 5V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M17 5V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <circle cx="7" cy="18" r="1.5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/>
+                                    <circle cx="17" cy="18" r="1.5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/>
+                                    <path d="M8 13H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M14 13H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M4 7L5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M20 7L19 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <rect x="7" y="6" width="3" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/>
+                                    <rect x="14" y="6" width="3" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/>
+                                </svg>
                             </div>
-                            <span class="status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
-                        </div>
-                        <div class="machine-card__status-group">
-                            <div>
-                                <span class="form-field__label">Chofer asignado</span>
-                                <p style="margin: 0; font-weight: var(--font-weight-medium);">${machine.driver}</p>
+                            
+                            <!-- Status Pill (posición absoluta, esquina superior derecha) -->
+                            <span class="machine-card__status status-pill ${getStatusPillClass(machine.status)}">${machine.status}</span>
+                            
+                            <!-- Contenido principal -->
+                            <div class="machine-card__content">
+                                <!-- Identificación -->
+                                <div class="machine-card__identity">
+                                    <div class="machine-card__number">
+                                        ${machine.number}
+                                    </div>
+                                    <div class="machine-card__brand">
+                                        ${machine.brand}
+                                    </div>
+                                    <div class="machine-card__detail">
+                                        ${machine.plate}
+                                    </div>
+                                </div>
+                                
+                                <!-- Separador -->
+                                <div class="machine-card__separator"></div>
+                                
+                                <!-- Chofer y Documentación (en una línea) -->
+                                <div class="machine-card__info">
+                                    <div class="machine-card__driver">
+                                        <svg class="machine-card__driver-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.5 14a.5.5 0 0 1-.5-.5v-1a2.5 2.5 0 0 0-5 0v1a.5.5 0 0 1-1 0v-1a3.5 3.5 0 1 1 7 0v1a.5.5 0 0 1-.5.5Z"/>
+                                        </svg>
+                                        <span class="machine-card__driver-text">${machine.driver}</span>
+                                    </div>
+                                    <div class="machine-card__docs">
+                                        ${buildDocIndicators(machine.documents)}
+                                    </div>
+                                </div>
+                                
+                                <!-- Botón de acción -->
+                                <div class="machine-card__actions">
+                                    <a href="admin-machine-detail.html" class="btn btn-primary btn-sm" style="width: 100%;">Ver Detalle</a>
+                                </div>
                             </div>
-                            <div>
-                                <span class="form-field__label">Documentacion</span>
-                                ${buildDocIndicators(machine.documents)}
-                            </div>
-                        </div>
-                        <div class="machine-card__actions">
-                            <a href="admin-machine-detail.html" class="btn btn-secondary btn-sm">Gestionar</a>
                         </div>
                     `;
                     cardsGrid.appendChild(card);

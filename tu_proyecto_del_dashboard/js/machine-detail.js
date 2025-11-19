@@ -34,7 +34,7 @@
     ]
   };
 
-  const sectionButtons = document.querySelectorAll('.section-switcher__button');
+  const tabButtons = document.querySelectorAll('.tab-item');
   const machineNumberHeader = document.getElementById('machine-number-header');
   const machineNumberView = document.getElementById('machine-number-view');
   const machineBrandView  = document.getElementById('machine-brand-view');
@@ -62,11 +62,13 @@
   const cancelDocumentationBtn = document.getElementById('documentation-cancel-btn');
 
   const filterDriverSelect = document.getElementById('filter-driver-select');
-  const filterStatusSelect = document.getElementById('filter-status-select');
   const recordsBody        = document.getElementById('daily-records-body');
 
   const assignmentHistoryList   = document.getElementById('assignment-history-list');
-  const assignmentHistoryEmpty  = document.getElementById('assignment-history-empty');
+  const assignmentEmptyState    = document.getElementById('assignment-empty-state');
+  const assignmentChipFilters   = document.querySelectorAll('[data-history-filter]');
+  
+  let currentAssignmentFilter = 'all';
 
   const formatHeader = () => `Maquina ${state.general.number} - ${state.general.brand}`;
 
@@ -79,14 +81,41 @@
     }
   };
 
+  const formatCurrency = (value) => {
+    if (typeof value !== 'number') return value;
+    try {
+      return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value);
+    } catch (error) {
+      return `$${value.toLocaleString()}`;
+    }
+  };
+
   const renderInfoView = () => {
     machineNumberView.textContent = state.general.number;
     machineBrandView.textContent  = state.general.brand;
     machinePlateView.textContent  = state.general.plate;
     machineYearView.textContent   = state.general.year;
-    machineStatusView.textContent = state.general.status;
+    
+    // Renderizar estado operativo con status-pill
+    const statusContainer = document.getElementById('machine-status-view-container');
+    if (statusContainer) {
+      const statusClass = state.general.status === 'Operativa' ? 'status-pill--ok' : 'status-pill--error';
+      statusContainer.innerHTML = `<span class="status-pill ${statusClass}">${state.general.status}</span>`;
+    }
+    
     machineDriverView.textContent = state.general.driver || '(Sin Asignar)';
     machineNumberHeader.textContent = formatHeader();
+    
+    // Actualizar aria-label del avatar con información dinámica
+    const avatar = document.querySelector('.machine-avatar');
+    if (avatar) {
+      avatar.setAttribute('aria-label', `Icono de Micro ${state.general.brand} ${state.general.number}`);
+    }
   };
 
   const renderDocumentation = () => {
@@ -99,47 +128,50 @@
   };
 
   const populateRecordFilters = () => {
-    if (!filterDriverSelect || !filterStatusSelect) return;
+    if (!filterDriverSelect) return;
     const drivers = Array.from(new Set(state.dailyRecords.map(r => r.driver)));
-    const statuses = Array.from(new Set(state.dailyRecords.map(r => r.status)));
 
     filterDriverSelect.innerHTML = '<option value="all">Todos</option>' +
       drivers.map(driver => `<option value="${driver}">${driver}</option>`).join('');
-    filterStatusSelect.innerHTML = '<option value="all">Todos</option>' +
-      statuses.map(status => `<option value="${status}">${status}</option>`).join('');
   };
 
   const renderDailyRecords = () => {
     if (!recordsBody) return;
+    
     const driverFilter = filterDriverSelect?.value || 'all';
-    const statusFilter = filterStatusSelect?.value || 'all';
+    const emptyState = document.getElementById('records-empty-state');
+    const tableContainer = document.querySelector('#daily-records-section .data-table-container table');
 
     recordsBody.innerHTML = '';
     const filtered = state.dailyRecords.filter(record => {
       const driverMatch = driverFilter === 'all' || record.driver === driverFilter;
-      const statusMatch = statusFilter === 'all' || record.status === statusFilter;
-      return driverMatch && statusMatch;
+      return driverMatch;
     });
 
+    // Manejar estado vacío
     if (!filtered.length) {
-      recordsBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay registros disponibles.</td></tr>';
+      if (tableContainer) tableContainer.style.display = 'none';
+      if (emptyState) emptyState.style.display = 'flex';
       return;
     }
+
+    // Mostrar tabla y ocultar estado vacío
+    if (tableContainer) tableContainer.style.display = 'table';
+    if (emptyState) emptyState.style.display = 'none';
 
     filtered.forEach(record => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-                      <td>${record.date}</td>
-                      <td>${record.driver}</td>
-                      <td><span class="status-pill status-pill--${record.status === 'Cerrado' ? 'default' : 'ok'}">${record.status}</span></td>
-                      <td>${formatNumber(record.collected)}</td>
-                      <td>${formatNumber(record.diesel)}</td>
-                      <td style="text-align: center;">
-                          ${record.obs ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="opacity: 0.8;"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>' : ''}
-                      </td>
-                      <td>
-                          <a href="admin-registro-diario.html?mode=view" class="btn-link btn-sm">Ver Detalle</a>
-                      </td>
+        <td>${record.date}</td>
+        <td>${record.driver}</td>
+        <td style="text-align: right;" class="tabular-nums">${formatCurrency(record.collected)}</td>
+        <td style="text-align: right;" class="tabular-nums">${formatCurrency(record.diesel)}</td>
+        <td style="text-align: center;">
+          ${record.obs ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle;" title="Tiene observaciones"><circle cx="8" cy="8" r="7" stroke="currentColor" fill="none" stroke-width="1.5"/><circle cx="8" cy="12" r="0.8" fill="currentColor"/><path d="M8 5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>' : '—'}
+        </td>
+        <td>
+          <a href="admin-registro-diario.html?mode=view" class="btn-link btn-sm">Ver Detalle</a>
+        </td>
       `;
       recordsBody.appendChild(tr);
     });
@@ -156,13 +188,22 @@
     history.forEach(entry => rows.push({ ...entry, isCurrent: false, startSort: entry.start }));
     rows.sort((a, b) => new Date(b.startSort) - new Date(a.startSort));
 
+    // Aplicar filtro
+    const filtered = rows.filter(row => {
+      if (currentAssignmentFilter === 'all') return true;
+      if (currentAssignmentFilter === 'current') return row.isCurrent && !row.end;
+      if (currentAssignmentFilter === 'closed') return row.end !== null && row.end !== undefined;
+      return true;
+    });
+
     assignmentHistoryList.innerHTML = '';
 
-    if (!rows.length) {
-      assignmentHistoryEmpty?.classList.add('is-visible');
+    // Manejar estado vacío
+    if (!filtered.length) {
+      if (assignmentEmptyState) assignmentEmptyState.style.display = 'flex';
       return;
     }
-    assignmentHistoryEmpty?.classList.remove('is-visible');
+    if (assignmentEmptyState) assignmentEmptyState.style.display = 'none';
 
     const table = document.createElement('table');
     table.className = 'data-table data-table--compact';
@@ -172,21 +213,41 @@
           <th>Chofer</th>
           <th>Fecha Inicio</th>
           <th>Fecha Fin</th>
-          <th>Estado</th>
+          <th style="width: 120px;">Duración</th>
         </tr>
       </thead>
       <tbody></tbody>
     `;
 
     const tbody = table.querySelector('tbody');
-    rows.forEach(row => {
+    filtered.forEach(row => {
       const tr = document.createElement('tr');
-      const estado = row.isCurrent && !row.end ? 'Activa' : (row.end ? 'Cerrada' : 'En curso');
+      
+      // Calcular duración
+      let duration = '--';
+      if (row.start) {
+        const startDate = new Date(row.start);
+        const endDate = row.end ? new Date(row.end) : new Date();
+        const days = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+        duration = days === 0 ? 'Hoy' : days === 1 ? '1 día' : `${days} días`;
+      }
+      
+      // Destacar asignación activa
+      if (row.isCurrent && !row.end) {
+        tr.style.backgroundColor = 'rgba(37, 99, 235, 0.04)';
+        tr.style.fontWeight = 'var(--font-weight-medium)';
+      }
+      
       tr.innerHTML = `
-        <td>${row.driver}</td>
+        <td>
+          <div style="display: flex; align-items: center; gap: var(--space-xs);">
+            <span>${row.driver}</span>
+            ${row.isCurrent && !row.end ? '<span class="status-pill status-pill--ok" style="font-size: 11px; padding: 2px 8px;">ACTIVA</span>' : ''}
+          </div>
+        </td>
         <td>${row.start || '--'}</td>
-        <td>${row.end || 'En curso'}</td>
-        <td><span class="status-pill status-pill--${row.isCurrent && !row.end ? 'ok' : 'default'}">${estado}</span></td>
+        <td>${row.end || '<span style="color: var(--color-text-secondary);">En curso</span>'}</td>
+        <td style="color: var(--color-text-secondary);">${duration}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -281,17 +342,26 @@
     console.log('Documentación actualizada:', state.documentation);
   };
 
-  sectionButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (btn.classList.contains('is-active')) return;
+  // Tab navigation
+  tabButtons.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetId = tab.getAttribute('aria-controls');
 
-      sectionButtons.forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
+      // Update tabs
+      tabButtons.forEach(t => {
+        t.classList.remove('tab-item--active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('tab-item--active');
+      tab.setAttribute('aria-selected', 'true');
 
-      const targetId = btn.getAttribute('data-target');
-      const section = document.getElementById(targetId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Update content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+      });
+      const targetContent = document.getElementById(targetId);
+      if (targetContent) {
+        targetContent.style.display = 'block';
       }
     });
   });
@@ -312,7 +382,20 @@
   });
 
   filterDriverSelect?.addEventListener('change', renderDailyRecords);
-  filterStatusSelect?.addEventListener('change', renderDailyRecords);
+
+  // Chip filters para asignaciones
+  assignmentChipFilters.forEach(chip => {
+    chip.addEventListener('click', () => {
+      // Remover active de todos
+      assignmentChipFilters.forEach(c => c.classList.remove('is-active'));
+      // Agregar active al clickeado
+      chip.classList.add('is-active');
+      // Actualizar filtro actual
+      currentAssignmentFilter = chip.getAttribute('data-history-filter');
+      // Re-renderizar
+      renderAssignments();
+    });
+  });
 
   renderInfoView();
   renderDocumentation();

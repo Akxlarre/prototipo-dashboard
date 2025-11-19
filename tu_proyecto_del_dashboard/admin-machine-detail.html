@@ -23,128 +23,17 @@
     <link rel="stylesheet" href="css/components/_modal.css">
     <link rel="stylesheet" href="css/components/_status-pill.css">
     <link rel="stylesheet" href="css/components/_tabs.css">
+    <link rel="stylesheet" href="css/components/_detail.css">
     <style>
-        .assignment-grid {
-            display: grid;
-            gap: var(--space-xl);
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        }
-
-        .assignment-panel {
-            border: 1px solid var(--color-border-light);
-            border-radius: var(--border-radius-md);
-            padding: var(--space-lg);
-            background-color: var(--color-surface-widget);
-        }
-
-        .assignment-panel--history {
-            grid-column: 1 / -1;
-        }
-
-        .assignment-meta {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: var(--space-md);
-            margin-top: var(--space-md);
-        }
-
-        .assignment-meta__item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .assignment-meta__label {
-            font-size: var(--font-size-desktop-step);
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .assignment-history-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
-        }
-
-        .assignment-history-empty {
+        /* Control de modos vista/edición para info general */
+        #general-info-card .edit-mode {
             display: none;
-            text-align: center;
-            padding: var(--space-xl);
-            border: 1px dashed var(--color-border-light);
-            border-radius: var(--border-radius-md);
-            background-color: var(--color-surface-page);
-            color: var(--color-text-secondary);
         }
-
-        .assignment-history-empty.is-visible {
+        #general-info-card.is-editing .view-mode {
+            display: none;
+        }
+        #general-info-card.is-editing .edit-mode {
             display: block;
-        }
-
-        .assignment-history-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-        }
-
-        .assignment-form__grid {
-            display: grid;
-            gap: var(--space-md);
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-
-        .assignment-form__grid .form-field {
-            margin-bottom: 0;
-        }
-
-        .assignment-feedback {
-            margin-top: var(--space-md);
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-        }
-
-        .assignment-feedback--success {
-            color: var(--color-state-success);
-        }
-
-        .assignment-feedback--error {
-            color: var(--color-state-error);
-        }
-
-        @media (max-width: 768px) {
-            .assignment-meta {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .section-switcher {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-xl);
-        }
-
-        .section-switcher__button {
-            border: 1px solid var(--color-border-light);
-            background-color: var(--color-surface-widget);
-            border-radius: var(--border-radius-md);
-            padding: var(--space-sm) var(--space-lg);
-            font-size: var(--font-size-desktop-label);
-            font-weight: var(--font-weight-medium);
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .section-switcher__button.is-active,
-        .section-switcher__button:hover {
-            background-color: var(--color-action-primary);
-            border-color: var(--color-action-primary);
-            color: var(--color-action-text-light);
-        }
-
-        .detail-section {
-            margin-bottom: var(--space-xxl);
         }
 
         /* Control de modos vista/edición para documentación */
@@ -239,21 +128,22 @@
             <div class="main-content__grid" style="grid-template-columns: 1fr;">
                 <!-- Card Principal con Pestañas -->
                 <div class="card" id="machine-detail-card">
-                    <div class="card__body">
-                        <div class="section-switcher" role="navigation" aria-label="Secciones del detalle">
-                            <button class="section-switcher__button is-active" type="button" data-target="section-info">
+                    <div class="card__header" style="border-bottom: none; padding-bottom: 0;">
+                        <div class="tabs-container" role="tablist" aria-label="Secciones del detalle">
+                            <button class="tab-item tab-item--active" id="tab-info" role="tab" aria-selected="true" aria-controls="content-info" type="button">
                                 Información General
                             </button>
-                            <button class="section-switcher__button" type="button" data-target="section-records">
+                            <button class="tab-item" id="tab-records" role="tab" aria-selected="false" aria-controls="content-records" type="button">
                                 Registros Diarios
                             </button>
-                            <button class="section-switcher__button" type="button" data-target="section-assignments">
+                            <button class="tab-item" id="tab-assignments" role="tab" aria-selected="false" aria-controls="content-assignments" type="button">
                                 Historial de Asignaciones
                             </button>
                         </div>
-                        
+                    </div>
+                    <div class="card__body">
                         <!-- SECCIÓN 1: Información General (combina Info General + Documentación) -->
-                        <section class="detail-section" id="section-info" aria-label="Información General">
+                        <section class="tab-content" id="content-info" role="tabpanel" aria-labelledby="tab-info" style="display: block;">
                 <!-- Información General -->
                             <div class="card" id="general-info-card" style="border: none; box-shadow: none; margin-bottom: var(--space-xl);">
                                 <div class="card__header" style="border-bottom: 1px solid var(--color-border-light); display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); flex-wrap: wrap;">
@@ -262,21 +152,68 @@
                                         <button class="btn btn-secondary btn-sm" id="cancel-general-btn" style="display: none;">Cancelar</button>
                                         <button class="btn btn-primary btn-sm" id="save-general-btn" style="display: none;">Guardar</button>
                                         <button class="btn btn-primary btn-sm" id="edit-general-btn">Editar</button>
-                                        <button class="btn btn-secondary btn-sm" id="delete-machine-btn" style="background-color: var(--color-state-error); border-color: var(--color-state-error);">
+                                        <button class="btn btn-destructive btn-sm" id="delete-machine-btn">
                                             Eliminar Máquina
+                                        </button>
                                     </div>
                     </div>
                     <div class="card__body">
                         <div class="view-mode" id="general-info-view">
-                            <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
-                                <img src="https://via.placeholder.com/140x100" alt="Foto de la Máquina" style="border-radius: var(--border-radius-md); object-fit: cover; flex-shrink: 0;">
-                                <div style="flex-grow: 1;">
-                                    <p><strong>Número:</strong> <span id="machine-number-view">05</span></p>
-                                    <p><strong>Marca:</strong> <span id="machine-brand-view">Mercedes-Benz</span></p>
-                                    <p><strong>Patente:</strong> <span id="machine-plate-view">ABCD-12</span></p>
-                                    <p><strong>Año:</strong> <span id="machine-year-view">2018</span></p>
-                                    <p><strong>Estado Operativo:</strong> <span id="machine-status-view">Operativa</span></p>
-                                    <p><strong>Chofer Asignado:</strong> <span id="machine-driver-view">Juan Pérez</span></p>
+                            <div class="detail-hero">
+                                <div class="machine-avatar" role="img" aria-label="Icono de Micro Mercedes-Benz 05">
+                                    <svg class="machine-avatar__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M4 10H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M7 5V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M17 5V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <circle cx="7" cy="18" r="1.5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/>
+                                        <circle cx="17" cy="18" r="1.5" stroke="currentColor" stroke-width="1.5" fill="currentColor"/>
+                                        <path d="M8 13H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M14 13H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M4 7L5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M20 7L19 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <rect x="7" y="6" width="3" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/>
+                                        <rect x="14" y="6" width="3" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/>
+                                    </svg>
+                                </div>
+                                <div class="detail-hero__content">
+                                    <!-- Información Primaria -->
+                                    <div class="detail-section">
+                                        <h3 class="detail-section__title">Identificación</h3>
+                                        <div class="detail-grid detail-grid--three-cols">
+                                            <div class="detail-field">
+                                                <span class="detail-field__label">Número</span>
+                                                <span class="detail-field__value detail-field__value--large" id="machine-number-view">05</span>
+                                            </div>
+                                            <div class="detail-field">
+                                                <span class="detail-field__label">Marca</span>
+                                                <span class="detail-field__value" id="machine-brand-view">Mercedes-Benz</span>
+                                            </div>
+                                            <div class="detail-field">
+                                                <span class="detail-field__label">Patente</span>
+                                                <span class="detail-field__value" id="machine-plate-view">ABCD-12</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Información Secundaria -->
+                                    <div class="detail-section">
+                                        <h3 class="detail-section__title">Estado y Asignación</h3>
+                                        <div class="detail-grid detail-grid--three-cols">
+                                            <div class="detail-field">
+                                                <span class="detail-field__label">Año</span>
+                                                <span class="detail-field__value" id="machine-year-view">2018</span>
+                                            </div>
+                                            <div class="detail-field">
+                                                <span class="detail-field__label">Estado Operativo</span>
+                                                <span id="machine-status-view-container"></span>
+                                            </div>
+                                            <div class="detail-field">
+                                                <span class="detail-field__label">Chofer Asignado</span>
+                                                <span class="detail-field__value" id="machine-driver-view">Juan Pérez</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -305,20 +242,30 @@
                     </div>
                     <div class="card__body">
                         <div class="view-mode" id="documentation-view">
-                            <div class="form-field">
-                                <label class="form-field__label">Revisión Técnica</label>
-                                <p><span id="rev-date-view">2023-11-20</span></p>
-                                            <span class="status-pill status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
-                            </div>
-                            <div class="form-field">
-                                <label class="form-field__label">Permiso de Circulación</label>
-                                <p><span id="permit-date-view">2024-03-31</span></p>
-                                            <span class="status-pill status-pill--ok" id="permit-status-pill">Al día</span>
-                            </div>
-                            <div class="form-field">
-                                <label class="form-field__label">Seguro Obligatorio</label>
-                                <p><span id="insurance-date-view">2024-01-15</span></p>
-                                            <span class="status-pill status-pill--warning" id="insurance-status-pill">Renovar pronto</span>
+                            <div style="display: grid; gap: var(--space-lg);">
+                                <div class="document-field">
+                                    <span class="document-field__label">Revisión Técnica</span>
+                                    <span class="document-field__value" id="rev-date-view">2023-11-20</span>
+                                    <div class="document-field__status">
+                                        <span class="status-pill status-pill--warning" id="rev-status-pill">Vence en 6 días</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="document-field">
+                                    <span class="document-field__label">Permiso de Circulación</span>
+                                    <span class="document-field__value" id="permit-date-view">2024-03-31</span>
+                                    <div class="document-field__status">
+                                        <span class="status-pill status-pill--ok" id="permit-status-pill">Al día</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="document-field">
+                                    <span class="document-field__label">Seguro Obligatorio (SOAP)</span>
+                                    <span class="document-field__value" id="insurance-date-view">2024-01-15</span>
+                                    <div class="document-field__status">
+                                        <span class="status-pill status-pill--warning" id="insurance-status-pill">Renovar pronto</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                                     <div class="edit-mode" id="documentation-edit">
@@ -346,50 +293,38 @@
                         </section>
 
                         <!-- SECCIÓN 2: Registros Diarios -->
-                        <section class="detail-section" id="section-records" aria-label="Registros Diarios">
+                        <section class="tab-content" id="content-records" role="tabpanel" aria-labelledby="tab-records" style="display: none;">
                             <div class="card" id="daily-records-section" style="border: none; box-shadow: none;">
-                    <div class="card__header">
+                    <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
                         <div>
                             <h2 class="card__header-title">Historial de Registros Diarios</h2>
                             <p class="dashboard-section-subtitle">Últimos registros, estado de cierre y KPIs por jornada.</p>
                         </div>
-                        <a href="admin-registro-diario.html?mode=view" class="card__header-action">
-                            Abrir Registro Diario
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                            </svg>
-                        </a>
                     </div>
                     <div class="card__body">
-                        <div class="record-filters" style="display: flex; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-md);">
-                            <div class="form-field" style="flex: 1; min-width: 180px;">
+                        <div class="filters-bar">
+                            <div class="form-field">
                                 <label class="form-field__label" for="filter-driver-select">Chofer</label>
                                 <select id="filter-driver-select" class="input-text">
                                     <option value="all">Todos</option>
                                 </select>
                             </div>
-                            <div class="form-field" style="flex: 1; min-width: 180px;">
-                                <label class="form-field__label" for="filter-status-select">Estado</label>
-                                <select id="filter-status-select" class="input-text">
-                                    <option value="all">Todos</option>
-                                </select>
-                            </div>
-                            <div class="form-field" style="min-width: 160px;">
+                            <div class="form-field">
                                 <label class="form-field__label" for="filter-date-from">Desde</label>
                                 <input type="date" id="filter-date-from" class="input-text">
                             </div>
-                            <div class="form-field" style="min-width: 160px;">
+                            <div class="form-field">
                                 <label class="form-field__label" for="filter-date-to">Hasta</label>
                                 <input type="date" id="filter-date-to" class="input-text">
                             </div>
-                            <div class="form-field" style="min-width: 150px;">
+                            <div class="form-field">
                                 <label class="form-field__label" for="filter-sort-order">Orden</label>
                                 <select id="filter-sort-order" class="input-text">
                                     <option value="desc">Más reciente</option>
                                     <option value="asc">Más antiguo</option>
                                 </select>
                             </div>
-                            <div style="display: flex; align-items: flex-end;">
+                            <div class="filters-bar__actions">
                                 <button class="btn btn-secondary btn-sm" type="button" id="clear-record-filters">Limpiar filtros</button>
                             </div>
                         </div>
@@ -399,68 +334,67 @@
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Chofer</th>
-                                        <th>Estado</th>
-                                        <th>Recaudado</th>
-                                        <th>Diésel</th>
-                                        <th title="Observaciones" style="text-align: center; width: 40px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="opacity: 0.6;">
-                                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                                                <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                            </svg>
-                                        </th>
+                                        <th style="text-align: right;">Recaudado</th>
+                                        <th style="text-align: right;">Diésel</th>
+                                        <th style="text-align: center; width: 60px;">Obs.</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="daily-records-body">
-                                    <tr>
-                                        <td colspan="7" style="text-align: center; font-size: 0.9rem; color: var(--color-text-muted);">
-                                            Cargando registros...
-                                        </td>
-                                    </tr>
+                                    <!-- El contenido se renderizará dinámicamente -->
                                 </tbody>
                             </table>
+                            
+                            <!-- Estado vacío -->
+                            <div id="records-empty-state" class="empty-state" style="display: none;">
+                                <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 17H15M9 13H15M9 9H10M14 9H15M5 21H19C20.1046 21 21 20.1046 21 19V8L16 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M16 3V8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <h3 class="empty-state__title">No hay registros disponibles</h3>
+                                <p class="empty-state__message">
+                                    No se encontraron registros diarios con los filtros aplicados. Intenta ajustar los criterios de búsqueda.
+                                </p>
+                            </div>
                         </div>
                             </div>
                         </div>
                         </section>
                         
                         <!-- SECCIÓN 3: Historial de Asignaciones -->
-                        <section class="detail-section" id="section-assignments" aria-label="Historial de Asignaciones">
+                        <section class="tab-content" id="content-assignments" role="tabpanel" aria-labelledby="tab-assignments" style="display: none;">
                             <div class="card" id="assignment-card" style="border: none; box-shadow: none;">
-                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
+                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light); display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-md); flex-wrap: wrap;">
                                     <div>
                                         <h2 class="card__header-title">Historial de Asignaciones</h2>
                                         <p class="dashboard-section-subtitle">
-                                            Controla el chofer activo, registra reasignaciones y mantén trazabilidad por máquina.
+                                            Trazabilidad completa de choferes asignados a esta máquina.
                                         </p>
+                                    </div>
+                                    <div class="chip-filters" role="group" aria-label="Filtrar historial">
+                                        <button class="chip is-active" data-history-filter="all" type="button">Todo</button>
+                                        <button class="chip" data-history-filter="current" type="button">Activas</button>
+                                        <button class="chip" data-history-filter="closed" type="button">Cerradas</button>
                                     </div>
                                 </div>
                                 <div class="card__body">
-                                    <div class="assignment-grid">
-                                        <section class="assignment-panel assignment-panel--history" style="grid-column: 1 / -1;">
-                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-md); flex-wrap: wrap;">
-                                                <div>
-                                                    <h3 style="margin: 0;">Historial completo</h3>
-                                                    <p class="dashboard-section-subtitle" style="margin-top: var(--space-xxs);">
-                                                        Incluye la asignación activa y las anteriores.
-                                                    </p> 
-                                            </div>
-                                                <div class="assignment-history-filters" role="group" aria-label="Filtrar historial">
-                                                    <button class="chip is-active" data-history-filter="all" type="button">Todo</button>
-                                                    <button class="chip" data-history-filter="current" type="button">Activas</button>
-                                                    <button class="chip" data-history-filter="closed" type="button">Cerradas</button>
-                                        </div>
-                                    </div>
-                                            <div id="assignment-history-empty" class="assignment-history-empty">
-                                                No hay asignaciones registradas aún.
-                                            </div>
-                                            <div id="assignment-history-list" class="assignment-history-list"></div>
-                                        </section>
-
+                                    <div id="assignment-history-list"></div>
+                                    
+                                    <!-- Estado vacío -->
+                                    <div id="assignment-empty-state" class="empty-state" style="display: none;">
+                                        <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M3.41003 22C3.41003 18.13 7.26003 15 12 15C12.96 15 13.89 15.13 14.76 15.37" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M22 18C22 18.32 21.96 18.63 21.88 18.93C21.79 19.33 21.63 19.72 21.42 20.06C20.73 21.22 19.46 22 18 22C16.97 22 16.04 21.61 15.34 20.97C15.04 20.71 14.78 20.4 14.58 20.06C14.21 19.46 14 18.75 14 18C14 16.92 14.43 15.93 15.13 15.21C15.86 14.46 16.88 14 18 14C19.18 14 20.25 14.51 20.97 15.33C21.61 16.04 22 16.98 22 18Z" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M16.44 18L17.43 18.99L19.56 17.02" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <h3 class="empty-state__title">No hay asignaciones registradas</h3>
+                                        <p class="empty-state__message">
+                                            Aún no se han registrado asignaciones de choferes para esta máquina.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </section>
                     </div>
                 </div>
