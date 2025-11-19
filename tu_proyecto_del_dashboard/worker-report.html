@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/variables-responsive.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
@@ -18,13 +19,13 @@
 
     <style>
         /* ============================================ */
-        /* INDICADOR DE PROGRESO                       */
+        /* INDICADOR DE PROGRESO - RESPONSIVE          */
         /* ============================================ */
         .form-progress {
-            margin-bottom: 24px;
-            padding: 16px;
+            margin-bottom: var(--card-margin-responsive);
+            padding: var(--card-padding-responsive);
             background: white;
-            border-radius: 12px;
+            border-radius: var(--card-radius-responsive);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: background 0.3s ease;
         }
@@ -54,7 +55,7 @@
         }
         
         .form-progress__text {
-            font-size: 14px;
+            font-size: var(--font-size-small-mobile); /* Fluido: 13-14px */
             color: #6B7280;
             font-weight: 500;
             text-align: center;

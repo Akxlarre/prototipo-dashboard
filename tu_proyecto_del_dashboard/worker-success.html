@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/variables-responsive.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
@@ -16,16 +17,16 @@
     
     <style>
         /* ============================================ */
-        /* RESUMEN DE REPORTE                          */
+        /* RESUMEN DE REPORTE - RESPONSIVE             */
         /* ============================================ */
         .success-summary {
             width: 100%;
-            max-width: 400px;
-            padding: 20px;
+            max-width: var(--content-max-width);
+            padding: var(--card-padding-responsive);
             background: white;
-            border-radius: 16px;
+            border-radius: var(--card-radius-responsive);
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin: 24px 0;
+            margin: var(--card-margin-responsive) 0;
             animation: slideUp 0.5s ease-out 0.3s both;
         }
         
@@ -41,19 +42,19 @@
         }
         
         .success-summary__title {
-            font-size: 15px;
+            font-size: var(--font-size-activity-title); /* Fluido: 14-15px */
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #6B7280;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-responsive-md);
             text-align: center;
         }
         
         .success-summary__item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: var(--space-responsive-sm) 0;
             border-bottom: 1px solid #F3F4F6;
         }
         
@@ -63,13 +64,13 @@
         
         .success-summary__label {
             color: #6B7280;
-            font-size: 14px;
+            font-size: var(--font-size-small-mobile); /* Fluido: 13-14px */
         }
         
         .success-summary__value {
             font-weight: 600;
             color: #1F2937;
-            font-size: 15px;
+            font-size: var(--font-size-activity-text); /* Fluido: 14-15px */
         }
         
         .success-icon {

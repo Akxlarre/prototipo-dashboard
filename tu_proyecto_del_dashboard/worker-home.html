@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/variables-responsive.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
@@ -16,56 +17,56 @@
     
     <style>
         /* ============================================ */
-        /* HEADER MEJORADO                             */
+        /* HEADER MEJORADO - RESPONSIVE                */
         /* ============================================ */
         .mobile-header__greeting {
-            font-size: 15px;
+            font-size: var(--font-size-greeting); /* Fluido: 14-15px */
             font-weight: 500;
             color: #6B7280;
-            margin-bottom: 4px;
+            margin-bottom: var(--space-responsive-xxs);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         
         .mobile-header__name {
-            font-size: 28px;
+            font-size: var(--font-size-name); /* Fluido: 24-30px */
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: var(--space-responsive-sm);
             letter-spacing: -0.02em;
             color: #111827;
         }
         
         .mobile-header__metadata {
             display: flex;
-            gap: 12px;
+            gap: var(--gap-sm-responsive); /* Fluido: 12-16px */
             flex-wrap: wrap;
         }
         
         .metadata-chip {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
+            gap: var(--gap-xs-responsive); /* Fluido: 8-12px */
+            padding: var(--space-responsive-xs) var(--space-responsive-sm);
             background: white;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: var(--font-size-chip); /* Fluido: 13-14px */
             font-weight: 500;
             color: #4B5563;
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
         
         .metadata-chip__icon {
-            font-size: 16px;
+            font-size: var(--chip-icon-size); /* Fluido: 15-16px */
         }
         
         /* ============================================ */
-        /* TIMELINE DE ACTIVIDAD RECIENTE              */
+        /* TIMELINE DE ACTIVIDAD RECIENTE - RESPONSIVE */
         /* ============================================ */
         .recent-activity {
-            margin: 24px 0;
-            padding: 20px;
+            margin: var(--card-margin-responsive) 0;
+            padding: var(--card-padding-responsive);
             background: white;
-            border-radius: 16px;
+            border-radius: var(--card-radius-responsive);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             animation: fadeInUp 0.5s ease-out;
         }
@@ -82,18 +83,18 @@
         }
         
         .recent-activity__title {
-            font-size: 15px;
+            font-size: var(--font-size-activity-title); /* Fluido: 14-15px */
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #6B7280;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-responsive-md);
         }
         
         .activity-item {
             display: flex;
-            gap: 12px;
-            padding: 12px 0;
+            gap: var(--gap-sm-responsive); /* Fluido: 12-16px */
+            padding: var(--space-responsive-sm) 0;
             border-bottom: 1px solid #F3F4F6;
         }
         
@@ -102,26 +103,26 @@
         }
         
         .activity-item__dot {
-            width: 12px;
-            height: 12px;
+            width: var(--dot-size); /* Fluido: 10-12px */
+            height: var(--dot-size);
             border-radius: 50%;
-            margin-top: 4px;
+            margin-top: var(--space-responsive-xxs);
             flex-shrink: 0;
         }
         
         .activity-item__dot--success {
             background: #10B981;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 0 var(--dot-shadow) rgba(16, 185, 129, 0.2);
         }
         
         .activity-item__dot--info {
             background: #3B82F6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 var(--dot-shadow) rgba(59, 130, 246, 0.2);
         }
         
         .activity-item__dot--warning {
             background: #F59E0B;
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+            box-shadow: 0 0 0 var(--dot-shadow) rgba(245, 158, 11, 0.2);
         }
         
         .activity-item__content {
@@ -129,7 +130,7 @@
         }
         
         .activity-item__text {
-            font-size: 15px;
+            font-size: var(--font-size-activity-text); /* Fluido: 14-15px */
             color: #1F2937;
             margin-bottom: 2px;
             line-height: 1.4;
@@ -141,22 +142,22 @@
         }
         
         .activity-item__time {
-            font-size: 13px;
+            font-size: var(--font-size-activity-time); /* Fluido: 12-13px */
             color: #9CA3AF;
         }
         
         /* ============================================ */
-        /* BOTÓN CTA MEJORADO                          */
+        /* BOTÓN CTA MEJORADO - RESPONSIVE             */
         /* ============================================ */
         .cta-section {
             text-align: center;
-            margin-top: 24px;
+            margin-top: var(--card-margin-responsive);
         }
         
         .cta-section__message {
-            font-size: var(--font-size-mobile-base);
+            font-size: var(--font-size-body-mobile); /* Fluido: 15-18px */
             color: var(--color-text-secondary);
-            margin-bottom: var(--space-xl);
+            margin-bottom: var(--space-responsive-xl);
         }
         
         @keyframes pulse-glow {
@@ -246,7 +247,6 @@
                     Tu reporte de hoy está pendiente.
                 </p>
                 <a href="worker-report.html" class="btn btn-primary btn-full-width btn-mobile-height btn-primary--urgent btn-with-icon">
-                    <span class="btn-icon">📝</span>
                     INGRESAR REPORTE DE HOY
                 </a>
             </div>
