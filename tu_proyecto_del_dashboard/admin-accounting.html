@@ -94,76 +94,226 @@
             gap: 0.75rem;
         }
 
-        /* Estilos para el toggle de vista (Diaria/Semanal) */
-        .view-toggle-container {
+        /* Estilos para el resumen semanal */
+        .history-detail-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--color-surface-widget);
+            border-radius: var(--border-radius-md);
+        }
+
+        .history-detail-summary-grid > div {
             display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .history-detail-summary-item__label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .history-detail-summary-item__value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        /* Mejoras para tabla de resumen semanal */
+        .weekly-summary-table {
+            margin-top: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .weekly-summary-table tbody tr {
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .weekly-summary-table tbody tr:hover {
+            background-color: var(--color-surface-page);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transform: translateX(2px);
+        }
+
+        .weekly-summary-table tbody tr:active {
+            transform: translateX(0);
+        }
+
+        /* Alineación de números a la derecha */
+        .weekly-summary-table td:nth-child(3),
+        .weekly-summary-table td:nth-child(4),
+        .weekly-summary-table td:nth-child(5) {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Indicador de expansión */
+        .week-expand-indicator {
+            display: inline-flex;
             align-items: center;
+            gap: var(--space-xs);
+            font-weight: 600;
+        }
+
+        .week-expand-indicator::after {
+            content: '▼';
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+            color: var(--color-action-primary);
+        }
+
+        .week-row.is-expanded .week-expand-indicator::after {
+            transform: rotate(180deg);
+        }
+
+
+        /* Tabla de desglose simplificada */
+        .driver-breakdown-table td:nth-child(2) {
+            text-align: center;
+        }
+
+        .driver-breakdown-table td:nth-child(3),
+        .driver-breakdown-table td:nth-child(4),
+        .driver-breakdown-table td:nth-child(5) {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Destacar columna de ganancia neta */
+        .driver-breakdown-table th:nth-child(5),
+        .driver-breakdown-table td:nth-child(5) {
+            background-color: rgba(34, 197, 94, 0.05);
+            font-weight: 600;
+        }
+
+        .driver-breakdown-table th:nth-child(5) {
+            color: var(--color-state-success);
+        }
+
+        /* Destacar pago del chofer */
+        .driver-breakdown-table td:nth-child(4) {
+            color: var(--color-action-primary);
+            font-weight: 600;
+        }
+
+        /* Sub-tabla expandible inline */
+        .week-breakdown-row {
+            background-color: var(--color-surface-page) !important;
+        }
+
+        .week-breakdown-row td {
+            padding: 0 !important;
+            border-bottom: 2px solid var(--color-border-light);
+        }
+
+        .week-breakdown-content {
+            padding: var(--space-xl);
+            animation: expandDown 0.3s ease-out;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+                padding-top: var(--space-xl);
+                padding-bottom: var(--space-xl);
+            }
+        }
+
+        .week-breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+        }
+
+        .week-breakdown-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: var(--space-md);
             margin-top: var(--space-lg);
-            padding-top: var(--space-lg);
-            border-top: 1px solid var(--color-border-light);
-        }
-
-        .view-toggle-container__label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--color-text-primary);
-        }
-
-        .btn-group {
-            display: inline-flex;
+            padding: var(--space-lg);
+            background: var(--color-surface-widget);
             border-radius: var(--border-radius-md);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            overflow: hidden;
         }
 
-        .btn-toggle {
-            position: relative;
-            background-color: white;
+        .breakdown-kpi {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xxs);
+        }
+
+        .breakdown-kpi__label {
+            font-size: 0.75rem;
             color: var(--color-text-secondary);
-            border: 1px solid var(--color-border-default);
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .btn-toggle:first-child {
-            border-top-left-radius: var(--border-radius-md);
-            border-bottom-left-radius: var(--border-radius-md);
-        }
-
-        .btn-toggle:last-child {
-            border-top-right-radius: var(--border-radius-md);
-            border-bottom-right-radius: var(--border-radius-md);
-            border-left: none;
-        }
-
-        .btn-toggle:hover:not(.is-active) {
-            background-color: var(--color-background-secondary);
+        .breakdown-kpi__value {
+            font-size: 1.25rem;
+            font-weight: 600;
             color: var(--color-text-primary);
         }
 
-        .btn-toggle.is-active {
-            background-color: var(--color-action-primary);
-            color: white;
-            border-color: var(--color-action-primary);
-            z-index: 1;
+        .breakdown-kpi--highlight .breakdown-kpi__value {
+            font-size: 1.5rem;
+            color: var(--color-state-success);
         }
 
-        .btn-toggle:focus {
-            outline: 2px solid var(--color-action-primary);
-            outline-offset: 2px;
-            z-index: 2;
+        /* KPI Hero (Ganancia Neta destacada) */
+        .kpi-card--hero {
+            grid-column: span 1;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+            border: 2px solid var(--color-state-success);
+        }
+
+        .kpi-card--hero .kpi-card__value {
+            font-size: 2.25rem;
+            color: var(--color-state-success);
+        }
+
+        .kpi-card--hero .kpi-card__label {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Comparación visual entre semanas */
+        .week-comparison-bar {
+            display: inline-block;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-state-success), var(--color-state-warning));
+            border-radius: 2px;
+            margin-left: var(--space-sm);
+            vertical-align: middle;
         }
 
         @media (max-width: 768px) {
-            .view-toggle-container {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--space-sm);
+            .history-detail-summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-card--hero .kpi-card__value {
+                font-size: 1.75rem;
+            }
+
+            .weekly-summary-table td:nth-child(3),
+            .weekly-summary-table td:nth-child(4),
+            .weekly-summary-table td:nth-child(5) {
+                text-align: left;
             }
         }
     </style>
@@ -249,6 +399,9 @@
                             <button class="tab-item is-active" id="tab-summary" role="tab" aria-controls="content-summary" aria-selected="true">
                                 Resumen General (RF-019)
                             </button>
+                            <button class="tab-item" id="tab-weekly" role="tab" aria-controls="content-weekly" aria-selected="false">
+                                Resumen Semanal
+                            </button>
                             <button class="tab-item" id="tab-payroll" role="tab" aria-controls="content-payroll" aria-selected="false">
                                 Liquidación de Choferes (RF-022)
                             </button>
@@ -283,15 +436,6 @@
                             </div>
                         </div>
 
-                        <!-- Toggle Vista Diaria/Semanal -->
-                        <div class="view-toggle-container">
-                            <span class="view-toggle-container__label">Granularidad:</span>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-toggle is-active" type="button" data-view="daily" id="toggle-daily">Diaria</button>
-                                <button class="btn btn-sm btn-toggle" type="button" data-view="weekly" id="toggle-weekly">Semanal</button>
-                            </div>
-                        </div>
-
                         <div class="kpi-card-row">
                             <div class="kpi-card">
                                 <span class="kpi-card__label">Total Recaudado (Bruto)</span>
@@ -316,11 +460,84 @@
                         </div>
 
                         <div class="chart-container-wrapper chart-container-wrapper--spaced">
-                            <h3 class="chart-title" id="chart-title">Evolución de Rentabilidad (Diaria)</h3>
-                            <p class="form-field__helper-text chart-helper-text" id="chart-description">Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).</p>
+                            <h3 class="chart-title">Evolución de Rentabilidad (Diaria)</h3>
+                            <p class="form-field__helper-text chart-helper-text">Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).</p>
                             <div class="chart-container">
                                 <canvas id="rentabilidad-line-chart"></canvas>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="content-weekly" role="tabpanel" aria-labelledby="tab-weekly">
+                    <div class="card__body">
+                        <div class="card-controls-row">
+                            <h2 class="card__header-title">Resumen Semanal Detallado</h2>
+                            <div class="period-selector-group" id="weekly-period-selector">
+                                <div class="form-field form-field--inline">
+                                    <label for="select-month-weekly" class="form-field__label">Mes</label>
+                                    <select id="select-month-weekly" class="input-text input-text--small">
+                                        <option value="10">Octubre</option>
+                                        <option value="11" selected>Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                </div>
+                                <div class="form-field form-field--inline">
+                                    <label for="select-year-weekly" class="form-field__label">Año</label>
+                                    <select id="select-year-weekly" class="input-text input-text--small">
+                                        <option value="2024">2024</option>
+                                        <option value="2025" selected>2025</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-apply-filter-weekly">Aplicar</button>
+                            </div>
+                        </div>
+
+                        <p class="form-field__helper-text" style="margin-bottom: var(--space-xl);">
+                            Vista consolidada de ingresos, egresos y ganancias por semana con desglose detallado por chofer.
+                        </p>
+
+                        <!-- KPIs Mensuales Resumidos -->
+                        <div class="kpi-card-row">
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Total Recaudado (Mes)</span>
+                                <span class="kpi-card__value" id="weekly-month-recaudado">$ 44.340.000</span>
+                                <span class="kpi-card__context">4 semanas completas</span>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Total Pagado a Choferes</span>
+                                <span class="kpi-card__value" id="weekly-month-pago-choferes">$ 9.330.000</span>
+                                <span class="kpi-card__context">30% de ganancia bruta</span>
+                            </div>
+                            <div class="kpi-card kpi-card--hero">
+                                <span class="kpi-card__label">Ganancia Neta (Mes)</span>
+                                <span class="kpi-card__value" id="weekly-month-ganancia">$ 29.807.640</span>
+                                <span class="kpi-card__context kpi-card__context--positive">Después de todos los gastos</span>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-card__label">Promedio por Semana</span>
+                                <span class="kpi-card__value" id="weekly-month-average">$ 7.451.910</span>
+                                <span class="kpi-card__context">Ganancia promedio semanal</span>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Resumen por Semana -->
+                        <div class="data-table-container weekly-summary-table">
+                            <table class="data-table" id="weekly-summary-table">
+                                <thead>
+                                    <tr>
+                                        <th>Semana</th>
+                                        <th>Rango de Fechas</th>
+                                        <th>Total Recaudado</th>
+                                        <th>Total Egresos</th>
+                                        <th>Ganancia Neta</th>
+                                        <th style="text-align: center;">Ver Desglose</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="weekly-summary-tbody">
+                                    <!-- Generado dinámicamente con filas expandibles -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -529,63 +746,15 @@
                        310000, 315000, 305000, 320000, 325000, 313000, 318000, 308000, 323000, 328000]
         };
 
-        // Función para agrupar datos diarios en semanas
-        const groupDataByWeek = (dailyData) => {
-            const weeks = [];
-            const weekLabels = [];
-            const ingresosByWeek = [];
-            const egresosByWeek = [];
-            const gananciaByWeek = [];
-
-            // Agrupar cada 7 días
-            for (let i = 0; i < dailyData.labels.length; i += 7) {
-                const weekNumber = Math.floor(i / 7) + 1;
-                weekLabels.push(`Sem ${weekNumber}`);
-
-                const weekIngresos = dailyData.ingresos.slice(i, i + 7).reduce((a, b) => a + b, 0);
-                const weekEgresos = dailyData.egresos.slice(i, i + 7).reduce((a, b) => a + b, 0);
-                const weekGanancia = dailyData.ganancia.slice(i, i + 7).reduce((a, b) => a + b, 0);
-
-                ingresosByWeek.push(weekIngresos);
-                egresosByWeek.push(weekEgresos);
-                gananciaByWeek.push(weekGanancia);
-            }
-
-            return {
-                labels: weekLabels,
-                ingresos: ingresosByWeek,
-                egresos: egresosByWeek,
-                ganancia: gananciaByWeek
-            };
-        };
-
         // Variable global para el gráfico
         let rentabilidadChart = null;
-        let currentView = 'daily'; // 'daily' o 'weekly'
 
         // Función para crear o actualizar el gráfico
-        const renderRentabilidadChart = (view = 'daily') => {
+        const renderRentabilidadChart = () => {
             const ctxLine = document.getElementById('rentabilidad-line-chart');
             if (!ctxLine || !window.Chart) return;
 
-            currentView = view;
-            const chartData = view === 'weekly' ? groupDataByWeek(dailyDataExample) : dailyDataExample;
-
-            // Actualizar título y descripción
-            const chartTitle = document.getElementById('chart-title');
-            const chartDescription = document.getElementById('chart-description');
-            
-            if (chartTitle) {
-                chartTitle.textContent = view === 'weekly' 
-                    ? 'Evolución de Rentabilidad (Semanal)' 
-                    : 'Evolución de Rentabilidad (Diaria)';
-            }
-            
-            if (chartDescription) {
-                chartDescription.textContent = view === 'weekly'
-                    ? 'Muestra la acumulación de ingresos, egresos y ganancia neta agrupada por semana (MTD).'
-                    : 'Muestra la acumulación de ingresos, egresos y ganancia neta día a día (MTD).';
-            }
+            const chartData = dailyDataExample;
 
             const chartConfig = {
                 type: 'line',
@@ -598,7 +767,7 @@
                             borderColor: colorSuccess,
                             backgroundColor: colorSuccess,
                             tension: 0.3,
-                            pointRadius: view === 'weekly' ? 4 : 2
+                            pointRadius: 2
                         },
                         {
                             label: 'Egresos (Total)',
@@ -606,7 +775,7 @@
                             borderColor: colorError,
                             backgroundColor: colorError,
                             tension: 0.3,
-                            pointRadius: view === 'weekly' ? 4 : 2
+                            pointRadius: 2
                         },
                         {
                             label: 'Ganancia (Neta)',
@@ -614,7 +783,7 @@
                             borderColor: colorPrimary,
                             backgroundColor: colorPrimary,
                             tension: 0.3,
-                            pointRadius: view === 'weekly' ? 4 : 2,
+                            pointRadius: 2,
                             borderDash: [5, 5]
                         }
                     ]
@@ -631,7 +800,7 @@
                         },
                         x: {
                             ticks: {
-                                maxTicksLimit: view === 'weekly' ? 6 : 15
+                                maxTicksLimit: 15
                             }
                         }
                     },
@@ -658,26 +827,254 @@
             rentabilidadChart = new Chart(ctxLine, chartConfig);
         };
 
-        // Inicializar gráfico con vista diaria
-        renderRentabilidadChart('daily');
+        // Inicializar gráfico
+        renderRentabilidadChart();
 
-        // Event listeners para los botones de toggle
-        const toggleDailyBtn = document.getElementById('toggle-daily');
-        const toggleWeeklyBtn = document.getElementById('toggle-weekly');
+        // Inicializar resumen semanal en su pestaña
+        document.addEventListener('DOMContentLoaded', () => {
+            renderWeeklySummary();
+        });
 
-        if (toggleDailyBtn && toggleWeeklyBtn) {
-            toggleDailyBtn.addEventListener('click', () => {
-                toggleDailyBtn.classList.add('is-active');
-                toggleWeeklyBtn.classList.remove('is-active');
-                renderRentabilidadChart('daily');
+        // Datos de ejemplo por chofer y por semana
+        const weeklyDriverData = [
+            {
+                week: 1,
+                dateRange: '1-7 Nov',
+                drivers: [
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3650000, diesel: 550000, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 6, recaudado: 3120000, diesel: 480000, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3500000, diesel: 520000, percentage: 30 }
+                ]
+            },
+            {
+                week: 2,
+                dateRange: '8-14 Nov',
+                drivers: [
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3700000, diesel: 560000, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 7, recaudado: 3640000, diesel: 510000, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 5, recaudado: 2500000, diesel: 400000, percentage: 30 }
+                ]
+            },
+            {
+                week: 3,
+                dateRange: '15-21 Nov',
+                drivers: [
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3680000, diesel: 545000, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 7, recaudado: 3580000, diesel: 495000, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3450000, diesel: 505000, percentage: 30 }
+                ]
+            },
+            {
+                week: 4,
+                dateRange: '22-28 Nov',
+                drivers: [
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3720000, diesel: 570000, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 6, recaudado: 3180000, diesel: 475000, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3600000, diesel: 530000, percentage: 30 }
+                ]
+            }
+        ];
+
+        // Función para calcular totales de una semana
+        const calculateWeekTotals = (weekData) => {
+            let totalRecaudado = 0;
+            let totalDiesel = 0;
+            let totalPagoChoferes = 0;
+
+            weekData.drivers.forEach(driver => {
+                totalRecaudado += driver.recaudado;
+                totalDiesel += driver.diesel;
+                const gananciaBruta = driver.recaudado - driver.diesel;
+                const pagoChofer = gananciaBruta * (driver.percentage / 100);
+                totalPagoChoferes += pagoChofer;
             });
 
-            toggleWeeklyBtn.addEventListener('click', () => {
-                toggleWeeklyBtn.classList.add('is-active');
-                toggleDailyBtn.classList.remove('is-active');
-                renderRentabilidadChart('weekly');
+            const totalEgresos = totalDiesel + totalPagoChoferes;
+            const gananciaNeta = totalRecaudado - totalEgresos;
+
+            return {
+                totalRecaudado,
+                totalDiesel,
+                totalPagoChoferes,
+                totalEgresos,
+                gananciaNeta
+            };
+        };
+
+        // Renderizar tabla de resumen semanal
+        const renderWeeklySummary = () => {
+            const tbody = document.getElementById('weekly-summary-tbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            // Encontrar la semana con mayor ganancia para comparación
+            const maxGanancia = Math.max(...weeklyDriverData.map(w => calculateWeekTotals(w).gananciaNeta));
+
+            weeklyDriverData.forEach(weekData => {
+                const totals = calculateWeekTotals(weekData);
+                const row = document.createElement('tr');
+                row.classList.add('week-row');
+                row.dataset.week = weekData.week;
+                
+                // Calcular porcentaje para barra comparativa
+                const gananciaPercent = (totals.gananciaNeta / maxGanancia) * 100;
+                const barWidth = Math.max(gananciaPercent, 10); // Mínimo 10% visible
+                
+                row.innerHTML = `
+                    <td>
+                        <span class="week-expand-indicator">Semana ${weekData.week}</span>
+                    </td>
+                    <td>${weekData.dateRange}</td>
+                    <td>${formatCurrencyCLP(totals.totalRecaudado)}</td>
+                    <td>${formatCurrencyCLP(totals.totalEgresos)}</td>
+                    <td>
+                        <strong style="color: var(--color-state-success);">
+                            ${formatCurrencyCLP(totals.gananciaNeta)}
+                        </strong>
+                        <span class="week-comparison-bar" style="width: ${barWidth}%;"></span>
+                    </td>
+                    <td class="action-cell" style="text-align: center;">
+                        <button class="btn btn-secondary btn-sm view-week-breakdown" data-week="${weekData.week}">
+                            Ver Detalle
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                
+                // Hacer la fila clickeable
+                row.style.cursor = 'pointer';
+                row.addEventListener('click', (e) => {
+                    // No expandir si se hizo clic en el botón
+                    if (e.target.closest('button')) return;
+                    showWeekBreakdown(weekData.week);
+                });
             });
-        }
+
+            // Agregar event listeners a los botones de desglose
+            const breakdownButtons = tbody.querySelectorAll('.view-week-breakdown');
+            breakdownButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Evitar doble trigger
+                    const weekNumber = parseInt(btn.dataset.week);
+                    showWeekBreakdown(weekNumber);
+                });
+            });
+        };
+
+        // Mostrar desglose por chofer de una semana (inline, debajo de la fila)
+        const showWeekBreakdown = (weekNumber) => {
+            const weekData = weeklyDriverData.find(w => w.week === weekNumber);
+            if (!weekData) return;
+
+            const tbody = document.getElementById('weekly-summary-tbody');
+            const currentRow = document.querySelector(`.week-row[data-week="${weekNumber}"]`);
+            if (!tbody || !currentRow) return;
+
+            // Si ya está expandida, colapsarla
+            const existingBreakdown = currentRow.nextElementSibling;
+            if (existingBreakdown && existingBreakdown.classList.contains('week-breakdown-row')) {
+                existingBreakdown.remove();
+                currentRow.classList.remove('is-expanded');
+                return;
+            }
+
+            // Remover cualquier otro desglose abierto
+            document.querySelectorAll('.week-breakdown-row').forEach(row => row.remove());
+            document.querySelectorAll('.week-row').forEach(row => row.classList.remove('is-expanded'));
+
+            // Marcar fila actual como expandida
+            currentRow.classList.add('is-expanded');
+
+            // Calcular totales
+            let weekTotalRecaudado = 0;
+            let weekTotalPagoChoferes = 0;
+            let weekTotalGanancia = 0;
+
+            const driversRows = weekData.drivers.map(driver => {
+                const gananciaBruta = driver.recaudado - driver.diesel;
+                const pagoChofer = gananciaBruta * (driver.percentage / 100);
+                const gananciaNeta = gananciaBruta - pagoChofer;
+
+                weekTotalRecaudado += driver.recaudado;
+                weekTotalPagoChoferes += pagoChofer;
+                weekTotalGanancia += gananciaNeta;
+
+                return `
+                    <tr>
+                        <td><strong>${driver.name}</strong></td>
+                        <td style="text-align: center;">${driver.daysWorked} días</td>
+                        <td>${formatCurrencyCLP(driver.recaudado)}</td>
+                        <td>${formatCurrencyCLP(pagoChofer)}</td>
+                        <td>${formatCurrencyCLP(gananciaNeta)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Crear fila de desglose
+            const breakdownRow = document.createElement('tr');
+            breakdownRow.className = 'week-breakdown-row';
+            breakdownRow.innerHTML = `
+                <td colspan="6">
+                    <div class="week-breakdown-content">
+                        <div class="week-breakdown-header">
+                            <div>
+                                <h4 class="card__header-title">Desglose por Chofer - Semana ${weekNumber} (${weekData.dateRange})</h4>
+                                <p class="form-field__helper-text">Detalle de cuánto ganó cada chofer y la ganancia generada</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm close-inline-breakdown" data-week="${weekNumber}">
+                                ✕ Cerrar
+                            </button>
+                        </div>
+                        
+                        <table class="data-table driver-breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>Chofer</th>
+                                    <th style="text-align: center;">Días Trabajados</th>
+                                    <th style="text-align: right;">Total Recaudado</th>
+                                    <th style="text-align: right;">Pago Chofer</th>
+                                    <th style="text-align: right;">Ganancia Neta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${driversRows}
+                            </tbody>
+                        </table>
+
+                        <div class="week-breakdown-kpis">
+                            <div class="breakdown-kpi">
+                                <span class="breakdown-kpi__label">Total Recaudado</span>
+                                <span class="breakdown-kpi__value">${formatCurrencyCLP(weekTotalRecaudado)}</span>
+                            </div>
+                            <div class="breakdown-kpi">
+                                <span class="breakdown-kpi__label">Total Pagado a Choferes</span>
+                                <span class="breakdown-kpi__value">${formatCurrencyCLP(weekTotalPagoChoferes)}</span>
+                            </div>
+                            <div class="breakdown-kpi breakdown-kpi--highlight">
+                                <span class="breakdown-kpi__label">Ganancia Neta</span>
+                                <span class="breakdown-kpi__value">${formatCurrencyCLP(weekTotalGanancia)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            `;
+
+            // Insertar justo después de la fila actual
+            currentRow.after(breakdownRow);
+
+            // Event listener para cerrar
+            const closeBtn = breakdownRow.querySelector('.close-inline-breakdown');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    breakdownRow.remove();
+                    currentRow.classList.remove('is-expanded');
+                });
+            }
+        };
+
+
 
         const applyFilterBtnSummary = document.getElementById('btn-apply-filter-summary');
         const selectMonthSummary = document.getElementById('select-month-summary');
@@ -710,8 +1107,8 @@
             applyFilterBtnSummary.addEventListener('click', (event) => {
                 event.preventDefault();
                 updateSummaryContext();
-                // Regenerar el gráfico con la vista actual cuando se cambia de período
-                renderRentabilidadChart(currentView);
+                // Regenerar el gráfico cuando se cambia de período
+                renderRentabilidadChart();
             });
         }
 
