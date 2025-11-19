@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
     <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_toast.css">
     
     <style>
         .profile-section {
@@ -133,6 +134,35 @@
             margin-top: var(--space-xl);
             width: 100%;
         }
+        
+        /* ============================================ */
+        /* GRÁFICO DE DESEMPEÑO                        */
+        /* ============================================ */
+        .mini-chart {
+            height: 120px;
+            margin: 16px 0;
+        }
+        
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-legend__item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #6B7280;
+        }
+        
+        .chart-legend__dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -187,6 +217,19 @@
                     </div>
                 </div>
 
+                <div class="info-card">
+                    <h3 class="info-card__title">Desempeño de Noviembre</h3>
+                    <div class="mini-chart">
+                        <canvas id="performance-chart"></canvas>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="chart-legend__item">
+                            <div class="chart-legend__dot" style="background: #2563EB;"></div>
+                            <span>Recaudación Semanal</span>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="login.html" class="btn btn-primary btn-full-width logout-button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
                         <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zM20 3h-9c-1.11 0-2 .89-2 2v4h2V5h9v14h-9v-4H9v4c0 1.1.89 2 2 2h9c1.1 0 2-.9 2-2V5c0-1.11-.9-2-2-2z"/>
@@ -213,6 +256,92 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('performance-chart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                        datasets: [{
+                            label: 'Recaudación',
+                            data: [1750000, 1850000, 1900000, 1700000],
+                            borderColor: '#2563EB',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#2563EB',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                display: false 
+                            },
+                            tooltip: {
+                                backgroundColor: '#1F2937',
+                                padding: 12,
+                                displayColors: false,
+                                titleFont: {
+                                    size: 13,
+                                    weight: '600'
+                                },
+                                bodyFont: {
+                                    size: 14,
+                                    weight: '700'
+                                },
+                                callbacks: {
+                                    label: (context) => {
+                                        return new Intl.NumberFormat('es-CL', {
+                                            style: 'currency',
+                                            currency: 'CLP',
+                                            minimumFractionDigits: 0
+                                        }).format(context.parsed.y);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: { 
+                                    display: false 
+                                },
+                                grid: { 
+                                    display: false 
+                                },
+                                border: { 
+                                    display: false 
+                                }
+                            },
+                            x: {
+                                grid: { 
+                                    display: false 
+                                },
+                                border: { 
+                                    display: false 
+                                },
+                                ticks: {
+                                    color: '#9CA3AF',
+                                    font: { 
+                                        size: 11 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 

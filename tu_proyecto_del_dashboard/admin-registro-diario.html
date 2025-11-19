@@ -218,14 +218,26 @@
 
                             <!-- Diesel -->
                             <div class="form-field">
-                                <label for="diesel-quantity" class="form-field__label">Litros de Diesel <span style="color: var(--color-text-secondary); font-weight: normal;">(Opcional)</span></label>
+                                <label for="diesel-quantity-edit" class="form-field__label">
+                                    Litros de Diesel 
+                                    <span style="color: var(--color-text-secondary); font-weight: normal;">(Opcional)</span>
+                                </label>
                                 <p id="diesel-quantity-view" class="view-mode-value" style="color: var(--color-text-secondary);">Sin carga</p>
-                                <input type="number" id="diesel-quantity-edit" class="input-text" placeholder="0.00" style="display: none;">
+                                <input type="number" id="diesel-quantity-edit" class="input-text" placeholder="Dejar vacío si no hubo carga" step="0.1" style="display: none;">
+                                <p class="form-field__helper-text" id="diesel-quantity-helper" style="display: none; margin-top: 0.25rem;">
+                                    💡 Dejar vacío si el conductor no cargó diésel este día
+                                </p>
                             </div>
                             <div class="form-field">
-                                <label for="diesel-cost" class="form-field__label">Costo Total Diesel ($) <span style="color: var(--color-text-secondary); font-weight: normal;">(Opcional)</span></label>
+                                <label for="diesel-cost-edit" class="form-field__label">
+                                    Costo Total Diesel ($) 
+                                    <span style="color: var(--color-text-secondary); font-weight: normal;">(Opcional)</span>
+                                </label>
                                 <p id="diesel-cost-view" class="view-mode-value" style="color: var(--color-text-secondary);">Sin carga</p>
-                                <input type="number" id="diesel-cost-edit" class="input-text" placeholder="0" style="display: none;">
+                                <input type="number" id="diesel-cost-edit" class="input-text" placeholder="Dejar vacío si no hubo carga" step="1" style="display: none;">
+                                <p class="form-field__helper-text" id="diesel-cost-helper" style="display: none; margin-top: 0.25rem;">
+                                    💡 Dejar vacío si el conductor no cargó diésel este día
+                                </p>
                             </div>
                         </div>
 
@@ -331,6 +343,8 @@
             const fileUploadArea = document.getElementById('file-upload-area');
             const fileInput = document.getElementById('comprobante-file');
             const previewImage = document.getElementById('preview-image');
+            const dieselQuantityHelper = document.getElementById('diesel-quantity-helper');
+            const dieselCostHelper = document.getElementById('diesel-cost-helper');
 
             // Variables para día no trabajado
             const diaNoTrabajadoCheckbox = document.getElementById('dia-no-trabajado-checkbox');
@@ -401,9 +415,9 @@
                             ...baseData,
                             'revenue': maquina === '02' ? '395000' : baseData['revenue'],
                             'final-km': maquina === '02' ? '125200' : '',
-                            'diesel-quantity': maquina === '02' ? '80.0' : '',
-                            'diesel-cost': maquina === '02' ? '56000' : '',
-                            'observaciones': maquina === '02' ? 'Se derramado combustible en la estacion de servicio.' : ''
+                            'diesel-quantity': '',  // Sin datos de diésel para Ana Gómez
+                            'diesel-cost': '',       // Sin datos de diésel para Ana Gómez
+                            'observaciones': maquina === '02' ? 'El conductor no cargo diesel este dia.' : ''
                         };
                     }
                 }
@@ -414,8 +428,6 @@
 
             const fields = {
                 'revenue': { view: 'revenue-view', edit: 'revenue-edit', value: recordData['revenue'] },
-                'initial-km': { view: 'initial-km-view', edit: 'initial-km-edit', value: recordData['initial-km'] },
-                'final-km': { view: 'final-km-view', edit: 'final-km-edit', value: recordData['final-km'] },
                 'diesel-quantity': { view: 'diesel-quantity-view', edit: 'diesel-quantity-edit', value: recordData['diesel-quantity'] },
                 'diesel-cost': { view: 'diesel-cost-view', edit: 'diesel-cost-edit', value: recordData['diesel-cost'] },
                 'observaciones': { view: 'observaciones-view', edit: 'observaciones-edit', value: recordData['observaciones'] }
@@ -442,22 +454,39 @@
                     viewModeControls.style.display = 'none';
                     editModeControls.style.display = 'flex';
                     document.querySelectorAll('.edit-mode-content').forEach(el => el.style.display = 'block');
+                    
+                    // Mostrar textos helper de campos opcionales de diésel
+                    if (dieselQuantityHelper) dieselQuantityHelper.style.display = 'block';
+                    if (dieselCostHelper) dieselCostHelper.style.display = 'block';
 
                 } else {
                     viewModeControls.style.display = 'flex';
                     editModeControls.style.display = 'none';
+                    
+                    // Ocultar textos helper en modo vista
+                    if (dieselQuantityHelper) dieselQuantityHelper.style.display = 'none';
+                    if (dieselCostHelper) dieselCostHelper.style.display = 'none';
                 }
 
                 for (const key in fields) {
                     const viewEl = document.getElementById(fields[key].view);
                     const editEl = document.getElementById(fields[key].edit);
+                    
+                    if (!viewEl || !editEl) {
+                        console.warn(`Elementos no encontrados para campo: ${key}`);
+                        continue;
+                    }
+                    
                     if (mode === 'edit') {
+                        // MODO EDICIÓN: Mostrar inputs editables
                         viewEl.style.display = 'none';
                         editEl.style.display = 'block';
-                        editEl.value = fields[key].value;
+                        editEl.value = fields[key].value || '';
                     } else {
+                        // MODO VISTA: Mostrar valores de solo lectura
                         viewEl.style.display = 'block';
                         editEl.style.display = 'none';
+                        
                         if (key === 'observaciones') {
                             // Manejo especial para observaciones
                             if (fields[key].value && fields[key].value.trim() !== '') {
@@ -468,20 +497,22 @@
                                 viewEl.style.color = 'var(--color-text-secondary)';
                             }
                         } else if (fields[key].value) {
-                            if (key.includes('revenue') || key.includes('cost')) {
+                            // Campo tiene valor
+                            if (key.includes('revenue') || key.includes('diesel-cost')) {
                                 viewEl.textContent = '$ ' + parseFloat(fields[key].value).toLocaleString('es-CL');
+                                viewEl.style.color = 'var(--color-text-primary)';
                             } else if (key.includes('km')) {
                                 viewEl.textContent = fields[key].value + ' Km';
-                            } else if (key.includes('cost')) {
-                                viewEl.textContent = '$ ' + parseFloat(fields[key].value).toLocaleString('es-CL');
-                            } else if (key.includes('quantity')) {
+                                viewEl.style.color = 'var(--color-text-primary)';
+                            } else if (key.includes('diesel-quantity')) {
                                 viewEl.textContent = fields[key].value + ' L';
+                                viewEl.style.color = 'var(--color-text-primary)';
                             } else {
                                 viewEl.textContent = fields[key].value;
+                                viewEl.style.color = 'var(--color-text-primary)';
                             }
-                            viewEl.style.color = 'var(--color-text-primary)';
                         } else {
-                            // Los campos de diesel son opcionales
+                            // Campo vacío
                             if (key.includes('diesel')) {
                                 viewEl.textContent = 'Sin carga';
                                 viewEl.style.color = 'var(--color-text-secondary)';
@@ -547,20 +578,43 @@
                     setMode('view');
                 } else {
                     // Validación normal para días trabajados
-                    const finalKm = document.getElementById('final-km-edit').value;
+                    const revenueValue = document.getElementById('revenue-edit').value;
 
-                    if (!finalKm) {
-                        alert('Por favor complete todos los campos requeridos (Kilómetros Finales).');
+                    if (!revenueValue || parseFloat(revenueValue) <= 0) {
+                        alert('Por favor ingrese un Monto Recaudado válido.');
                         return;
                     }
 
-                    // Save new values
+                    // Guardar nuevos valores
                     for (const key in fields) {
                         const editEl = document.getElementById(fields[key].edit);
                         if (editEl) {
-                            fields[key].value = editEl.value;
+                            // Normalizar valores vacíos y limpiar espacios
+                            const value = editEl.value.trim();
+                            fields[key].value = value || '';
                         }
                     }
+                    
+                    // Validar coherencia de datos de diésel (si hay uno, debería haber el otro)
+                    const dieselQty = fields['diesel-quantity'].value;
+                    const dieselCost = fields['diesel-cost'].value;
+                    
+                    if ((dieselQty && !dieselCost) || (!dieselQty && dieselCost)) {
+                        const confirm = window.confirm(
+                            'Solo has ingresado uno de los valores de diésel (litros o costo).\n\n' +
+                            '¿Deseas continuar de todas formas?'
+                        );
+                        if (!confirm) return;
+                    }
+                    
+                    // Log para debug
+                    console.log('Datos guardados:', {
+                        revenue: fields['revenue'].value,
+                        dieselQuantity: fields['diesel-quantity'].value || '(Sin carga)',
+                        dieselCost: fields['diesel-cost'].value || '(Sin carga)',
+                        observaciones: fields['observaciones'].value || '(Sin observaciones)',
+                        comprobante: recordData.hasComprobante ? 'Sí' : 'No'
+                    });
                     
                     confirmationMessage.querySelector('.alert-row__text').textContent = 
                         'Registro guardado y actualizado a "Completo" exitosamente.';

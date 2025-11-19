@@ -1,0 +1,113 @@
+/* ==================================== */
+/* _toast.css - Toast Notifications    */
+/* ==================================== */
+
+.toast {
+    position: fixed;
+    bottom: 80px; /* Por encima de la nav bar */
+    left: 16px;
+    right: 16px;
+    padding: 16px;
+    background: #1F2937;
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.toast--visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Variantes de toast */
+.toast--success {
+    background: linear-gradient(135deg, #10B981, #059669);
+}
+
+.toast--error {
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+}
+
+.toast--warning {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+}
+
+.toast--info {
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+
+.toast__icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.toast__content {
+    flex: 1;
+}
+
+.toast__close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.toast__close:hover {
+    opacity: 1;
+}
+
+.toast__close:active {
+    transform: scale(0.9);
+}
+
+/* Animación de entrada alternativa */
+@keyframes toast-slide-in {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Para múltiples toasts (stack) */
+.toast-container {
+    position: fixed;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 16px;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.toast-container .toast {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    pointer-events: auto;
+}
+

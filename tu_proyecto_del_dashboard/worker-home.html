@@ -12,21 +12,243 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_toast.css">
+    
+    <style>
+        /* ============================================ */
+        /* HEADER MEJORADO                             */
+        /* ============================================ */
+        .mobile-header__greeting {
+            font-size: 15px;
+            font-weight: 500;
+            color: #6B7280;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .mobile-header__name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            color: #111827;
+        }
+        
+        .mobile-header__metadata {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .metadata-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4B5563;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .metadata-chip__icon {
+            font-size: 16px;
+        }
+        
+        /* ============================================ */
+        /* TIMELINE DE ACTIVIDAD RECIENTE              */
+        /* ============================================ */
+        .recent-activity {
+            margin: 24px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .recent-activity__title {
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6B7280;
+            margin-bottom: 16px;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-item__dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        
+        .activity-item__dot--success {
+            background: #10B981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+        
+        .activity-item__dot--info {
+            background: #3B82F6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        
+        .activity-item__dot--warning {
+            background: #F59E0B;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+        }
+        
+        .activity-item__content {
+            flex: 1;
+        }
+        
+        .activity-item__text {
+            font-size: 15px;
+            color: #1F2937;
+            margin-bottom: 2px;
+            line-height: 1.4;
+        }
+        
+        .activity-item__text strong {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .activity-item__time {
+            font-size: 13px;
+            color: #9CA3AF;
+        }
+        
+        /* ============================================ */
+        /* BOTÓN CTA MEJORADO                          */
+        /* ============================================ */
+        .cta-section {
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .cta-section__message {
+            font-size: var(--font-size-mobile-base);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-xl);
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(37, 99, 235, 0.5);
+            }
+        }
+        
+        .btn-primary--urgent {
+            animation: pulse-glow 2s ease-in-out infinite;
+            position: relative;
+        }
+        
+        .btn-with-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-icon {
+            font-size: 20px;
+        }
+        
+        /* Estados táctiles mejorados */
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+        
+        .btn-primary {
+            transition: transform 0.1s ease, background-color 0.2s ease, box-shadow 0.3s ease;
+        }
+    </style>
     </head>
 <body>
     <div class="mobile-app-container">
         <main class="mobile-content">
             <header class="mobile-header mobile-header--align-left">
-                <h1 class="mobile-header__title">Hola, Juan Pérez</h1>
-                <p class="mobile-header__subtitle">Máquina Asignada: 05</p>
-                <p class="mobile-header__subtitle">Fecha: Viernes, 14 de Noviembre</p>
+                <p class="mobile-header__greeting">Bienvenido de vuelta</p>
+                <h1 class="mobile-header__name">Juan Pérez</h1>
+                <div class="mobile-header__metadata">
+                    <span class="metadata-chip">
+                        <span class="metadata-chip__icon">🚛</span>
+                        Máquina 05
+                    </span>
+                    <span class="metadata-chip">
+                        <span class="metadata-chip__icon">📅</span>
+                        Vie, 14 Nov
+                    </span>
+                </div>
             </header>
 
-            <div style="text-align: center; margin-top: var(--space-xxxl);">
-                <p style="font-size: var(--font-size-mobile-base); color: var(--color-text-secondary); margin-bottom: var(--space-xl);">
+            <!-- Timeline de Actividad Reciente -->
+            <div class="recent-activity">
+                <h3 class="recent-activity__title">Actividad Reciente</h3>
+                
+                <div class="activity-item">
+                    <div class="activity-item__dot activity-item__dot--success"></div>
+                    <div class="activity-item__content">
+                        <p class="activity-item__text">Reporte de ayer <strong>enviado</strong></p>
+                        <span class="activity-item__time">Hace 2 horas</span>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-item__dot activity-item__dot--info"></div>
+                    <div class="activity-item__content">
+                        <p class="activity-item__text">Nueva asignación: <strong>Máquina 05</strong></p>
+                        <span class="activity-item__time">Hace 1 día</span>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-item__dot activity-item__dot--warning"></div>
+                    <div class="activity-item__content">
+                        <p class="activity-item__text">Alerta: <strong>Tu licencia vence en 15 días</strong></p>
+                        <span class="activity-item__time">Hace 3 días</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <p class="cta-section__message">
                     Tu reporte de hoy está pendiente.
                 </p>
-                <a href="worker-report.html" class="btn btn-primary btn-full-width btn-mobile-height">INGRESAR REPORTE DE HOY</a>
+                <a href="worker-report.html" class="btn btn-primary btn-full-width btn-mobile-height btn-primary--urgent btn-with-icon">
+                    <span class="btn-icon">📝</span>
+                    INGRESAR REPORTE DE HOY
+                </a>
             </div>
         </main>
 

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_inputs.css">
     <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_toast.css">
     
     <style>
         /* ============================================ */
@@ -352,6 +353,62 @@
         }
         
         /* ============================================ */
+        /* TRANSICIONES ENTRE TABS                    */
+        /* ============================================ */
+        .history-container {
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* ============================================ */
+        /* PULL TO REFRESH                             */
+        /* ============================================ */
+        .pull-to-refresh {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .pull-to-refresh.is-pulling {
+            transform: translateY(60px);
+        }
+        
+        .pull-to-refresh__spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E7EB;
+            border-top-color: #2563EB;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .pull-to-refresh__icon {
+            font-size: 24px;
+            color: #2563EB;
+        }
+        
+        /* ============================================ */
         /* RESPONSIVE: Optimizaciones                 */
         /* ============================================ */
         @media (max-width: 360px) {
@@ -396,7 +453,12 @@
             </button>
         </nav>
 
-        <main class="mobile-content" style="padding-top: 8px;">
+        <main class="mobile-content" style="padding-top: 8px; position: relative;">
+            <!-- Pull to Refresh Indicator -->
+            <div class="pull-to-refresh" id="pull-to-refresh">
+                <div class="pull-to-refresh__icon">⟳</div>
+            </div>
+            
             <!-- Contenedor del historial -->
             <div class="history-container" id="history-container">
                 <!-- El contenido se genera dinámicamente con JS -->
@@ -645,6 +707,80 @@
             };
 
             // ============================================
+            // HAPTIC FEEDBACK
+            // ============================================
+            function triggerHaptic(style = 'light') {
+                if ('vibrate' in navigator) {
+                    const patterns = {
+                        light: [10],
+                        medium: [20],
+                        success: [10, 50, 10]
+                    };
+                    navigator.vibrate(patterns[style]);
+                }
+            }
+            
+            // ============================================
+            // PULL TO REFRESH
+            // ============================================
+            let startY = 0;
+            let isPulling = false;
+            const pullToRefresh = document.getElementById('pull-to-refresh');
+            const mainContent = document.querySelector('.mobile-content');
+            
+            mainContent.addEventListener('touchstart', (e) => {
+                if (mainContent.scrollTop === 0) {
+                    startY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            });
+            
+            mainContent.addEventListener('touchmove', (e) => {
+                if (!isPulling || mainContent.scrollTop > 0) return;
+                
+                const currentY = e.touches[0].clientY;
+                const pullDistance = currentY - startY;
+                
+                if (pullDistance > 0 && pullDistance < 100) {
+                    pullToRefresh.style.transform = `translateY(${Math.min(pullDistance, 60)}px)`;
+                    pullToRefresh.querySelector('.pull-to-refresh__icon').style.transform = `rotate(${pullDistance * 3.6}deg)`;
+                }
+                
+                if (pullDistance > 80) {
+                    pullToRefresh.classList.add('is-pulling');
+                }
+            });
+            
+            mainContent.addEventListener('touchend', (e) => {
+                if (!isPulling) return;
+                
+                const currentY = e.changedTouches[0].clientY;
+                const pullDistance = currentY - startY;
+                
+                if (pullDistance > 80) {
+                    // Trigger refresh
+                    triggerHaptic('success');
+                    pullToRefresh.innerHTML = '<div class="pull-to-refresh__spinner"></div>';
+                    
+                    setTimeout(() => {
+                        // Recargar datos
+                        renderHistory(currentPeriod);
+                        updateCounts();
+                        
+                        // Reset pull indicator
+                        pullToRefresh.innerHTML = '<div class="pull-to-refresh__icon">⟳</div>';
+                        pullToRefresh.style.transform = '';
+                        pullToRefresh.classList.remove('is-pulling');
+                    }, 1000);
+                } else {
+                    pullToRefresh.style.transform = '';
+                    pullToRefresh.classList.remove('is-pulling');
+                }
+                
+                isPulling = false;
+            });
+            
+            // ============================================
             // TABS: Event Listeners
             // ============================================
             const tabs = document.querySelectorAll('.filter-tab');
@@ -652,6 +788,9 @@
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
+                    // Haptic feedback
+                    triggerHaptic('light');
+                    
                     // Actualizar estado visual
                     tabs.forEach(t => {
                         t.classList.remove('is-active');
@@ -659,6 +798,13 @@
                     });
                     tab.classList.add('is-active');
                     tab.setAttribute('aria-selected', 'true');
+
+                    // Re-trigger animation
+                    const container = document.getElementById('history-container');
+                    container.style.animation = 'none';
+                    setTimeout(() => {
+                        container.style.animation = '';
+                    }, 10);
 
                     // Renderizar
                     currentPeriod = tab.dataset.period;

@@ -12,18 +12,111 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components/_mobile-layout.css">
     <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_toast.css">
+    
+    <style>
+        /* ============================================ */
+        /* RESUMEN DE REPORTE                          */
+        /* ============================================ */
+        .success-summary {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin: 24px 0;
+            animation: slideUp 0.5s ease-out 0.3s both;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .success-summary__title {
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6B7280;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .success-summary__item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        
+        .success-summary__item:last-child {
+            border-bottom: none;
+        }
+        
+        .success-summary__label {
+            color: #6B7280;
+            font-size: 14px;
+        }
+        
+        .success-summary__value {
+            font-weight: 600;
+            color: #1F2937;
+            font-size: 15px;
+        }
+        
+        .success-icon {
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></canvas>
+    
     <div class="mobile-app-container">
         <main class="mobile-content" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-            <svg style="color: var(--color-state-success); margin-bottom: var(--space-xxl);" xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+            <svg class="success-icon" style="color: var(--color-state-success); margin-bottom: var(--space-xxl);" xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
             
             <h1 class="mobile-header__title" style="margin-bottom: var(--space-md);">¡Reporte Enviado!</h1>
-            <p style="font-size: var(--font-size-mobile-base); color: var(--color-text-secondary); margin-bottom: var(--space-xxl);">
+            <p style="font-size: var(--font-size-mobile-base); color: var(--color-text-secondary); margin-bottom: var(--space-md);">
                 Tu reporte de hoy ha sido enviado exitosamente y está pendiente de aprobación.
             </p>
 
-            <a href="worker-home.html" class="btn btn-primary btn-full-width btn-mobile-height" style="margin-top: auto;">Volver al Inicio</a>
+            <div class="success-summary" id="success-summary">
+                <h3 class="success-summary__title">Resumen de tu reporte</h3>
+                <div class="success-summary__item">
+                    <span class="success-summary__label">Monto Recaudado</span>
+                    <span class="success-summary__value" id="summary-monto">$ 0</span>
+                </div>
+                <div class="success-summary__item">
+                    <span class="success-summary__label">Diésel Cargado</span>
+                    <span class="success-summary__value" id="summary-diesel">0 Lts</span>
+                </div>
+                <div class="success-summary__item">
+                    <span class="success-summary__label">Fecha</span>
+                    <span class="success-summary__value" id="summary-fecha">-</span>
+                </div>
+            </div>
+
+            <a href="worker-home.html" class="btn btn-primary btn-full-width btn-mobile-height">Volver al Inicio</a>
         </main>
 
         <nav class="mobile-nav-bar">
@@ -43,5 +136,71 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lanzar confetti al cargar
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#2563EB', '#10B981', '#F59E0B', '#EF4444']
+            });
+            
+            // Segundo disparo después de medio segundo
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.6 }
+                });
+            }, 200);
+            
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.6 }
+                });
+            }, 400);
+            
+            // Vibración de éxito
+            if ('vibrate' in navigator) {
+                navigator.vibrate([10, 50, 10]);
+            }
+            
+            // Cargar datos del reporte desde sessionStorage
+            const lastReport = sessionStorage.getItem('lastReport');
+            if (lastReport) {
+                try {
+                    const data = JSON.parse(lastReport);
+                    
+                    // Formatear y mostrar monto
+                    const monto = parseFloat(data.monto);
+                    document.getElementById('summary-monto').textContent = new Intl.NumberFormat('es-CL', {
+                        style: 'currency',
+                        currency: 'CLP',
+                        minimumFractionDigits: 0
+                    }).format(monto);
+                    
+                    // Mostrar diesel
+                    const diesel = parseFloat(data.diesel) || 0;
+                    document.getElementById('summary-diesel').textContent = diesel > 0 
+                        ? `${diesel} Lts` 
+                        : 'Sin carga';
+                    
+                    // Mostrar fecha
+                    document.getElementById('summary-fecha').textContent = data.fecha;
+                    
+                    // Limpiar sessionStorage
+                    sessionStorage.removeItem('lastReport');
+                } catch (e) {
+                    console.error('Error al cargar datos del reporte:', e);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

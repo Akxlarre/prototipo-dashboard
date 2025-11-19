@@ -101,3 +101,27 @@
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* Para modals */
     --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.1); /* Para modals grandes */
 }
+
+/* ------------------------------------ */
+/* 6. Utilidades Globales              */
+/* ------------------------------------ */
+
+/* Números tabulares para mejor legibilidad de cantidades */
+.tabular-nums,
+.currency-value,
+.numeric-value {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+}
+
+/* Reducir animaciones en dispositivos con preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

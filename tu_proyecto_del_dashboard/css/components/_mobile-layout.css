@@ -67,11 +67,21 @@
     color: var(--color-text-secondary); /* Gris-600 */
     font-size: var(--font-size-desktop-label); /* 14px */
     font-weight: var(--font-weight-medium);
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.1s ease, opacity 0.1s ease;
+    -webkit-tap-highlight-color: transparent; /* Quitar highlight azul en móviles */
+    user-select: none; /* Prevenir selección de texto */
+    min-width: 64px; /* Asegurar área táctil mínima */
+    min-height: 56px; /* Altura completa del nav bar */
+    padding: 8px 12px; /* Padding para área táctil */
 }
 
 .mobile-nav-item:hover {
     color: var(--color-action-primary); /* Azul-600 */
+}
+
+.mobile-nav-item:active {
+    transform: scale(0.96); /* Feedback táctil */
+    opacity: 0.8;
 }
 
 .mobile-nav-item.is-active {
@@ -79,8 +89,8 @@
 }
 
 .mobile-nav-item__icon {
-    width: var(--space-lg); /* 20px */
-    height: var(--space-lg);
+    width: 24px; /* Aumentado de 20px a 24px para mejor visualización */
+    height: 24px;
     margin-bottom: var(--space-xxs); /* 4px */
     fill: currentColor;
 }
