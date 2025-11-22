@@ -453,8 +453,13 @@
                                 <span class="kpi-card__context kpi-card__context--negative" id="context-choferes">Acumulado hasta hoy</span>
                             </div>
                             <div class="kpi-card">
+                                <span class="kpi-card__label">Gastos en Repuestos (Mes)</span>
+                                <span class="kpi-card__value" id="summary-repuestos-kpi">$ 655.000</span>
+                                <span class="kpi-card__context kpi-card__context--negative" id="context-repuestos">Acumulado hasta hoy</span>
+                            </div>
+                            <div class="kpi-card">
                                 <span class="kpi-card__label">Ganancia Líquida (Neta)</span>
-                                <span class="kpi-card__value">$ 8.765.432</span>
+                                <span class="kpi-card__value" id="summary-ganancia-kpi">$ 8.110.432</span>
                                 <span class="kpi-card__context kpi-card__context--positive" id="context-ganancia">Acumulado hasta hoy</span>
                             </div>
                         </div>
@@ -529,6 +534,8 @@
                                         <th>Semana</th>
                                         <th>Rango de Fechas</th>
                                         <th>Total Recaudado</th>
+                                        <th>Gasto Diésel</th>
+                                        <th>Mantenimiento</th>
                                         <th>Total Egresos</th>
                                         <th>Ganancia Neta</th>
                                         <th style="text-align: center;">Ver Desglose</th>
@@ -841,36 +848,36 @@
                 week: 1,
                 dateRange: '1-7 Nov',
                 drivers: [
-                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3650000, diesel: 550000, percentage: 30 },
-                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 6, recaudado: 3120000, diesel: 480000, percentage: 30 },
-                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3500000, diesel: 520000, percentage: 30 }
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3650000, diesel: 550000, maintenance: 0, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 6, recaudado: 3120000, diesel: 480000, maintenance: 0, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3500000, diesel: 520000, maintenance: 0, percentage: 30 }
                 ]
             },
             {
                 week: 2,
                 dateRange: '8-14 Nov',
                 drivers: [
-                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3700000, diesel: 560000, percentage: 30 },
-                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 7, recaudado: 3640000, diesel: 510000, percentage: 30 },
-                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 5, recaudado: 2500000, diesel: 400000, percentage: 30 }
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3700000, diesel: 560000, maintenance: 450000, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 7, recaudado: 3640000, diesel: 510000, maintenance: 0, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 5, recaudado: 2500000, diesel: 400000, maintenance: 0, percentage: 30 }
                 ]
             },
             {
                 week: 3,
                 dateRange: '15-21 Nov',
                 drivers: [
-                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3680000, diesel: 545000, percentage: 30 },
-                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 7, recaudado: 3580000, diesel: 495000, percentage: 30 },
-                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3450000, diesel: 505000, percentage: 30 }
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3680000, diesel: 545000, maintenance: 85000, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 7, recaudado: 3580000, diesel: 495000, maintenance: 0, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3450000, diesel: 505000, maintenance: 120000, percentage: 30 }
                 ]
             },
             {
                 week: 4,
                 dateRange: '22-28 Nov',
                 drivers: [
-                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3720000, diesel: 570000, percentage: 30 },
-                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 6, recaudado: 3180000, diesel: 475000, percentage: 30 },
-                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3600000, diesel: 530000, percentage: 30 }
+                    { name: 'Juan Pérez', machine: 'Máquina 05', daysWorked: 7, recaudado: 3720000, diesel: 570000, maintenance: 0, percentage: 30 },
+                    { name: 'María Gómez', machine: 'Máquina 02', daysWorked: 6, recaudado: 3180000, diesel: 475000, maintenance: 0, percentage: 30 },
+                    { name: 'Pedro López', machine: 'Máquina 07', daysWorked: 7, recaudado: 3600000, diesel: 530000, maintenance: 0, percentage: 30 }
                 ]
             }
         ];
@@ -879,22 +886,25 @@
         const calculateWeekTotals = (weekData) => {
             let totalRecaudado = 0;
             let totalDiesel = 0;
+            let totalMaintenance = 0;
             let totalPagoChoferes = 0;
 
             weekData.drivers.forEach(driver => {
                 totalRecaudado += driver.recaudado;
-                totalDiesel += driver.diesel;
-                const gananciaBruta = driver.recaudado - driver.diesel;
+                totalDiesel += driver.diesel || 0;
+                totalMaintenance += driver.maintenance || 0;
+                const gananciaBruta = driver.recaudado - (driver.diesel || 0);
                 const pagoChofer = gananciaBruta * (driver.percentage / 100);
                 totalPagoChoferes += pagoChofer;
             });
 
-            const totalEgresos = totalDiesel + totalPagoChoferes;
+            const totalEgresos = totalDiesel + totalPagoChoferes + totalMaintenance;
             const gananciaNeta = totalRecaudado - totalEgresos;
 
             return {
                 totalRecaudado,
                 totalDiesel,
+                totalMaintenance,
                 totalPagoChoferes,
                 totalEgresos,
                 gananciaNeta
@@ -927,6 +937,8 @@
                     </td>
                     <td>${weekData.dateRange}</td>
                     <td>${formatCurrencyCLP(totals.totalRecaudado)}</td>
+                    <td>${formatCurrencyCLP(totals.totalDiesel)}</td>
+                    <td>${formatCurrencyCLP(totals.totalMaintenance)}</td>
                     <td>${formatCurrencyCLP(totals.totalEgresos)}</td>
                     <td>
                         <strong style="color: var(--color-state-success);">
@@ -988,15 +1000,21 @@
 
             // Calcular totales
             let weekTotalRecaudado = 0;
+            let weekTotalDiesel = 0;
+            let weekTotalMaintenance = 0;
             let weekTotalPagoChoferes = 0;
             let weekTotalGanancia = 0;
 
             const driversRows = weekData.drivers.map(driver => {
-                const gananciaBruta = driver.recaudado - driver.diesel;
+                const diesel = driver.diesel || 0;
+                const maintenance = driver.maintenance || 0;
+                const gananciaBruta = driver.recaudado - diesel;
                 const pagoChofer = gananciaBruta * (driver.percentage / 100);
-                const gananciaNeta = gananciaBruta - pagoChofer;
+                const gananciaNeta = gananciaBruta - pagoChofer - maintenance;
 
                 weekTotalRecaudado += driver.recaudado;
+                weekTotalDiesel += diesel;
+                weekTotalMaintenance += maintenance;
                 weekTotalPagoChoferes += pagoChofer;
                 weekTotalGanancia += gananciaNeta;
 
@@ -1005,6 +1023,8 @@
                         <td><strong>${driver.name}</strong></td>
                         <td style="text-align: center;">${driver.daysWorked} días</td>
                         <td>${formatCurrencyCLP(driver.recaudado)}</td>
+                        <td>${formatCurrencyCLP(diesel)}</td>
+                        <td>${formatCurrencyCLP(maintenance)}</td>
                         <td>${formatCurrencyCLP(pagoChofer)}</td>
                         <td>${formatCurrencyCLP(gananciaNeta)}</td>
                     </tr>
@@ -1015,7 +1035,7 @@
             const breakdownRow = document.createElement('tr');
             breakdownRow.className = 'week-breakdown-row';
             breakdownRow.innerHTML = `
-                <td colspan="6">
+                <td colspan="8">
                     <div class="week-breakdown-content">
                         <div class="week-breakdown-header">
                             <div>
@@ -1033,6 +1053,8 @@
                                     <th>Chofer</th>
                                     <th style="text-align: center;">Días Trabajados</th>
                                     <th style="text-align: right;">Total Recaudado</th>
+                                    <th style="text-align: right;">Gasto Diésel</th>
+                                    <th style="text-align: right;">Mantenimiento</th>
                                     <th style="text-align: right;">Pago Chofer</th>
                                     <th style="text-align: right;">Ganancia Neta</th>
                                 </tr>
@@ -1046,6 +1068,14 @@
                             <div class="breakdown-kpi">
                                 <span class="breakdown-kpi__label">Total Recaudado</span>
                                 <span class="breakdown-kpi__value">${formatCurrencyCLP(weekTotalRecaudado)}</span>
+                            </div>
+                            <div class="breakdown-kpi">
+                                <span class="breakdown-kpi__label">Total Gasto Diésel</span>
+                                <span class="breakdown-kpi__value">${formatCurrencyCLP(weekTotalDiesel)}</span>
+                            </div>
+                            <div class="breakdown-kpi">
+                                <span class="breakdown-kpi__label">Total Mantenimiento</span>
+                                <span class="breakdown-kpi__value">${formatCurrencyCLP(weekTotalMaintenance)}</span>
                             </div>
                             <div class="breakdown-kpi">
                                 <span class="breakdown-kpi__label">Total Pagado a Choferes</span>
@@ -1082,6 +1112,7 @@
         const contextRecaudado = document.getElementById('context-recaudado');
         const contextDiesel = document.getElementById('context-diesel');
         const contextChoferes = document.getElementById('context-choferes');
+        const contextRepuestos = document.getElementById('context-repuestos');
         const contextGanancia = document.getElementById('context-ganancia');
         const arrowIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/></svg>';
 
@@ -1091,14 +1122,21 @@
 
             if (isCurrentMonth) {
                 summaryTitle.textContent = 'Resumen de Rentabilidad (Mes en curso - MTD)';
-                [contextRecaudado, contextDiesel, contextChoferes, contextGanancia].forEach(ctx => {
+                [contextRecaudado, contextDiesel, contextChoferes, contextGanancia, contextRepuestos].forEach(ctx => {
                     if (ctx) ctx.textContent = 'Acumulado hasta hoy';
                 });
+                // Actualizar ganancia neta restando gastos en repuestos
+                const gananciaBruta = 8765432;
+                const gastosRepuestos = 655000;
+                const gananciaNeta = gananciaBruta - gastosRepuestos;
+                const gananciaKpi = document.getElementById('summary-ganancia-kpi');
+                if (gananciaKpi) gananciaKpi.textContent = formatCurrencyCLP(gananciaNeta);
             } else {
                 summaryTitle.textContent = 'Resumen de Rentabilidad (Octubre 2025)';
                 if (contextRecaudado) contextRecaudado.innerHTML = `${arrowIcon} 3.1% vs Septiembre`;
                 if (contextDiesel) contextDiesel.innerHTML = `${arrowIcon} 1.5% vs Septiembre`;
                 if (contextChoferes) contextChoferes.textContent = 'N/A';
+                if (contextRepuestos) contextRepuestos.textContent = 'N/A';
                 if (contextGanancia) contextGanancia.innerHTML = `${arrowIcon} 5.2% vs Septiembre`;
             }
         };

@@ -139,6 +139,9 @@
                             <button class="tab-item" id="tab-assignments" role="tab" aria-selected="false" aria-controls="content-assignments" type="button">
                                 Historial de Asignaciones
                             </button>
+                            <button class="tab-item" id="tab-maintenance" role="tab" aria-selected="false" aria-controls="content-maintenance" type="button">
+                                Mantenimiento y Gastos
+                            </button>
                         </div>
                     </div>
                     <div class="card__body">
@@ -392,6 +395,140 @@
                                         <p class="empty-state__message">
                                             Aún no se han registrado asignaciones de choferes para esta máquina.
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- SECCIÓN 4: Mantenimiento y Gastos -->
+                        <section class="tab-content" id="content-maintenance" role="tabpanel" aria-labelledby="tab-maintenance" style="display: none;">
+                            <div class="card" id="maintenance-section" style="border: none; box-shadow: none;">
+                                <div class="card__header" style="border-bottom: 1px solid var(--color-border-light);">
+                                    <div>
+                                        <h2 class="card__header-title">Mantenimiento y Gastos</h2>
+                                        <p class="dashboard-section-subtitle">Gestiona repuestos, mantenimientos y gastos asociados a esta máquina.</p>
+                                    </div>
+                                </div>
+                                <div class="card__body">
+                                    <!-- KPI de Gastos del Mes -->
+                                    <div class="kpi-card-row" style="margin-bottom: var(--space-xl);">
+                                        <div class="kpi-card">
+                                            <span class="kpi-card__label">Gastos en Repuestos (Este Mes)</span>
+                                            <span class="kpi-card__value" id="maintenance-month-kpi">$ 0</span>
+                                            <span class="kpi-card__context kpi-card__context--negative">Acumulado del mes actual</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botón para registrar nueva compra -->
+                                    <div style="margin-bottom: var(--space-lg);">
+                                        <button class="btn btn-primary" id="btn-new-maintenance" type="button">
+                                            Registrar Nueva Compra
+                                        </button>
+                                    </div>
+
+                                    <!-- Formulario de Registro (Modal) -->
+                                    <div class="modal-overlay" id="maintenance-modal">
+                                        <div class="modal-content" style="max-width: 600px;">
+                                            <div class="modal-header">
+                                                <h2 class="modal-header__title">Registrar Compra de Repuesto</h2>
+                                                <button class="modal-close-btn" type="button" id="maintenance-modal-close" aria-label="Cerrar modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="maintenance-form">
+                                                    <div class="form-field">
+                                                        <label for="maintenance-item" class="form-field__label">Ítem/Repuesto *</label>
+                                                        <input type="text" id="maintenance-item" class="input-text" placeholder="Ej: Neumáticos, Aceite, Filtros" required>
+                                                        <span class="form-field__helper-text">Ingrese el nombre del repuesto o ítem comprado</span>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <label for="maintenance-cost" class="form-field__label">Costo ($) *</label>
+                                                        <input type="number" id="maintenance-cost" class="input-text" min="0" step="1" placeholder="0" required>
+                                                        <span class="form-field__helper-text">Ingrese el costo en pesos chilenos</span>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <label for="maintenance-invoice" class="form-field__label">Nº Factura/Boleta *</label>
+                                                        <input type="text" id="maintenance-invoice" class="input-text" placeholder="Ej: 001-00001234" required>
+                                                        <span class="form-field__helper-text">Número de factura o boleta para trazabilidad contable/SII</span>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <label for="maintenance-category" class="form-field__label">Categoría</label>
+                                                        <select id="maintenance-category" class="input-text">
+                                                            <option value="">Seleccione una categoría</option>
+                                                            <option value="preventivo">Preventivo</option>
+                                                            <option value="correctivo">Correctivo</option>
+                                                        </select>
+                                                        <span class="form-field__helper-text">Tipo de mantenimiento (opcional pero recomendado)</span>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <label for="maintenance-date" class="form-field__label">Fecha de Compra *</label>
+                                                        <input type="date" id="maintenance-date" class="input-text" required>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" id="maintenance-modal-cancel">Cancelar</button>
+                                                <button class="btn btn-primary" type="button" id="maintenance-modal-save">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Histórico con Filtros -->
+                                    <div style="margin-top: var(--space-xl);">
+                                        <h3 class="card__header-title" style="margin-bottom: var(--space-md);">Histórico de Repuestos</h3>
+                                        <div class="filters-bar" style="margin-bottom: var(--space-lg);">
+                                            <div class="form-field">
+                                                <label class="form-field__label" for="maintenance-filter-item">Ítem</label>
+                                                <input type="text" id="maintenance-filter-item" class="input-text" placeholder="Buscar por ítem...">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field__label" for="maintenance-filter-category">Categoría</label>
+                                                <select id="maintenance-filter-category" class="input-text">
+                                                    <option value="all">Todas</option>
+                                                    <option value="preventivo">Preventivo</option>
+                                                    <option value="correctivo">Correctivo</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field__label" for="maintenance-filter-date-from">Desde</label>
+                                                <input type="date" id="maintenance-filter-date-from" class="input-text">
+                                            </div>
+                                            <div class="form-field">
+                                                <label class="form-field__label" for="maintenance-filter-date-to">Hasta</label>
+                                                <input type="date" id="maintenance-filter-date-to" class="input-text">
+                                            </div>
+                                            <div class="filters-bar__actions">
+                                                <button class="btn btn-secondary btn-sm" type="button" id="maintenance-clear-filters">Limpiar filtros</button>
+                                            </div>
+                                        </div>
+                                        <div class="data-table-container">
+                                            <table class="data-table data-table--compact">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Ítem/Repuesto</th>
+                                                        <th style="text-align: right;">Costo</th>
+                                                        <th>Nº Factura/Boleta</th>
+                                                        <th>Categoría</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="maintenance-history-body">
+                                                    <!-- El contenido se renderizará dinámicamente -->
+                                                </tbody>
+                                            </table>
+                                            
+                                            <!-- Estado vacío -->
+                                            <div id="maintenance-empty-state" class="empty-state" style="display: none;">
+                                                <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 17H15M9 13H15M9 9H10M14 9H15M5 21H19C20.1046 21 21 20.1046 21 19V8L16 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M16 3V8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                                <h3 class="empty-state__title">No hay registros de mantenimiento</h3>
+                                                <p class="empty-state__message">
+                                                    No se encontraron registros de repuestos con los filtros aplicados. Intenta ajustar los criterios de búsqueda o registra una nueva compra.
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

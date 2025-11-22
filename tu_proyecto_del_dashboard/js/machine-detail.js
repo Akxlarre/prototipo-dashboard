@@ -31,6 +31,12 @@
       { date: '2025-11-16', driver: 'Juan Pérez', status: 'Cerrado', collected: 150000, diesel: 35000, obs: true },
       { date: '2025-11-15', driver: 'Juan Pérez', status: 'Cerrado', collected: 145000, diesel: 32000, obs: false },
       { date: '2025-11-14', driver: 'Laura Díaz', status: 'Abierto', collected: 0, diesel: 0, obs: true },
+    ],
+    maintenance: [
+      { id: 1, date: '2025-11-10', item: 'Neumáticos', cost: 450000, invoice: '001-00001234', category: 'preventivo' },
+      { id: 2, date: '2025-11-05', item: 'Aceite Motor', cost: 85000, invoice: '001-00001233', category: 'preventivo' },
+      { id: 3, date: '2025-10-28', item: 'Filtros', cost: 120000, invoice: '001-00001232', category: 'preventivo' },
+      { id: 4, date: '2025-10-15', item: 'Reparación Frenos', cost: 280000, invoice: '001-00001231', category: 'correctivo' }
     ]
   };
 
@@ -69,6 +75,22 @@
   const assignmentChipFilters   = document.querySelectorAll('[data-history-filter]');
   
   let currentAssignmentFilter = 'all';
+
+  // Elementos de mantenimiento
+  const maintenanceModal = document.getElementById('maintenance-modal');
+  const maintenanceForm = document.getElementById('maintenance-form');
+  const btnNewMaintenance = document.getElementById('btn-new-maintenance');
+  const maintenanceModalClose = document.getElementById('maintenance-modal-close');
+  const maintenanceModalCancel = document.getElementById('maintenance-modal-cancel');
+  const maintenanceModalSave = document.getElementById('maintenance-modal-save');
+  const maintenanceHistoryBody = document.getElementById('maintenance-history-body');
+  const maintenanceEmptyState = document.getElementById('maintenance-empty-state');
+  const maintenanceMonthKpi = document.getElementById('maintenance-month-kpi');
+  const maintenanceFilterItem = document.getElementById('maintenance-filter-item');
+  const maintenanceFilterCategory = document.getElementById('maintenance-filter-category');
+  const maintenanceFilterDateFrom = document.getElementById('maintenance-filter-date-from');
+  const maintenanceFilterDateTo = document.getElementById('maintenance-filter-date-to');
+  const maintenanceClearFilters = document.getElementById('maintenance-clear-filters');
 
   const formatHeader = () => `Maquina ${state.general.number} - ${state.general.brand}`;
 
@@ -397,9 +419,166 @@
     });
   });
 
+  // Funciones de mantenimiento
+  const calculateMaintenanceMonthTotal = () => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    return state.maintenance
+      .filter(m => {
+        const mDate = new Date(m.date);
+        return mDate.getMonth() === currentMonth && mDate.getFullYear() === currentYear;
+      })
+      .reduce((sum, m) => sum + m.cost, 0);
+  };
+
+  const updateMaintenanceKPI = () => {
+    if (!maintenanceMonthKpi) return;
+    const total = calculateMaintenanceMonthTotal();
+    maintenanceMonthKpi.textContent = formatCurrency(total);
+  };
+
+  const renderMaintenanceHistory = () => {
+    if (!maintenanceHistoryBody) return;
+    
+    const itemFilter = maintenanceFilterItem?.value.toLowerCase() || '';
+    const categoryFilter = maintenanceFilterCategory?.value || 'all';
+    const dateFrom = maintenanceFilterDateFrom?.value || '';
+    const dateTo = maintenanceFilterDateTo?.value || '';
+    
+    const filtered = state.maintenance.filter(m => {
+      const itemMatch = !itemFilter || m.item.toLowerCase().includes(itemFilter);
+      const categoryMatch = categoryFilter === 'all' || m.category === categoryFilter;
+      const dateMatch = (!dateFrom || m.date >= dateFrom) && (!dateTo || m.date <= dateTo);
+      
+      return itemMatch && categoryMatch && dateMatch;
+    });
+
+    maintenanceHistoryBody.innerHTML = '';
+    
+    if (filtered.length === 0) {
+      if (maintenanceEmptyState) maintenanceEmptyState.style.display = 'flex';
+      const table = document.querySelector('#maintenance-section .data-table-container table');
+      if (table) table.style.display = 'none';
+      return;
+    }
+
+    if (maintenanceEmptyState) maintenanceEmptyState.style.display = 'none';
+    const table = document.querySelector('#maintenance-section .data-table-container table');
+    if (table) table.style.display = 'table';
+
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(m => {
+      const tr = document.createElement('tr');
+      const categoryLabel = m.category === 'preventivo' ? 'Preventivo' : m.category === 'correctivo' ? 'Correctivo' : '—';
+      const categoryClass = m.category === 'preventivo' ? 'status-pill--ok' : m.category === 'correctivo' ? 'status-pill--warning' : '';
+      
+      tr.innerHTML = `
+        <td>${m.date}</td>
+        <td>${m.item}</td>
+        <td style="text-align: right;" class="tabular-nums">${formatCurrency(m.cost)}</td>
+        <td>${m.invoice}</td>
+        <td>${categoryLabel ? `<span class="status-pill ${categoryClass}">${categoryLabel}</span>` : '—'}</td>
+        <td>
+          <button class="btn-link btn-sm maintenance-delete-btn" data-id="${m.id}">Eliminar</button>
+        </td>
+      `;
+      maintenanceHistoryBody.appendChild(tr);
+    });
+
+    // Agregar event listeners a los botones de eliminar
+    maintenanceHistoryBody.querySelectorAll('.maintenance-delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.target.dataset.id);
+        if (confirm('¿Está seguro de que desea eliminar este registro de mantenimiento?')) {
+          state.maintenance = state.maintenance.filter(m => m.id !== id);
+          renderMaintenanceHistory();
+          updateMaintenanceKPI();
+        }
+      });
+    });
+  };
+
+  const openMaintenanceModal = () => {
+    if (!maintenanceModal || !maintenanceForm) return;
+    maintenanceForm.reset();
+    const today = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('maintenance-date');
+    if (dateInput) dateInput.value = today;
+    maintenanceModal.classList.add('is-active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeMaintenanceModal = () => {
+    if (!maintenanceModal) return;
+    maintenanceModal.classList.remove('is-active');
+    document.body.style.overflow = '';
+    if (maintenanceForm) maintenanceForm.reset();
+  };
+
+  const saveMaintenance = () => {
+    if (!maintenanceForm) return;
+    
+    const item = document.getElementById('maintenance-item')?.value.trim();
+    const cost = parseFloat(document.getElementById('maintenance-cost')?.value) || 0;
+    const invoice = document.getElementById('maintenance-invoice')?.value.trim();
+    const category = document.getElementById('maintenance-category')?.value || '';
+    const date = document.getElementById('maintenance-date')?.value;
+
+    if (!item || !cost || !invoice || !date) {
+      alert('Por favor complete todos los campos obligatorios.');
+      return;
+    }
+
+    const newId = state.maintenance.length > 0 
+      ? Math.max(...state.maintenance.map(m => m.id)) + 1 
+      : 1;
+
+    state.maintenance.push({
+      id: newId,
+      date,
+      item,
+      cost,
+      invoice,
+      category
+    });
+
+    renderMaintenanceHistory();
+    updateMaintenanceKPI();
+    closeMaintenanceModal();
+  };
+
+  // Event listeners de mantenimiento
+  btnNewMaintenance?.addEventListener('click', openMaintenanceModal);
+  maintenanceModalClose?.addEventListener('click', closeMaintenanceModal);
+  maintenanceModalCancel?.addEventListener('click', closeMaintenanceModal);
+  maintenanceModalSave?.addEventListener('click', saveMaintenance);
+  
+  if (maintenanceModal) {
+    maintenanceModal.addEventListener('click', (e) => {
+      if (e.target === maintenanceModal) {
+        closeMaintenanceModal();
+      }
+    });
+  }
+
+  maintenanceFilterItem?.addEventListener('input', renderMaintenanceHistory);
+  maintenanceFilterCategory?.addEventListener('change', renderMaintenanceHistory);
+  maintenanceFilterDateFrom?.addEventListener('change', renderMaintenanceHistory);
+  maintenanceFilterDateTo?.addEventListener('change', renderMaintenanceHistory);
+  maintenanceClearFilters?.addEventListener('click', () => {
+    if (maintenanceFilterItem) maintenanceFilterItem.value = '';
+    if (maintenanceFilterCategory) maintenanceFilterCategory.value = 'all';
+    if (maintenanceFilterDateFrom) maintenanceFilterDateFrom.value = '';
+    if (maintenanceFilterDateTo) maintenanceFilterDateTo.value = '';
+    renderMaintenanceHistory();
+  });
+
   renderInfoView();
   renderDocumentation();
   populateRecordFilters();
   renderDailyRecords();
   renderAssignments();
+  renderMaintenanceHistory();
+  updateMaintenanceKPI();
 });

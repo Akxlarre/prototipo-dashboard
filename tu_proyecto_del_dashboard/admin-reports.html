@@ -113,7 +113,7 @@
                         <div class="report-header-row">
                             <div class="chart-kpi">
                                 <span class="chart-kpi__label">Ganancia Neta Total</span>
-                                <span class="chart-kpi__value">$ 12.345.678</span>
+                                <span class="chart-kpi__value" id="machines-profit-total">$ 13.913.000</span>
                             </div>
                             <div class="export-group">
                                 <button class="btn btn-secondary export-button" type="button">Exportar</button>
@@ -139,6 +139,7 @@
                                         <th>Ingreso Total ($)</th>
                                         <th>Costo Diésel ($)</th>
                                         <th>Pago Choferes ($)</th>
+                                        <th>Gastos Mantenimiento ($)</th>
                                         <th>Ganancia Neta ($)</th>
                                     </tr>
                                 </thead>
@@ -149,7 +150,8 @@
                                         <td>$ 5.200.000</td>
                                         <td>$ 1.350.000</td>
                                         <td>$ 350.000</td>
-                                        <td>$ 3.500.000</td>
+                                        <td>$ 535.000</td>
+                                        <td>$ 2.965.000</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
@@ -157,7 +159,8 @@
                                         <td>$ 4.700.000</td>
                                         <td>$ 1.100.000</td>
                                         <td>$ 320.000</td>
-                                        <td>$ 2.980.000</td>
+                                        <td>$ 0</td>
+                                        <td>$ 3.280.000</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
@@ -165,7 +168,8 @@
                                         <td>$ 4.250.000</td>
                                         <td>$ 1.050.000</td>
                                         <td>$ 300.000</td>
-                                        <td>$ 2.900.000</td>
+                                        <td>$ 120.000</td>
+                                        <td>$ 2.780.000</td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
@@ -173,6 +177,7 @@
                                         <td>$ 3.950.000</td>
                                         <td>$ 980.000</td>
                                         <td>$ 290.000</td>
+                                        <td>$ 0</td>
                                         <td>$ 2.680.000</td>
                                     </tr>
                                     <tr>
@@ -181,6 +186,7 @@
                                         <td>$ 3.500.000</td>
                                         <td>$ 990.000</td>
                                         <td>$ 310.000</td>
+                                        <td>$ 0</td>
                                         <td>$ 2.200.000</td>
                                     </tr>
                                 </tbody>
@@ -355,9 +361,9 @@
             const formatPercentage = (value) => `${value.toFixed(0)}%`;
 
             const machinesProfitData = [
-                { machine: 'Máquina 05', net: 3500000 },
-                { machine: 'Máquina 02', net: 2980000 },
-                { machine: 'Máquina 07', net: 2900000 },
+                { machine: 'Máquina 05', net: 2965000 },
+                { machine: 'Máquina 02', net: 3280000 },
+                { machine: 'Máquina 07', net: 2780000 },
                 { machine: 'Máquina 01', net: 2680000 },
                 { machine: 'Máquina 03', net: 2200000 }
             ];
