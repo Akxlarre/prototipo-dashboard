@@ -119,6 +119,12 @@
                     </span>
                     <span class="badge badge--text">3</span>
                 </a>
+                <a href="admin-daily-logs.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-bitacora"></span>
+                        Bitácora
+                    </span>
+                </a>
                 <div class="sidebar__nav-separator"></div>
                 <a href="admin-settings.html" class="sidebar__nav-item">
                     <span class="sidebar__nav-item-content">
@@ -280,7 +286,7 @@
                             <textarea id="observaciones-edit" class="input-text" placeholder="Notas adicionales (opcional)" rows="4" style="display: none; resize: vertical;"></textarea>
                         </div>
 
-                         <div class="form-field" style="margin-top: var(--space-lg);">
+                         <div class="form-field" id="historial-cambios-section" style="margin-top: var(--space-lg);">
                             <label class="form-field__label">Historial de Cambios (RF-011)</label>
                             <p class="form-field__helper-text">v1: Creado por Juan Perez (Chofer) - 2025-11-14 18:30</p>
                             <p class="form-field__helper-text">v2: Modificado por Administrador - 2025-11-15 10:00</p>
@@ -296,11 +302,14 @@
             // Funcion para obtener parametros de URL
             const getUrlParams = () => {
                 const params = new URLSearchParams(window.location.search);
+                const isNewMode = params.get('mode') === 'new';
+                const today = new Date().toISOString().split('T')[0];
                 return {
                     maquina: params.get('maquina') || '05',
                     chofer: params.get('chofer') || 'Juan Perez',
-                    fecha: params.get('fecha') || '2025-11-14',
-                    estado: params.get('estado') || 'pending-diesel'
+                    fecha: params.get('fecha') || today,
+                    estado: params.get('estado') || 'pending-diesel',
+                    isNewMode: isNewMode
                 };
             };
 
@@ -330,6 +339,7 @@
 
             const urlParams = getUrlParams();
             const normalizedEstado = normalizeEstadoParam(urlParams.estado);
+            const isNewMode = urlParams.isNewMode;
             const formContainer = document.getElementById('form-container');
             const editButton = document.getElementById('edit-button');
             const saveButton = document.getElementById('save-button');
@@ -339,6 +349,8 @@
             const confirmationMessage = document.getElementById('confirmation-message');
             const subtitleText = document.getElementById('subtitle-text');
             const recordDateTitle = document.getElementById('record-date-title');
+            const mainTitle = document.querySelector('.main-content__title');
+            const historialSection = document.getElementById('historial-cambios-section');
 
             const fileUploadArea = document.getElementById('file-upload-area');
             const fileInput = document.getElementById('comprobante-file');
@@ -424,7 +436,16 @@
                 return baseData;
             };
 
-            const recordData = getRecordData(normalizedEstado, urlParams.maquina);
+            // Si es modo nuevo, usar datos vacíos; si no, usar datos según estado
+            const recordData = isNewMode ? {
+                'initial-km': '',
+                'revenue': '',
+                'final-km': '',
+                'diesel-quantity': '',
+                'diesel-cost': '',
+                'observaciones': '',
+                hasComprobante: false
+            } : getRecordData(normalizedEstado, urlParams.maquina);
 
             const fields = {
                 'revenue': { view: 'revenue-view', edit: 'revenue-edit', value: recordData['revenue'] },
@@ -433,18 +454,53 @@
                 'observaciones': { view: 'observaciones-view', edit: 'observaciones-edit', value: recordData['observaciones'] }
             };
 
-            // Actualizar titulo y subtitulo segun parametros
-            recordDateTitle.textContent = `Registro del ${urlParams.fecha}`;
-            subtitleText.textContent = `Corrija o complete la informacion del registro diario para la Maquina ${urlParams.maquina}.`;
+            // Modo "Nuevo Registro" - Configuración especial
+            if (isNewMode) {
+                // Cambiar título principal
+                if (mainTitle) {
+                    mainTitle.textContent = 'Crear Nuevo Registro';
+                }
+                // Cambiar subtítulo
+                if (subtitleText) {
+                    subtitleText.textContent = 'Complete los datos del nuevo registro diario.';
+                }
+                // Cambiar título del card
+                if (recordDateTitle) {
+                    const today = new Date();
+                    const fechaFormateada = today.toLocaleDateString('es-CL', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    recordDateTitle.textContent = `Nuevo Registro - ${fechaFormateada}`;
+                }
+                // Ocultar historial de cambios
+                if (historialSection) {
+                    historialSection.style.display = 'none';
+                }
+                // Cambiar texto del botón de guardar
+                if (saveButton) {
+                    saveButton.textContent = 'Crear Registro';
+                }
+                // Ocultar alerta de incidente
+                const incidenteAlert = document.getElementById('incidente-alert');
+                if (incidenteAlert) {
+                    incidenteAlert.style.display = 'none';
+                }
+            } else {
+                // Modo normal (edición de registro existente)
+                recordDateTitle.textContent = `Registro del ${urlParams.fecha}`;
+                subtitleText.textContent = `Corrija o complete la informacion del registro diario para la Maquina ${urlParams.maquina}.`;
 
-            // Mostrar alerta de incidente si aplica
-            const incidenteAlert = document.getElementById('incidente-alert');
-            if (normalizedEstado === 'incidente') {
-                incidenteAlert.style.display = 'flex';
+                // Mostrar alerta de incidente si aplica
+                const incidenteAlert = document.getElementById('incidente-alert');
+                if (normalizedEstado === 'incidente') {
+                    incidenteAlert.style.display = 'flex';
+                }
             }
 
-            // Determinar modo inicial segun el estado  
-            const initialMode = (normalizedEstado === 'complete') ? 'view' : 'edit';
+            // Determinar modo inicial: si es nuevo, siempre iniciar en edición; si no, según estado
+            const initialMode = isNewMode ? 'edit' : ((normalizedEstado === 'complete') ? 'view' : 'edit');
 
             function setMode(mode) {
                 formContainer.classList.remove('view-mode', 'edit-mode');
@@ -616,12 +672,17 @@
                         comprobante: recordData.hasComprobante ? 'Sí' : 'No'
                     });
                     
-                    confirmationMessage.querySelector('.alert-row__text').textContent = 
-                        'Registro guardado y actualizado a "Completo" exitosamente.';
+                    const successMessage = isNewMode 
+                        ? 'Registro creado exitosamente.'
+                        : 'Registro guardado y actualizado a "Completo" exitosamente.';
+                    confirmationMessage.querySelector('.alert-row__text').textContent = successMessage;
                     confirmationMessage.style.display = 'flex';
                     setTimeout(() => { confirmationMessage.style.display = 'none'; }, 5000);
                     
-                    setMode('view');
+                    // Si es modo nuevo, mantener en edición; si no, volver a vista
+                    if (!isNewMode) {
+                        setMode('view');
+                    }
                 }
             });
 

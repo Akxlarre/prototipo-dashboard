@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Bitácora de Operaciones</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/_icons.css">
+    <link rel="stylesheet" href="css/components/_layout.css">
+    <link rel="stylesheet" href="css/components/_buttons.css">
+    <link rel="stylesheet" href="css/components/_inputs.css">
+    <link rel="stylesheet" href="css/components/_forms.css">
+    <link rel="stylesheet" href="css/components/_cards.css">
+    <link rel="stylesheet" href="css/components/_table.css">
+    <link rel="stylesheet" href="css/components/_badge.css">
+    
+    <style>
+        .main-content__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .data-table tbody tr[data-anomaly="true"] {
+            background-color: rgba(239, 68, 68, 0.03);
+            border-left: 3px solid var(--color-state-warning);
+        }
+        
+        .data-table tbody tr[data-anomaly="true"]:hover {
+            background-color: rgba(239, 68, 68, 0.06);
+        }
+        
+        .card__footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-xl);
+            border-top: 1px solid var(--color-border-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__header-group">
+                    <div class="sidebar__logo"></div>
+                    <span class="sidebar__app-name">Nombre de la App</span>
+                </div>
+                <svg class="sidebar__header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 0 1-1.06 1.06L10 4.811 6.03 8.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 10 3ZM10 17a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06L10 15.189l3.97-3.969a.75.75 0 0 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="admin-dashboard.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-dashboard"></span>
+                        Dashboard
+                    </span>
+                </a>
+                <a href="admin-machines-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-maquinas"></span>
+                        Máquinas
+                    </span>
+                </a>
+                <a href="admin-drivers-list.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-choferes"></span>
+                        Choferes
+                    </span>
+                </a>
+                <a href="admin-accounting.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-contabilidad"></span>
+                        Contabilidad
+                    </span>
+                    <span class="badge badge--icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.35 2.35 4.47-6.705a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" /></svg></span>
+                </a>
+                <a href="admin-reports.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-reportes"></span>
+                        Reportes
+                    </span>
+                    <span class="badge badge--text">3</span>
+                </a>
+                <a href="admin-daily-logs.html" class="sidebar__nav-item is-active">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-bitacora"></span>
+                        Bitácora
+                    </span>
+                </a>
+                <div class="sidebar__nav-separator"></div>
+                <a href="admin-settings.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-configuracion"></span>
+                        Configuración
+                    </span>
+                </a>
+                <a href="admin-help-center.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-ayuda"></span>
+                        Centro de Ayuda
+                    </span>
+                </a>
+                <a href="login.html" class="sidebar__nav-item">
+                    <span class="sidebar__nav-item-content">
+                        <span class="sidebar__nav-item-icon icon-logout"></span>
+                        Cerrar Sesión
+                    </span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-content__header">
+                <div>
+                    <h1 class="main-content__title">Bitácora de Operaciones</h1>
+                    <p class="main-content__subtitle">Auditoría y gestión centralizada de reportes diarios.</p>
+                </div>
+                <a href="admin-registro-diario.html?mode=new" class="btn btn-primary">
+                    <span class="icon-plus"></span> Nuevo Registro Manual
+                </a>
+            </header>
+
+            <div class="main-content__grid" style="margin-bottom: var(--space-xl);">
+                <div class="card">
+                    <div class="card__body" style="text-align: center;">
+                        <span style="display: block; font-size: 0.875rem; color: var(--color-text-secondary);">Recaudación (Periodo)</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--color-text-primary);" class="tabular-nums" id="kpi-recaudacion">$ 4.520.000</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body" style="text-align: center;">
+                        <span style="display: block; font-size: 0.875rem; color: var(--color-text-secondary);">Registros Faltantes</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--color-state-error);" class="tabular-nums" id="kpi-faltantes">3</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body" style="text-align: center;">
+                        <span style="display: block; font-size: 0.875rem; color: var(--color-text-secondary);">Con Incidentes</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--color-state-warning);" class="tabular-nums" id="kpi-incidentes">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card__header" style="flex-wrap: wrap; gap: var(--space-md);">
+                    <div style="display: flex; gap: var(--space-sm); flex: 1; min-width: 280px;">
+                        <div class="form-field" style="margin-bottom: 0; flex: 1;">
+                            <input type="text" class="input-text" id="search-input" placeholder="Buscar por máquina, chofer o folio...">
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                        <select class="input-text" id="status-filter" style="width: auto;">
+                            <option value="all">Todos los Estados</option>
+                            <option value="pending">Pendientes/Conflictos</option>
+                            <option value="complete">Completados</option>
+                        </select>
+                        <input type="date" class="input-text" id="date-filter" style="width: auto;">
+                        <button class="btn btn-secondary" id="export-btn">Exportar</button>
+                    </div>
+                </div>
+
+                <div class="card__body card__body--no-padding">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Máquina / Chofer</th>
+                                    <th>Estado</th>
+                                    <th style="text-align: right;">Ingreso</th>
+                                    <th style="text-align: right;">Gasto Diésel</th>
+                                    <th style="text-align: right;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-table-body">
+                                <!-- Los datos se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card__footer">
+                        <span style="font-size: 0.875rem; color: var(--color-text-secondary);" id="pagination-info">Mostrando 1-10 de 50 registros</span>
+                        <div style="display: flex; gap: var(--space-xs);">
+                            <button class="btn btn-secondary btn-sm" id="prev-btn" disabled>Anterior</button>
+                            <button class="btn btn-secondary btn-sm" id="next-btn">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Función para obtener fecha en formato YYYY-MM-DD
+        function getDateString(daysAgo = 0) {
+            const date = new Date();
+            date.setDate(date.getDate() - daysAgo);
+            return date.toISOString().split('T')[0];
+        }
+
+        // Datos de ejemplo con fechas relativas (últimos días)
+        const logsData = [
+            {
+                id: '123',
+                fecha: getDateString(0), // Hoy
+                hora: '18:30',
+                maquina: 'Máquina 04',
+                chofer: 'Luis Martínez',
+                estado: 'incidente',
+                ingreso: 85000,
+                diesel: 0,
+                anomalia: true
+            },
+            {
+                id: '124',
+                fecha: getDateString(0), // Hoy
+                hora: '19:15',
+                maquina: 'Máquina 05',
+                chofer: 'Juan Pérez',
+                estado: 'complete',
+                ingreso: 120000,
+                diesel: 45000,
+                anomalia: false
+            },
+            {
+                id: '125',
+                fecha: getDateString(0), // Hoy
+                hora: '17:45',
+                maquina: 'Máquina 02',
+                chofer: 'Ana Gómez',
+                estado: 'pending',
+                ingreso: 95000,
+                diesel: 0,
+                anomalia: false
+            },
+            {
+                id: '126',
+                fecha: getDateString(1), // Ayer
+                hora: '18:00',
+                maquina: 'Máquina 07',
+                chofer: 'Pedro López',
+                estado: 'complete',
+                ingreso: 135000,
+                diesel: 52000,
+                anomalia: false
+            },
+            {
+                id: '127',
+                fecha: getDateString(1), // Ayer
+                hora: '19:30',
+                maquina: 'Máquina 01',
+                chofer: 'Carlos Ramírez',
+                estado: 'complete',
+                ingreso: 110000,
+                diesel: 48000,
+                anomalia: false
+            },
+            {
+                id: '128',
+                fecha: getDateString(2), // Hace 2 días
+                hora: '18:20',
+                maquina: 'Máquina 03',
+                chofer: 'María Silva',
+                estado: 'complete',
+                ingreso: 125000,
+                diesel: 50000,
+                anomalia: false
+            },
+            {
+                id: '129',
+                fecha: getDateString(2), // Hace 2 días
+                hora: '17:50',
+                maquina: 'Máquina 06',
+                chofer: 'Roberto Torres',
+                estado: 'pending',
+                ingreso: 0,
+                diesel: 0,
+                anomalia: true
+            },
+            {
+                id: '130',
+                fecha: getDateString(3), // Hace 3 días
+                hora: '18:10',
+                maquina: 'Máquina 04',
+                chofer: 'Luis Martínez',
+                estado: 'complete',
+                ingreso: 115000,
+                diesel: 46000,
+                anomalia: false
+            },
+            {
+                id: '131',
+                fecha: getDateString(3), // Hace 3 días
+                hora: '19:00',
+                maquina: 'Máquina 05',
+                chofer: 'Juan Pérez',
+                estado: 'complete',
+                ingreso: 130000,
+                diesel: 51000,
+                anomalia: false
+            },
+            {
+                id: '132',
+                fecha: getDateString(4), // Hace 4 días
+                hora: '18:45',
+                maquina: 'Máquina 02',
+                chofer: 'Ana Gómez',
+                estado: 'complete',
+                ingreso: 105000,
+                diesel: 44000,
+                anomalia: false
+            },
+            {
+                id: '133',
+                fecha: getDateString(5), // Hace 5 días
+                hora: '17:30',
+                maquina: 'Máquina 08',
+                chofer: 'Fernando Castro',
+                estado: 'complete',
+                ingreso: 140000,
+                diesel: 55000,
+                anomalia: false
+            },
+            {
+                id: '134',
+                fecha: getDateString(5), // Hace 5 días
+                hora: '19:20',
+                maquina: 'Máquina 09',
+                chofer: 'Sofía Morales',
+                estado: 'complete',
+                ingreso: 128000,
+                diesel: 49000,
+                anomalia: false
+            },
+            {
+                id: '135',
+                fecha: getDateString(6), // Hace 6 días
+                hora: '18:15',
+                maquina: 'Máquina 10',
+                chofer: 'Diego Herrera',
+                estado: 'complete',
+                ingreso: 132000,
+                diesel: 53000,
+                anomalia: false
+            },
+            {
+                id: '136',
+                fecha: getDateString(7), // Hace 7 días
+                hora: '17:40',
+                maquina: 'Máquina 01',
+                chofer: 'Carlos Ramírez',
+                estado: 'incidente',
+                ingreso: 75000,
+                diesel: 35000,
+                anomalia: true
+            },
+            {
+                id: '137',
+                fecha: getDateString(7), // Hace 7 días
+                hora: '19:00',
+                maquina: 'Máquina 03',
+                chofer: 'María Silva',
+                estado: 'complete',
+                ingreso: 118000,
+                diesel: 47000,
+                anomalia: false
+            }
+        ];
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value).replace('CLP', '').trim();
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString + 'T00:00:00');
+            const day = date.getDate();
+            const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day} ${month} ${year}`;
+        }
+
+        function getStatusPillClass(estado) {
+            const mapping = {
+                'complete': 'status-pill--ok',
+                'pending': 'status-pill--warning',
+                'incidente': 'status-pill--error'
+            };
+            return mapping[estado] || 'status-pill--warning';
+        }
+
+        function getStatusLabel(estado) {
+            const mapping = {
+                'complete': 'Completo',
+                'pending': 'Pendiente',
+                'incidente': 'Incidente'
+            };
+            return mapping[estado] || estado;
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('logs-table-body');
+            if (!tbody) return;
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: var(--space-xl); color: var(--color-text-secondary);">
+                            No se encontraron registros para los filtros seleccionados.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = data.map(log => {
+                const fechaFormateada = formatDate(log.fecha);
+                const ingresoFormateado = log.ingreso > 0 ? formatCurrency(log.ingreso) : '$ 0';
+                const dieselFormateado = log.diesel > 0 ? formatCurrency(log.diesel) : '$ 0';
+                const statusClass = getStatusPillClass(log.estado);
+                const statusLabel = getStatusLabel(log.estado);
+                const anomaliaAttr = log.anomalia ? 'data-anomaly="true"' : '';
+                const actionButton = log.estado === 'incidente' || log.estado === 'pending' 
+                    ? `<a href="admin-registro-diario.html?id=${log.id}&estado=${log.estado}" class="btn btn-secondary btn-sm">Resolver</a>`
+                    : `<a href="admin-registro-diario.html?id=${log.id}&estado=${log.estado}" class="btn-link">Ver detalle</a>`;
+
+                return `
+                    <tr ${anomaliaAttr}>
+                        <td class="tabular-nums">${fechaFormateada}</td>
+                        <td>
+                            <div><strong>${log.maquina}</strong></div>
+                            <div style="font-size: 0.85rem; color: var(--color-text-secondary);">${log.chofer}</div>
+                        </td>
+                        <td>
+                            <span class="status-pill ${statusClass}">${statusLabel}</span>
+                        </td>
+                        <td class="tabular-nums" style="text-align: right;">${ingresoFormateado}</td>
+                        <td class="tabular-nums" style="text-align: right;">${dieselFormateado}</td>
+                        <td class="action-cell">
+                            ${actionButton}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateKPIs(data) {
+            const totalRecaudacion = data.reduce((sum, log) => sum + (log.ingreso || 0), 0);
+            const registrosFaltantes = data.filter(log => log.estado === 'pending' && log.ingreso === 0).length;
+            const conIncidentes = data.filter(log => log.estado === 'incidente').length;
+
+            const kpiRecaudacion = document.getElementById('kpi-recaudacion');
+            const kpiFaltantes = document.getElementById('kpi-faltantes');
+            const kpiIncidentes = document.getElementById('kpi-incidentes');
+
+            if (kpiRecaudacion) kpiRecaudacion.textContent = formatCurrency(totalRecaudacion);
+            if (kpiFaltantes) kpiFaltantes.textContent = registrosFaltantes.toString();
+            if (kpiIncidentes) kpiIncidentes.textContent = conIncidentes.toString();
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('status-filter')?.value || 'all';
+            const dateFilter = document.getElementById('date-filter')?.value || '';
+
+            let filtered = logsData.filter(log => {
+                const matchesSearch = !searchTerm || 
+                    log.maquina.toLowerCase().includes(searchTerm) ||
+                    log.chofer.toLowerCase().includes(searchTerm) ||
+                    log.id.includes(searchTerm);
+                
+                const matchesStatus = statusFilter === 'all' || 
+                    (statusFilter === 'pending' && (log.estado === 'pending' || log.estado === 'incidente')) ||
+                    (statusFilter === 'complete' && log.estado === 'complete');
+                
+                const matchesDate = !dateFilter || log.fecha === dateFilter;
+
+                return matchesSearch && matchesStatus && matchesDate;
+            });
+
+            // Ordenar por fecha descendente (más reciente primero)
+            filtered.sort((a, b) => {
+                const dateA = new Date(a.fecha + 'T' + a.hora);
+                const dateB = new Date(b.fecha + 'T' + b.hora);
+                return dateB - dateA;
+            });
+
+            return filtered;
+        }
+
+        function updateTable() {
+            const filtered = filterData();
+            renderTable(filtered);
+            updateKPIs(filtered);
+            
+            // Actualizar información de paginación
+            const paginationInfo = document.getElementById('pagination-info');
+            if (paginationInfo) {
+                paginationInfo.textContent = `Mostrando 1-${Math.min(filtered.length, 10)} de ${filtered.length} registros`;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // No establecer fecha por defecto para mostrar todos los registros
+            // El usuario puede filtrar por fecha si lo desea
+            updateTable();
+
+            const searchInput = document.getElementById('search-input');
+            const statusFilter = document.getElementById('status-filter');
+            const dateFilter = document.getElementById('date-filter');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', updateTable);
+            }
+            if (statusFilter) {
+                statusFilter.addEventListener('change', updateTable);
+            }
+            if (dateFilter) {
+                dateFilter.addEventListener('change', updateTable);
+            }
+
+            const exportBtn = document.getElementById('export-btn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', () => {
+                    alert('Funcionalidad de exportación en desarrollo.');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
